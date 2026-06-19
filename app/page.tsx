@@ -26,6 +26,7 @@ import type {
   AnalyzeResponse,
   BetaLead,
   Category,
+  CheckoutReview,
   FeedbackRecord,
   ReportAdvisorAnswer,
   SourceCandidate,
@@ -109,6 +110,17 @@ export default function Home() {
   >("idle");
   const [latestSourceCandidate, setLatestSourceCandidate] =
     useState<SourceCandidate | null>(null);
+  const [checkoutReview, setCheckoutReview] = useState({
+    confirmedPrice: "",
+    sellerAnswer: "판매 페이지 옵션명, 배송비, 카드 혜택, 반품 조건 확인 완료",
+    acknowledgeMissing: false,
+    notes: "웹사이트 결제 전 검수",
+  });
+  const [checkoutStatus, setCheckoutStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestCheckoutReview, setLatestCheckoutReview] =
+    useState<CheckoutReview | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -167,6 +179,8 @@ export default function Home() {
     setSavedReportId(null);
     setAdvisorStatus("idle");
     setLatestAdvisorAnswer(null);
+    setCheckoutStatus("idle");
+    setLatestCheckoutReview(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -188,6 +202,14 @@ export default function Home() {
           data.analysis.report.top_recommendations[0]?.product.model_name ||
           current.expectedModel,
       }));
+      setCheckoutReview((current) => ({
+        ...current,
+        confirmedPrice: String(
+          data.analysis.report.top_recommendations[0]?.price.effective_price_krw ||
+            current.confirmedPrice,
+        ),
+        acknowledgeMissing: false,
+      }));
       setConnectionWarning(data.warning ?? null);
       setStatusText(
         data.mode === "live"
@@ -199,6 +221,7 @@ export default function Home() {
       setIsDemo(true);
       setSavedReportId(null);
       setLatestAdvisorAnswer(null);
+      setLatestCheckoutReview(null);
       setConnectionWarning(
         error instanceof Error
           ? error.message
@@ -281,6 +304,55 @@ export default function Home() {
       setSourceStatus("sent");
     } catch {
       setSourceStatus("error");
+    }
+  }
+
+  async function submitCheckoutReview(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setCheckoutStatus("sending");
+
+    try {
+      if (!savedReportId) {
+        throw new Error("missing report");
+      }
+      const sellerAnswers = Object.fromEntries(
+        (latestCheckoutReview?.seller_questions || []).map((question) => [
+          question,
+          checkoutReview.sellerAnswer,
+        ]),
+      );
+      const response = await fetch("/api/specpilot/checkout-review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          report_id: savedReportId,
+          product_id: result.report.final_pick_id,
+          confirmed_price_krw: Number(checkoutReview.confirmedPrice || 0) || null,
+          acknowledged_risks: checkoutReview.acknowledgeMissing
+            ? latestCheckoutReview?.missing_acknowledgements || []
+            : [],
+          seller_answers: sellerAnswers,
+          notes: checkoutReview.notes,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`checkout ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        review?: CheckoutReview;
+      };
+      if (!payload.ok || !payload.review) {
+        throw new Error("checkout rejected");
+      }
+      setLatestCheckoutReview(payload.review);
+      setCheckoutStatus("sent");
+      setCheckoutReview((current) => ({
+        ...current,
+        acknowledgeMissing: false,
+      }));
+    } catch {
+      setCheckoutStatus("error");
     }
   }
 
@@ -410,6 +482,7 @@ export default function Home() {
           </a>
           <a href="#analysis">분석</a>
           <a href="#source-check">상품 검수</a>
+          <a href="#checkout-review">결제 검수</a>
           <a href="#advisor">구매 상담</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -811,6 +884,147 @@ export default function Home() {
                 <li key={item}>{item}</li>
               ))}
             </ul>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="checkoutPanel" id="checkout-review">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <CreditCard size={16} />
+            결제 전 검수
+          </div>
+          <h2>최종 주문 화면을 리포트와 대조합니다</h2>
+          <p>
+            저장 리포트의 최종 후보, 결제 금액, 판매자 확인 답변, 리스크 승인
+            상태를 묶어 결제 가능, 확인 필요, 보류 상태를 계산합니다.
+          </p>
+          <div className="advisorMeta">
+            <span className={savedReportId ? "pill ok" : "pill warn"}>
+              {savedReportId ? `Report ${savedReportId}` : "라이브 분석 필요"}
+            </span>
+            <span className="pill muted">{result.report.final_pick_id || "후보 없음"}</span>
+          </div>
+        </div>
+
+        <form className="conversionForm advisorForm" onSubmit={submitCheckoutReview}>
+          <div className="fieldGrid">
+            <label>
+              최종 결제 금액
+              <input
+                inputMode="numeric"
+                value={checkoutReview.confirmedPrice || String(top.price.effective_price_krw)}
+                onChange={(event) =>
+                  setCheckoutReview((current) => ({
+                    ...current,
+                    confirmedPrice: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              검수 메모
+              <input
+                value={checkoutReview.notes}
+                onChange={(event) =>
+                  setCheckoutReview((current) => ({
+                    ...current,
+                    notes: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label>
+            판매자 확인 답변
+            <textarea
+              value={checkoutReview.sellerAnswer}
+              onChange={(event) =>
+                setCheckoutReview((current) => ({
+                  ...current,
+                  sellerAnswer: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label className="toggleLabel">
+            <input
+              type="checkbox"
+              checked={checkoutReview.acknowledgeMissing}
+              disabled={!latestCheckoutReview?.missing_acknowledgements.length}
+              onChange={(event) =>
+                setCheckoutReview((current) => ({
+                  ...current,
+                  acknowledgeMissing: event.target.checked,
+                }))
+              }
+            />
+            최근 검수의 누락 리스크와 판매자 질문을 확인 완료로 재검수
+          </label>
+          <button type="submit" disabled={checkoutStatus === "sending" || !savedReportId}>
+            {checkoutStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <CreditCard size={18} />
+            )}
+            결제 전 검수하기
+          </button>
+          <p className="formStatus">
+            {!savedReportId
+              ? "제품 API 연결 후 분석을 실행하면 저장 리포트 기준으로 검수할 수 있습니다."
+              : statusMessage(
+                  checkoutStatus,
+                  "결제 전 검수 결과가 저장됐습니다.",
+                  "결제 전 검수 생성에 실패했습니다.",
+                )}
+          </p>
+        </form>
+
+        {latestCheckoutReview ? (
+          <div className="checkoutResult">
+            <div className="answerHeader">
+              <span
+                className={`pill ${
+                  latestCheckoutReview.readiness_status === "ok" ? "ok" : "warn"
+                }`}
+              >
+                {latestCheckoutReview.checkout_blocked ? "결제 보류" : "결제 검수 완료"}
+              </span>
+              <span className="pill muted">
+                준비도 {Math.round(latestCheckoutReview.readiness_score)}점
+              </span>
+              <span className="pill muted">
+                {latestCheckoutReview.model_name || "선택 후보"}
+              </span>
+            </div>
+            <h3>{latestCheckoutReview.final_recommendation}</h3>
+            <div className="advisorLists">
+              <div>
+                <strong>검수 항목</strong>
+                <ul>
+                  {latestCheckoutReview.items.slice(0, 5).map((item) => (
+                    <li key={item.item_id}>
+                      {item.label} · {item.status} · {item.evidence}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 확인</strong>
+                <ul>
+                  {latestCheckoutReview.missing_acknowledgements.length ? (
+                    latestCheckoutReview.missing_acknowledgements.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))
+                  ) : (
+                    <li>누락된 리스크 승인이 없습니다.</li>
+                  )}
+                  {latestCheckoutReview.seller_questions.slice(0, 3).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         ) : null}
       </section>

@@ -234,3 +234,40 @@ export type SourceUrlIngestResponse = {
   fetched_live: boolean;
   extraction_notes: string[];
 };
+
+export type CheckoutReviewRequest = {
+  report_id: string;
+  product_id: string | null;
+  confirmed_price_krw: number | null;
+  acknowledged_risks: string[];
+  seller_answers: Record<string, string>;
+  notes: string;
+};
+
+export type CheckoutReviewItem = {
+  item_id: string;
+  label: string;
+  status: "ok" | "warning" | "blocker";
+  evidence: string;
+  required: boolean;
+};
+
+export type CheckoutReview = {
+  review_id: string;
+  report_id: string;
+  trace_id: string;
+  workspace_id: string;
+  product_id: string | null;
+  model_name: string | null;
+  confirmed_price_krw: number | null;
+  readiness_status: "ok" | "warning" | "blocker";
+  readiness_score: number;
+  checkout_blocked: boolean;
+  missing_acknowledgements: string[];
+  seller_questions: string[];
+  seller_answers: Record<string, string>;
+  items: CheckoutReviewItem[];
+  final_recommendation: string;
+  notes: string;
+  created_at: string;
+};

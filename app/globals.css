@@ -504,7 +504,8 @@ ul {
 }
 
 .advisorPanel,
-.sourceCheckPanel {
+.sourceCheckPanel,
+.checkoutPanel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
   gap: 18px;
@@ -542,7 +543,8 @@ ul {
   margin-top: 12px;
 }
 
-.sourceResult {
+.sourceResult,
+.checkoutResult {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);
   padding-top: 18px;
@@ -683,6 +685,7 @@ ul {
   .trustPanel,
   .advisorPanel,
   .sourceCheckPanel,
+  .checkoutPanel,
   .conversionPanel {
     grid-template-columns: 1fr;
   }
@@ -716,6 +719,7 @@ ul {
   .trustPanel,
   .advisorPanel,
   .sourceCheckPanel,
+  .checkoutPanel,
   .conversionPanel {
     padding-right: 14px;
     padding-left: 14px;

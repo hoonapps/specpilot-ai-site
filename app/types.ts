@@ -167,3 +167,32 @@ export type SubscriptionIntent = {
   recommendation: string;
   created_at: string;
 };
+
+export type ReportAdvisorQuestionRequest = {
+  report_id: string;
+  question: string;
+  context: string;
+  selected_product_id: string | null;
+  buyer_stage: string;
+  contact: string;
+};
+
+export type ReportAdvisorAnswer = {
+  answer_id: string;
+  report_id: string;
+  trace_id: string;
+  workspace_id: string;
+  question: string;
+  context: string;
+  selected_product_id: string | null;
+  selected_model_name: string;
+  buyer_stage: string;
+  answer: string;
+  status: "ok" | "warning" | "blocker";
+  confidence: number;
+  grounded_evidence: string[];
+  cited_product_ids: string[];
+  next_actions: string[];
+  contact_masked: string;
+  created_at: string;
+};

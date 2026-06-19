@@ -503,6 +503,56 @@ ul {
   margin: 12px 24px 36px;
 }
 
+.advisorPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
+  gap: 18px;
+  margin: 0 24px 36px;
+  border: 1px solid rgba(12, 116, 108, 0.26);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 2.4vw, 28px);
+}
+
+.advisorIntro {
+  min-width: 0;
+}
+
+.advisorMeta,
+.answerHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.advisorForm textarea {
+  min-height: 92px;
+}
+
+.advisorAnswer {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.advisorAnswer h3 {
+  margin-top: 12px;
+}
+
+.advisorLists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.advisorLists strong {
+  display: block;
+  font-size: 13px;
+}
+
 .conversionPanel {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -597,6 +647,7 @@ ul {
   .heroGrid,
   .summaryPanel,
   .trustPanel,
+  .advisorPanel,
   .conversionPanel {
     grid-template-columns: 1fr;
   }
@@ -628,6 +679,7 @@ ul {
   .workspace,
   .signalStrip,
   .trustPanel,
+  .advisorPanel,
   .conversionPanel {
     padding-right: 14px;
     padding-left: 14px;
@@ -641,6 +693,7 @@ ul {
   .cards.three,
   .cards.two,
   .signalStrip,
+  .advisorLists,
   .metricRow {
     grid-template-columns: 1fr;
   }

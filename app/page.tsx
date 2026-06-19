@@ -27,6 +27,7 @@ import type {
   BetaLead,
   Category,
   FeedbackRecord,
+  ReportAdvisorAnswer,
   SubscriptionIntent,
 } from "./types";
 
@@ -83,7 +84,18 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [statusText, setStatusText] = useState("데모 리포트");
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
+  const [savedReportId, setSavedReportId] = useState<string | null>(null);
   const [connectionWarning, setConnectionWarning] = useState<string | null>(null);
+  const [advisorQuestion, setAdvisorQuestion] = useState({
+    question: "지금 결제해도 돼, 아니면 목표가까지 기다리는 게 좋아?",
+    context: "이번 주 안에는 구매 가능하지만 가격과 호환성 리스크가 중요합니다.",
+    contact: "",
+  });
+  const [advisorStatus, setAdvisorStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestAdvisorAnswer, setLatestAdvisorAnswer] =
+    useState<ReportAdvisorAnswer | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -139,6 +151,9 @@ export default function Home() {
     setStatusText("서버 프록시 분석 중");
     setConnectionWarning(null);
     setPublicUrl(null);
+    setSavedReportId(null);
+    setAdvisorStatus("idle");
+    setLatestAdvisorAnswer(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -153,6 +168,7 @@ export default function Home() {
       setResult(data.analysis);
       setIsDemo(data.mode === "demo");
       setPublicUrl(data.public_url);
+      setSavedReportId(data.saved_report?.report_id ?? null);
       setConnectionWarning(data.warning ?? null);
       setStatusText(
         data.mode === "live"
@@ -162,6 +178,8 @@ export default function Home() {
     } catch (error) {
       setResult(demoResponse);
       setIsDemo(true);
+      setSavedReportId(null);
+      setLatestAdvisorAnswer(null);
       setConnectionWarning(
         error instanceof Error
           ? error.message
@@ -170,6 +188,44 @@ export default function Home() {
       setStatusText("API 미연결 데모");
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function submitAdvisorQuestion(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setAdvisorStatus("sending");
+    setLatestAdvisorAnswer(null);
+
+    try {
+      if (!savedReportId) {
+        throw new Error("missing report");
+      }
+      const response = await fetch("/api/specpilot/advisor-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          report_id: savedReportId,
+          question: advisorQuestion.question,
+          context: advisorQuestion.context,
+          selected_product_id: result.report.final_pick_id,
+          buyer_stage: "pre_checkout",
+          contact: advisorQuestion.contact,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`advisor ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        answer?: ReportAdvisorAnswer;
+      };
+      if (!payload.ok || !payload.answer) {
+        throw new Error("advisor rejected");
+      }
+      setLatestAdvisorAnswer(payload.answer);
+      setAdvisorStatus("sent");
+    } catch {
+      setAdvisorStatus("error");
     }
   }
 
@@ -298,6 +354,7 @@ export default function Home() {
             제품 API <ExternalLink size={14} />
           </a>
           <a href="#analysis">분석</a>
+          <a href="#advisor">구매 상담</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
         </nav>
@@ -553,6 +610,120 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="advisorPanel" id="advisor">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <ClipboardCheck size={16} />
+            구매 상담 Q&A
+          </div>
+          <h2>저장 리포트에 이어서 결제 전 질문을 던집니다</h2>
+          <p>
+            분석 결과가 저장되면 가격 대기, 호환성, 리스크, 후보 비교 질문을
+            리포트 근거에 연결해 답변합니다. 답변은 제품 API에 상담 이력으로
+            저장됩니다.
+          </p>
+          <div className="advisorMeta">
+            <span className={savedReportId ? "pill ok" : "pill warn"}>
+              {savedReportId ? `Report ${savedReportId}` : "라이브 분석 필요"}
+            </span>
+            <span className="pill muted">{top.product.model_name}</span>
+          </div>
+        </div>
+
+        <form className="conversionForm advisorForm" onSubmit={submitAdvisorQuestion}>
+          <label>
+            질문
+            <textarea
+              value={advisorQuestion.question}
+              onChange={(event) =>
+                setAdvisorQuestion((current) => ({
+                  ...current,
+                  question: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            추가 맥락
+            <textarea
+              value={advisorQuestion.context}
+              onChange={(event) =>
+                setAdvisorQuestion((current) => ({
+                  ...current,
+                  context: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            연락처 선택 입력
+            <input
+              placeholder="buyer@example.com"
+              value={advisorQuestion.contact}
+              onChange={(event) =>
+                setAdvisorQuestion((current) => ({
+                  ...current,
+                  contact: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <button
+            type="submit"
+            disabled={
+              advisorStatus === "sending" || !savedReportId || advisorQuestion.question.length < 2
+            }
+          >
+            {advisorStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <ClipboardCheck size={18} />
+            )}
+            리포트에 질문하기
+          </button>
+          <p className="formStatus">
+            {!savedReportId
+              ? "제품 API 연결 후 분석을 실행하면 저장 리포트 기반 상담을 사용할 수 있습니다."
+              : statusMessage(
+                  advisorStatus,
+                  "구매 상담 답변이 저장됐습니다.",
+                  "구매 상담 답변 생성에 실패했습니다.",
+                )}
+          </p>
+        </form>
+
+        {latestAdvisorAnswer ? (
+          <div className="advisorAnswer">
+            <div className="answerHeader">
+              <span className={`pill ${latestAdvisorAnswer.status === "ok" ? "ok" : "warn"}`}>
+                {latestAdvisorAnswer.status}
+              </span>
+              <span className="pill muted">확신도 {latestAdvisorAnswer.confidence}점</span>
+            </div>
+            <h3>{latestAdvisorAnswer.selected_model_name}</h3>
+            <p>{latestAdvisorAnswer.answer}</p>
+            <div className="advisorLists">
+              <div>
+                <strong>근거</strong>
+                <ul>
+                  {latestAdvisorAnswer.grounded_evidence.slice(0, 3).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 행동</strong>
+                <ul>
+                  {latestAdvisorAnswer.next_actions.slice(0, 3).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </section>
 
       <section className="conversionPanel" id="conversion">

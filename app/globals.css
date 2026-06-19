@@ -313,6 +313,23 @@ textarea:focus {
   color: var(--muted);
 }
 
+.pill.link {
+  gap: 5px;
+  background: #e8f0f8;
+  color: var(--blue);
+}
+
+.inlineNotice {
+  border: 1px solid #efd3a4;
+  border-radius: 8px;
+  background: #fff8eb;
+  color: #895919;
+  padding: 11px 13px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
 .heroGrid {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(280px, 1fr);

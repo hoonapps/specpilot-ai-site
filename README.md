@@ -21,8 +21,11 @@ http://127.0.0.1:3000
 제품 API 주소는 환경 변수로 지정합니다.
 
 ```bash
-NEXT_PUBLIC_SPECPILOT_API_URL=http://127.0.0.1:8000
+SPECPILOT_API_URL=http://127.0.0.1:8000
+SPECPILOT_API_KEY=specpilot-site-demo
 ```
+
+브라우저는 제품 API를 직접 호출하지 않습니다. Next.js 서버 라우트(`/api/specpilot/analyze`)가 제품 API의 `/analyze`, `/reports/save`, `/reports/{id}/share`를 순서대로 호출해 CORS와 공개 API 키 노출 리스크를 줄입니다.
 
 ## 검증
 
@@ -35,7 +38,8 @@ npm run check
 ## 연결되는 제품 API
 
 - `POST /analyze`
-- `GET /ready`
-- 공개 리포트와 저장 기능은 제품 API 레포에서 제공
+- `POST /reports/save`
+- `POST /reports/{report_id}/share`
+- 공개 리포트 페이지(`/r/{share_token}`)
 
 API가 꺼져 있으면 웹사이트는 내장 데모 리포트를 표시해 첫 화면 품질을 유지합니다.

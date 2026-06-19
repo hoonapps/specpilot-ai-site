@@ -42,6 +42,15 @@ export type DealWindow = {
   monitoring_plan: string[];
 };
 
+export type PriceAlertPlan = {
+  product_id: string;
+  current_price_krw: number;
+  target_price_krw: number;
+  recheck_interval_days: number;
+  channels: string[];
+  trigger_reason: string;
+};
+
 export type AnalyzeResponse = {
   graph_trace_id: string;
   report: {
@@ -62,6 +71,7 @@ export type AnalyzeResponse = {
       watchouts: string[];
       copy_text: string;
     };
+    price_alerts: PriceAlertPlan[];
     deal_windows: DealWindow[];
     source_health: string[];
   };
@@ -233,6 +243,59 @@ export type SourceUrlIngestResponse = {
   candidate: SourceCandidate;
   fetched_live: boolean;
   extraction_notes: string[];
+};
+
+export type AlertSubscriptionRequest = {
+  trace_id: string;
+  product_id: string;
+  target_price_krw: number;
+  channels: string[];
+  contact: string;
+  owner_label: string;
+};
+
+export type AlertSubscription = {
+  subscription_id: string;
+  trace_id: string;
+  product_id: string;
+  workspace_id: string;
+  target_price_krw: number;
+  current_price_krw: number;
+  channels: string[];
+  contact: string;
+  owner_label: string;
+  status: string;
+  created_at: string;
+};
+
+export type AlertDeliveryEvent = {
+  event_id: string;
+  subscription_id: string;
+  trace_id: string;
+  product_id: string;
+  workspace_id: string;
+  target_price_krw: number;
+  current_price_krw: number;
+  delta_krw: number;
+  channels: string[];
+  contact_masked: string;
+  delivery_status: string;
+  message: string;
+  created_at: string;
+};
+
+export type AlertEvaluationRequest = {
+  price_overrides_krw: Record<string, number>;
+  dry_run: boolean;
+  limit: number;
+};
+
+export type AlertEvaluationResponse = {
+  workspace_id: string;
+  evaluated_count: number;
+  triggered_count: number;
+  dry_run: boolean;
+  events: AlertDeliveryEvent[];
 };
 
 export type CheckoutReviewRequest = {

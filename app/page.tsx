@@ -21,6 +21,8 @@ import {
 import { FormEvent, useMemo, useState } from "react";
 import { demoResponse } from "./demo-data";
 import type {
+  AlertEvaluationResponse,
+  AlertSubscription,
   AnalyzeAndShareResponse,
   AnalyzePayload,
   AnalyzeResponse,
@@ -110,6 +112,31 @@ export default function Home() {
   >("idle");
   const [latestSourceCandidate, setLatestSourceCandidate] =
     useState<SourceCandidate | null>(null);
+  const [priceAlert, setPriceAlert] = useState({
+    contact: "buyer@example.com",
+    targetPrice: String(
+      demoResponse.report.price_alerts[0]?.target_price_krw ||
+        demoResponse.report.deal_windows[0]?.target_price_krw ||
+        0,
+    ),
+    overridePrice: String(
+      (demoResponse.report.price_alerts[0]?.target_price_krw ||
+        demoResponse.report.deal_windows[0]?.target_price_krw ||
+        0) - 1,
+    ),
+    channel: "email",
+    dryRun: false,
+  });
+  const [alertStatus, setAlertStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [alertEvalStatus, setAlertEvalStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestAlertSubscription, setLatestAlertSubscription] =
+    useState<AlertSubscription | null>(null);
+  const [latestAlertEvaluation, setLatestAlertEvaluation] =
+    useState<AlertEvaluationResponse | null>(null);
   const [checkoutReview, setCheckoutReview] = useState({
     confirmedPrice: "",
     sellerAnswer: "판매 페이지 옵션명, 배송비, 카드 혜택, 반품 조건 확인 완료",
@@ -155,6 +182,7 @@ export default function Home() {
 
   const top = result.report.top_recommendations[0];
   const dealWindow = result.report.deal_windows[0];
+  const alertPlan = result.report.price_alerts[0];
   const quality = result.quality_audit;
 
   const formPayload = useMemo<AnalyzePayload>(
@@ -179,6 +207,10 @@ export default function Home() {
     setSavedReportId(null);
     setAdvisorStatus("idle");
     setLatestAdvisorAnswer(null);
+    setAlertStatus("idle");
+    setAlertEvalStatus("idle");
+    setLatestAlertSubscription(null);
+    setLatestAlertEvaluation(null);
     setCheckoutStatus("idle");
     setLatestCheckoutReview(null);
     setFeedbackStatus("idle");
@@ -210,6 +242,16 @@ export default function Home() {
         ),
         acknowledgeMissing: false,
       }));
+      const nextAlert =
+        data.analysis.report.price_alerts[0] || data.analysis.report.deal_windows[0];
+      if (nextAlert) {
+        const targetPrice = String(nextAlert.target_price_krw);
+        setPriceAlert((current) => ({
+          ...current,
+          targetPrice,
+          overridePrice: String(Math.max(1, Number(targetPrice) - 1)),
+        }));
+      }
       setConnectionWarning(data.warning ?? null);
       setStatusText(
         data.mode === "live"
@@ -221,6 +263,8 @@ export default function Home() {
       setIsDemo(true);
       setSavedReportId(null);
       setLatestAdvisorAnswer(null);
+      setLatestAlertSubscription(null);
+      setLatestAlertEvaluation(null);
       setLatestCheckoutReview(null);
       setConnectionWarning(
         error instanceof Error
@@ -304,6 +348,80 @@ export default function Home() {
       setSourceStatus("sent");
     } catch {
       setSourceStatus("error");
+    }
+  }
+
+  async function submitPriceAlert(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setAlertStatus("sending");
+    setLatestAlertSubscription(null);
+
+    try {
+      const productId = alertPlan?.product_id || dealWindow.product_id || top.product.id;
+      const response = await fetch("/api/specpilot/alerts/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          trace_id: result.graph_trace_id,
+          product_id: productId,
+          target_price_krw: Number(priceAlert.targetPrice || 0),
+          channels: [priceAlert.channel],
+          contact: priceAlert.contact,
+          owner_label: "site-user",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`alert ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        subscription?: AlertSubscription;
+      };
+      if (!payload.ok || !payload.subscription) {
+        throw new Error("alert rejected");
+      }
+      setLatestAlertSubscription(payload.subscription);
+      setAlertStatus("sent");
+    } catch {
+      setAlertStatus("error");
+    }
+  }
+
+  async function evaluatePriceAlert() {
+    setAlertEvalStatus("sending");
+    setLatestAlertEvaluation(null);
+
+    try {
+      const productId =
+        latestAlertSubscription?.product_id ||
+        alertPlan?.product_id ||
+        dealWindow.product_id ||
+        top.product.id;
+      const response = await fetch("/api/specpilot/alerts/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          price_overrides_krw: {
+            [productId]: Number(priceAlert.overridePrice || 0),
+          },
+          dry_run: priceAlert.dryRun,
+          limit: 50,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`alert evaluation ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        evaluation?: AlertEvaluationResponse;
+      };
+      if (!payload.ok || !payload.evaluation) {
+        throw new Error("alert evaluation rejected");
+      }
+      setLatestAlertEvaluation(payload.evaluation);
+      setAlertEvalStatus("sent");
+    } catch {
+      setAlertEvalStatus("error");
     }
   }
 
@@ -481,6 +599,7 @@ export default function Home() {
             제품 API <ExternalLink size={14} />
           </a>
           <a href="#analysis">분석</a>
+          <a href="#price-alert">가격 알림</a>
           <a href="#source-check">상품 검수</a>
           <a href="#checkout-review">결제 검수</a>
           <a href="#advisor">구매 상담</a>
@@ -717,6 +836,208 @@ export default function Home() {
           <strong>운영 품질</strong>
           <span>품질 점수, 예상 비용, 공개 차단 사유</span>
         </article>
+      </section>
+
+      <section className="alertPanel" id="price-alert">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Bell size={16} />
+            가격 알림
+          </div>
+          <h2>목표가에 도달하면 다시 구매 판단으로 부릅니다</h2>
+          <p>
+            저장된 분석 리포트의 목표가를 알림으로 연결하고, 현재가가 목표가
+            이하로 내려왔을 때 발송 큐 이벤트가 생성되는지 바로 확인합니다.
+          </p>
+          <div className="advisorMeta">
+            <span className={isDemo ? "pill warn" : "pill ok"}>
+              {isDemo ? "라이브 분석 필요" : `Trace ${result.graph_trace_id}`}
+            </span>
+            <span className="pill muted">
+              {alertPlan?.product_id || dealWindow.product_id}
+            </span>
+          </div>
+        </div>
+
+        <form className="conversionForm advisorForm" onSubmit={submitPriceAlert}>
+          <div className="fieldGrid">
+            <label>
+              목표가
+              <input
+                inputMode="numeric"
+                value={priceAlert.targetPrice}
+                onChange={(event) =>
+                  setPriceAlert((current) => ({
+                    ...current,
+                    targetPrice: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              알림 채널
+              <select
+                value={priceAlert.channel}
+                onChange={(event) =>
+                  setPriceAlert((current) => ({
+                    ...current,
+                    channel: event.target.value,
+                  }))
+                }
+              >
+                <option value="email">이메일</option>
+                <option value="webhook">웹훅</option>
+                <option value="sms">SMS</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            알림 받을 연락처
+            <input
+              value={priceAlert.contact}
+              onChange={(event) =>
+                setPriceAlert((current) => ({
+                  ...current,
+                  contact: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <div className="alertActionGrid">
+            <button
+              type="submit"
+              disabled={alertStatus === "sending" || isDemo || !priceAlert.targetPrice}
+            >
+              {alertStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Bell size={18} />
+              )}
+              목표가 알림 켜기
+            </button>
+            <button
+              type="button"
+              className="secondaryButton"
+              disabled={alertEvalStatus === "sending" || !latestAlertSubscription}
+              onClick={evaluatePriceAlert}
+            >
+              {alertEvalStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <TimerReset size={18} />
+              )}
+              목표가 도달 테스트
+            </button>
+          </div>
+          <div className="fieldGrid">
+            <label>
+              테스트 현재가
+              <input
+                inputMode="numeric"
+                value={priceAlert.overridePrice}
+                onChange={(event) =>
+                  setPriceAlert((current) => ({
+                    ...current,
+                    overridePrice: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={priceAlert.dryRun}
+                onChange={(event) =>
+                  setPriceAlert((current) => ({
+                    ...current,
+                    dryRun: event.target.checked,
+                  }))
+                }
+              />
+              큐 저장 없이 dry-run
+            </label>
+          </div>
+          <p className="formStatus">
+            {isDemo
+              ? "제품 API 연결 후 분석을 실행하면 저장 리포트 기준으로 알림을 만들 수 있습니다."
+              : [
+                  statusMessage(
+                    alertStatus,
+                    "가격 알림 구독이 저장됐습니다.",
+                    "가격 알림 구독 생성에 실패했습니다.",
+                  ),
+                  statusMessage(
+                    alertEvalStatus,
+                    "목표가 평가가 완료됐습니다.",
+                    "목표가 평가에 실패했습니다.",
+                  ),
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+          </p>
+        </form>
+
+        {latestAlertSubscription || latestAlertEvaluation ? (
+          <div className="alertResult">
+            <div className="answerHeader">
+              {latestAlertSubscription ? (
+                <span className="pill ok">
+                  알림 {latestAlertSubscription.status}
+                </span>
+              ) : null}
+              {latestAlertEvaluation ? (
+                <span
+                  className={`pill ${
+                    latestAlertEvaluation.triggered_count ? "ok" : "warn"
+                  }`}
+                >
+                  트리거 {latestAlertEvaluation.triggered_count}건
+                </span>
+              ) : null}
+              <span className="pill muted">
+                목표가 {won(Number(priceAlert.targetPrice || 0))}
+              </span>
+            </div>
+            <div className="advisorLists">
+              <div>
+                <strong>구독 상태</strong>
+                <ul>
+                  <li>
+                    현재가{" "}
+                    {won(
+                      latestAlertSubscription?.current_price_krw ||
+                        alertPlan?.current_price_krw ||
+                        dealWindow.current_price_krw,
+                    )}
+                  </li>
+                  <li>
+                    채널 {(latestAlertSubscription?.channels || [priceAlert.channel]).join(", ")}
+                  </li>
+                  <li>
+                    연락처{" "}
+                    {latestAlertEvaluation?.events[0]?.contact_masked ||
+                      latestAlertSubscription?.contact ||
+                      priceAlert.contact}
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <strong>발송 큐 이벤트</strong>
+                <ul>
+                  {latestAlertEvaluation?.events.length ? (
+                    latestAlertEvaluation.events.slice(0, 3).map((event) => (
+                      <li key={event.event_id}>
+                        {event.delivery_status} · {event.message}
+                      </li>
+                    ))
+                  ) : (
+                    <li>목표가 도달 테스트를 실행하면 큐 이벤트가 표시됩니다.</li>
+                  )}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </section>
 
       <section className="trustPanel">

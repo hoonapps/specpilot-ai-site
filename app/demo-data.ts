@@ -72,6 +72,17 @@ export const demoResponse: AnalyzeResponse = {
       copy_text:
         "SpecPilot AI 검토 요청: 1순위 후보의 가격, 옵션명, 호환성 리스크를 결제 전 한 번 더 봐주세요.",
     },
+    price_alerts: [
+      {
+        product_id: "build-001",
+        current_price_krw: 1_925_000,
+        target_price_krw: 1_848_000,
+        recheck_interval_days: 7,
+        channels: ["email"],
+        trigger_reason:
+          "목표가와 현재가 차이가 있어 즉시 결제보다 알림 후 재검토가 유리합니다.",
+      },
+    ],
     deal_windows: [
       {
         product_id: "build-001",

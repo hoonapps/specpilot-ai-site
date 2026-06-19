@@ -2,7 +2,7 @@
 
 SpecPilot AI 제품 API를 공개 사용자에게 보여주는 Next.js 웹사이트입니다.
 
-이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 구매 조건을 입력하고, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 구매 타이밍, 공유 브리프, 상품 페이지 근거 검수, 결제 전 검수, 저장 리포트 기반 구매 상담, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
+이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 구매 조건을 입력하고, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 구매 타이밍, 공유 브리프, 가격 알림, 상품 페이지 근거 검수, 결제 전 검수, 저장 리포트 기반 구매 상담, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
 
 ## 실행
 
@@ -31,6 +31,8 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/feedback`: 제품 API의 `/feedback`으로 추천 만족도와 구매 의향 저장
 - `/api/specpilot/beta-leads`: 제품 API의 `/beta/leads`로 베타 신청 저장
 - `/api/specpilot/subscription-intents`: 제품 API의 `/billing/subscription-intents`로 Premium/Team 요금제 관심과 예상 MRR 저장
+- `/api/specpilot/alerts/subscribe`: 제품 API의 `/alerts/subscribe`로 분석 결과 기반 목표가 알림 구독 생성
+- `/api/specpilot/alerts/evaluate`: 제품 API의 `/alerts/evaluate`로 목표가 도달 평가와 발송 큐 이벤트 확인
 - `/api/specpilot/advisor-questions`: 제품 API의 `/reports/{report_id}/advisor-questions`로 저장 리포트 기반 구매 상담 답변 저장
 - `/api/specpilot/source-ingest`: 제품 API의 `/sources/ingest-url`로 상품 URL/HTML 스냅샷 가격, 배송비, 할인, 재고, 모델명 일치도 검수
 - `/api/specpilot/checkout-review`: 제품 API의 `/reports/{report_id}/checkout-review`로 최종 결제 금액, 판매자 답변, 리스크 승인 상태 검수
@@ -74,6 +76,8 @@ docker build -t specpilot-ai-site:local .
 - `POST /analyze`
 - `POST /reports/save`
 - `POST /reports/{report_id}/share`
+- `POST /alerts/subscribe`
+- `POST /alerts/evaluate`
 - `POST /reports/{report_id}/advisor-questions`
 - `POST /sources/ingest-url`
 - `POST /reports/{report_id}/checkout-review`

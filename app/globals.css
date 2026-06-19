@@ -505,6 +505,7 @@ ul {
 
 .advisorPanel,
 .sourceCheckPanel,
+.alertPanel,
 .checkoutPanel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
@@ -544,6 +545,7 @@ ul {
 }
 
 .sourceResult,
+.alertResult,
 .checkoutResult {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);
@@ -575,6 +577,18 @@ ul {
   margin: 0;
   color: var(--ink);
   font-weight: 950;
+}
+
+.alertActionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.secondaryButton {
+  border: 1px solid var(--line) !important;
+  background: #fbfcf9 !important;
+  color: var(--ink) !important;
 }
 
 .advisorLists {
@@ -685,6 +699,7 @@ ul {
   .trustPanel,
   .advisorPanel,
   .sourceCheckPanel,
+  .alertPanel,
   .checkoutPanel,
   .conversionPanel {
     grid-template-columns: 1fr;
@@ -719,6 +734,7 @@ ul {
   .trustPanel,
   .advisorPanel,
   .sourceCheckPanel,
+  .alertPanel,
   .checkoutPanel,
   .conversionPanel {
     padding-right: 14px;
@@ -734,6 +750,7 @@ ul {
   .cards.two,
   .signalStrip,
   .advisorLists,
+  .alertActionGrid,
   .sourceMetricGrid,
   .metricRow {
     grid-template-columns: 1fr;

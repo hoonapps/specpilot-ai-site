@@ -196,3 +196,41 @@ export type ReportAdvisorAnswer = {
   contact_masked: string;
   created_at: string;
 };
+
+export type SourceUrlIngestRequest = {
+  url: string;
+  category: Category;
+  kind: "price";
+  expected_model: string;
+  source_name: string;
+  seller: string;
+  html: string;
+};
+
+export type SourceCandidate = {
+  source_id: string;
+  adapter_id: string;
+  kind: string;
+  title: string;
+  url: string;
+  normalized_model: string;
+  extracted_price_krw: number | null;
+  shipping_fee_krw: number | null;
+  coupon_or_card_benefit_krw: number | null;
+  effective_price_krw: number | null;
+  availability_status: string;
+  model_match_status: "ok" | "warning" | "blocker";
+  seller: string | null;
+  evidence_text: string;
+  confidence: number;
+  collected_at: string;
+  needs_review: boolean;
+  risk_flags: string[];
+  extraction_signals: string[];
+};
+
+export type SourceUrlIngestResponse = {
+  candidate: SourceCandidate;
+  fetched_live: boolean;
+  extraction_notes: string[];
+};

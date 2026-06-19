@@ -503,7 +503,8 @@ ul {
   margin: 12px 24px 36px;
 }
 
-.advisorPanel {
+.advisorPanel,
+.sourceCheckPanel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
   gap: 18px;
@@ -539,6 +540,39 @@ ul {
 
 .advisorAnswer h3 {
   margin-top: 12px;
+}
+
+.sourceResult {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.sourceMetricGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.sourceMetricGrid div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 12px;
+}
+
+.sourceMetricGrid dt {
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.sourceMetricGrid dd {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 950;
 }
 
 .advisorLists {
@@ -648,6 +682,7 @@ ul {
   .summaryPanel,
   .trustPanel,
   .advisorPanel,
+  .sourceCheckPanel,
   .conversionPanel {
     grid-template-columns: 1fr;
   }
@@ -680,6 +715,7 @@ ul {
   .signalStrip,
   .trustPanel,
   .advisorPanel,
+  .sourceCheckPanel,
   .conversionPanel {
     padding-right: 14px;
     padding-left: 14px;
@@ -694,6 +730,7 @@ ul {
   .cards.two,
   .signalStrip,
   .advisorLists,
+  .sourceMetricGrid,
   .metricRow {
     grid-template-columns: 1fr;
   }

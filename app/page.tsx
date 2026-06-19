@@ -28,6 +28,7 @@ import type {
   Category,
   FeedbackRecord,
   ReportAdvisorAnswer,
+  SourceCandidate,
   SubscriptionIntent,
 } from "./types";
 
@@ -96,6 +97,18 @@ export default function Home() {
   >("idle");
   const [latestAdvisorAnswer, setLatestAdvisorAnswer] =
     useState<ReportAdvisorAnswer | null>(null);
+  const [sourceEvidence, setSourceEvidence] = useState({
+    url: "https://example.com/product/creator-rtx-4070-pc",
+    seller: "Example Store",
+    expectedModel: "Creator RTX 4070 SUPER Build",
+    html:
+      "<html><title>Creator RTX 4070 SUPER Build</title><body>최종 결제 금액 1,925,000원 무료배송 카드 할인 50,000원 재고 있음 QHD 144Hz 영상 편집 추천 구성</body></html>",
+  });
+  const [sourceStatus, setSourceStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestSourceCandidate, setLatestSourceCandidate] =
+    useState<SourceCandidate | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -169,6 +182,12 @@ export default function Home() {
       setIsDemo(data.mode === "demo");
       setPublicUrl(data.public_url);
       setSavedReportId(data.saved_report?.report_id ?? null);
+      setSourceEvidence((current) => ({
+        ...current,
+        expectedModel:
+          data.analysis.report.top_recommendations[0]?.product.model_name ||
+          current.expectedModel,
+      }));
       setConnectionWarning(data.warning ?? null);
       setStatusText(
         data.mode === "live"
@@ -226,6 +245,42 @@ export default function Home() {
       setAdvisorStatus("sent");
     } catch {
       setAdvisorStatus("error");
+    }
+  }
+
+  async function submitSourceEvidence(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSourceStatus("sending");
+    setLatestSourceCandidate(null);
+
+    try {
+      const response = await fetch("/api/specpilot/source-ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: sourceEvidence.url,
+          category: formPayload.category,
+          kind: "price",
+          expected_model: sourceEvidence.expectedModel,
+          source_name: "specpilot-ai-site",
+          seller: sourceEvidence.seller,
+          html: sourceEvidence.html,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`source ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        result?: { candidate: SourceCandidate };
+      };
+      if (!payload.ok || !payload.result) {
+        throw new Error("source rejected");
+      }
+      setLatestSourceCandidate(payload.result.candidate);
+      setSourceStatus("sent");
+    } catch {
+      setSourceStatus("error");
     }
   }
 
@@ -354,6 +409,7 @@ export default function Home() {
             제품 API <ExternalLink size={14} />
           </a>
           <a href="#analysis">분석</a>
+          <a href="#source-check">상품 검수</a>
           <a href="#advisor">구매 상담</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -610,6 +666,153 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="sourceCheckPanel" id="source-check">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <ShieldCheck size={16} />
+            상품 페이지 근거 검수
+          </div>
+          <h2>실제 판매 페이지가 리포트와 맞는지 먼저 확인합니다</h2>
+          <p>
+            상품 URL과 페이지 스냅샷에서 가격, 배송비, 쿠폰/카드 할인, 재고,
+            모델명 일치도를 추출해 제품 API의 검수 큐에 저장합니다.
+          </p>
+          <div className="advisorMeta">
+            <span className="pill muted">{formPayload.category}</span>
+            <span className="pill muted">{sourceEvidence.expectedModel}</span>
+          </div>
+        </div>
+
+        <form className="conversionForm advisorForm" onSubmit={submitSourceEvidence}>
+          <div className="fieldGrid">
+            <label>
+              상품 URL
+              <input
+                value={sourceEvidence.url}
+                onChange={(event) =>
+                  setSourceEvidence((current) => ({
+                    ...current,
+                    url: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              판매처
+              <input
+                value={sourceEvidence.seller}
+                onChange={(event) =>
+                  setSourceEvidence((current) => ({
+                    ...current,
+                    seller: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label>
+            기대 모델명
+            <input
+              value={sourceEvidence.expectedModel}
+              onChange={(event) =>
+                setSourceEvidence((current) => ({
+                  ...current,
+                  expectedModel: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            HTML 또는 텍스트 스냅샷
+            <textarea
+              value={sourceEvidence.html}
+              onChange={(event) =>
+                setSourceEvidence((current) => ({
+                  ...current,
+                  html: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <button
+            type="submit"
+            disabled={sourceStatus === "sending" || sourceEvidence.url.length < 8}
+          >
+            {sourceStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <ShieldCheck size={18} />
+            )}
+            상품 근거 검수하기
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              sourceStatus,
+              "상품 페이지 근거가 검수 큐에 저장됐습니다.",
+              "상품 페이지 근거 검수에 실패했습니다.",
+            )}
+          </p>
+        </form>
+
+        {latestSourceCandidate ? (
+          <div className="sourceResult">
+            <div className="answerHeader">
+              <span
+                className={`pill ${
+                  latestSourceCandidate.model_match_status === "ok" ? "ok" : "warn"
+                }`}
+              >
+                모델 {latestSourceCandidate.model_match_status}
+              </span>
+              <span className="pill muted">
+                신뢰도 {Math.round(latestSourceCandidate.confidence * 100)}%
+              </span>
+              <span className="pill muted">재고 {latestSourceCandidate.availability_status}</span>
+            </div>
+            <h3>{latestSourceCandidate.title}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>표시 가격</dt>
+                <dd>
+                  {latestSourceCandidate.extracted_price_krw
+                    ? won(latestSourceCandidate.extracted_price_krw)
+                    : "확인 필요"}
+                </dd>
+              </div>
+              <div>
+                <dt>배송비</dt>
+                <dd>
+                  {latestSourceCandidate.shipping_fee_krw === null
+                    ? "확인 필요"
+                    : won(latestSourceCandidate.shipping_fee_krw)}
+                </dd>
+              </div>
+              <div>
+                <dt>할인</dt>
+                <dd>
+                  {latestSourceCandidate.coupon_or_card_benefit_krw
+                    ? won(latestSourceCandidate.coupon_or_card_benefit_krw)
+                    : "없음"}
+                </dd>
+              </div>
+              <div>
+                <dt>추정 실구매가</dt>
+                <dd>
+                  {latestSourceCandidate.effective_price_krw
+                    ? won(latestSourceCandidate.effective_price_krw)
+                    : "확인 필요"}
+                </dd>
+              </div>
+            </dl>
+            <ul>
+              {latestSourceCandidate.extraction_signals.slice(0, 6).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </section>
 
       <section className="advisorPanel" id="advisor">

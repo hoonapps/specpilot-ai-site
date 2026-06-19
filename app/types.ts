@@ -131,3 +131,39 @@ export type BetaLead = {
   source: string;
   created_at: string;
 };
+
+export type SubscriptionIntentRequest = {
+  email: string;
+  plan_id: "premium" | "team";
+  billing_cycle: "monthly" | "annual";
+  persona: string;
+  use_case: string;
+  team_size: number;
+  max_budget_krw: number;
+  feature_priorities: string[];
+  purchase_timing: string;
+  contact_consent: boolean;
+  source: string;
+};
+
+export type SubscriptionIntent = {
+  intent_id: string;
+  workspace_id: string;
+  email_masked: string;
+  plan_id: string;
+  plan_name: string;
+  billing_cycle: string;
+  monthly_price_krw: number;
+  estimated_mrr_krw: number;
+  persona: string;
+  use_case: string;
+  team_size: number;
+  max_budget_krw: number | null;
+  feature_priorities: string[];
+  purchase_timing: string;
+  contact_consent: boolean;
+  source: string;
+  readiness_status: "ok" | "warning" | "blocker";
+  recommendation: string;
+  created_at: string;
+};

@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   ClipboardCheck,
   Clock3,
+  CreditCard,
   Cpu,
   ExternalLink,
   Gauge,
@@ -26,6 +27,7 @@ import type {
   BetaLead,
   Category,
   FeedbackRecord,
+  SubscriptionIntent,
 } from "./types";
 
 const starterPayload: AnalyzePayload = {
@@ -101,6 +103,18 @@ export default function Home() {
   const [betaStatus, setBetaStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
+  const [pricingIntent, setPricingIntent] = useState({
+    email: "",
+    planId: "premium" as "premium" | "team",
+    billingCycle: "monthly" as "monthly" | "annual",
+    teamSize: "1",
+    maxBudget: "20000",
+    contactConsent: true,
+  });
+  const [pricingStatus, setPricingStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestIntent, setLatestIntent] = useState<SubscriptionIntent | null>(null);
 
   const top = result.report.top_recommendations[0];
   const dealWindow = result.report.deal_windows[0];
@@ -225,6 +239,47 @@ export default function Home() {
       setBetaStatus("sent");
     } catch {
       setBetaStatus("error");
+    }
+  }
+
+  async function submitPricingIntent(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPricingStatus("sending");
+    setLatestIntent(null);
+
+    try {
+      const response = await fetch("/api/specpilot/subscription-intents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: pricingIntent.email,
+          plan_id: pricingIntent.planId,
+          billing_cycle: pricingIntent.billingCycle,
+          persona:
+            pricingIntent.planId === "team" ? "team_purchase_owner" : "individual_buyer",
+          use_case: formPayload.query,
+          team_size: Number(pricingIntent.teamSize || 1),
+          max_budget_krw: Number(pricingIntent.maxBudget || 0),
+          feature_priorities: ["가격 알림", "저장 견적 비교", "결제 전 검수"],
+          purchase_timing: result.report.purchase_timing,
+          contact_consent: pricingIntent.contactConsent,
+          source: "specpilot-ai-site",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`pricing ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        intent?: SubscriptionIntent;
+      };
+      if (!payload.ok || !payload.intent) {
+        throw new Error("pricing rejected");
+      }
+      setLatestIntent(payload.intent);
+      setPricingStatus("sent");
+    } catch {
+      setPricingStatus("error");
     }
   }
 
@@ -694,6 +749,131 @@ export default function Home() {
                 "베타 신청이 저장됐습니다.",
                 "베타 신청 저장에 실패했습니다.",
               )}
+            </p>
+          </form>
+        </article>
+
+        <article className="conversionCard pricingCard">
+          <div className="sectionLabel">
+            <CreditCard size={16} />
+            요금제 관심
+          </div>
+          <h2>결제 전에 유료 수요를 먼저 검증합니다</h2>
+          <p>
+            Premium은 개인 구매 코치, Team은 반복 장비 구매를 위한 운영형
+            요금제입니다. 관심 등록은 제품 API의 예상 MRR 대시보드에 반영됩니다.
+          </p>
+          <form className="conversionForm" onSubmit={submitPricingIntent}>
+            <label>
+              이메일
+              <input
+                required
+                type="email"
+                placeholder="buyer@example.com"
+                value={pricingIntent.email}
+                onChange={(event) =>
+                  setPricingIntent((current) => ({
+                    ...current,
+                    email: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <div className="fieldGrid">
+              <label>
+                요금제
+                <select
+                  value={pricingIntent.planId}
+                  onChange={(event) => {
+                    const planId = event.target.value as "premium" | "team";
+                    setPricingIntent((current) => ({
+                      ...current,
+                      planId,
+                      teamSize: planId === "team" ? "3" : "1",
+                      maxBudget: planId === "team" ? "150000" : "20000",
+                    }));
+                  }}
+                >
+                  <option value="premium">Premium 구매 코치</option>
+                  <option value="team">Team 구매 보조</option>
+                </select>
+              </label>
+              <label>
+                결제 주기
+                <select
+                  value={pricingIntent.billingCycle}
+                  onChange={(event) =>
+                    setPricingIntent((current) => ({
+                      ...current,
+                      billingCycle: event.target.value as "monthly" | "annual",
+                    }))
+                  }
+                >
+                  <option value="monthly">월 결제</option>
+                  <option value="annual">연 결제</option>
+                </select>
+              </label>
+            </div>
+            <div className="fieldGrid">
+              <label>
+                사용자/팀 수
+                <input
+                  inputMode="numeric"
+                  value={pricingIntent.teamSize}
+                  onChange={(event) =>
+                    setPricingIntent((current) => ({
+                      ...current,
+                      teamSize: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label>
+                월 최대 예산
+                <input
+                  inputMode="numeric"
+                  value={pricingIntent.maxBudget}
+                  onChange={(event) =>
+                    setPricingIntent((current) => ({
+                      ...current,
+                      maxBudget: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+            </div>
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={pricingIntent.contactConsent}
+                onChange={(event) =>
+                  setPricingIntent((current) => ({
+                    ...current,
+                    contactConsent: event.target.checked,
+                  }))
+                }
+              />
+              요금제 안내와 전환 실험 연락에 동의
+            </label>
+            <button
+              type="submit"
+              disabled={pricingStatus === "sending" || !pricingIntent.contactConsent}
+            >
+              {pricingStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <CreditCard size={18} />
+              )}
+              관심 등록하기
+            </button>
+            <p className="formStatus">
+              {latestIntent
+                ? `${latestIntent.plan_name} 관심 등록 완료 · 예상 MRR ${won(latestIntent.estimated_mrr_krw)}`
+                : statusMessage(
+                    pricingStatus,
+                    "요금제 관심이 저장됐습니다.",
+                    "요금제 관심 저장에 실패했습니다.",
+                  )}
             </p>
           </form>
         </article>

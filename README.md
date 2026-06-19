@@ -25,7 +25,11 @@ SPECPILOT_API_URL=http://127.0.0.1:8000
 SPECPILOT_API_KEY=specpilot-site-demo
 ```
 
-브라우저는 제품 API를 직접 호출하지 않습니다. Next.js 서버 라우트(`/api/specpilot/analyze`)가 제품 API의 `/analyze`, `/reports/save`, `/reports/{id}/share`를 순서대로 호출해 CORS와 공개 API 키 노출 리스크를 줄입니다.
+브라우저는 제품 API를 직접 호출하지 않습니다. Next.js 서버 라우트가 제품 API를 대신 호출해 CORS와 공개 API 키 노출 리스크를 줄입니다.
+
+- `/api/specpilot/analyze`: 제품 API의 `/analyze`, `/reports/save`, `/reports/{id}/share`를 순서대로 호출
+- `/api/specpilot/feedback`: 제품 API의 `/feedback`으로 추천 만족도와 구매 의향 저장
+- `/api/specpilot/beta-leads`: 제품 API의 `/beta/leads`로 베타 신청 저장
 
 ## Docker 실행
 
@@ -66,6 +70,8 @@ docker build -t specpilot-ai-site:local .
 - `POST /analyze`
 - `POST /reports/save`
 - `POST /reports/{report_id}/share`
+- `POST /feedback`
+- `POST /beta/leads`
 - 공개 리포트 페이지(`/r/{share_token}`)
 
 API가 꺼져 있으면 웹사이트는 내장 데모 리포트를 표시해 첫 화면 품질을 유지합니다.

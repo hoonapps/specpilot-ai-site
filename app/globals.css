@@ -141,7 +141,8 @@ main {
 .visualPanel,
 .summaryPanel,
 .card,
-.trustPanel {
+.trustPanel,
+.conversionCard {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--paper);
@@ -502,6 +503,66 @@ ul {
   margin: 12px 24px 36px;
 }
 
+.conversionPanel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 0 24px 44px;
+}
+
+.conversionCard {
+  padding: clamp(18px, 2.5vw, 28px);
+}
+
+.conversionForm {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.conversionForm button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ink);
+  color: white;
+  font-weight: 950;
+}
+
+.conversionForm button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.toggleLabel {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 10px 12px;
+}
+
+.toggleLabel input {
+  width: 18px;
+  min-height: 18px;
+  accent-color: var(--teal);
+}
+
+.formStatus {
+  min-height: 20px;
+  margin: 0;
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 850;
+}
+
 .trustList {
   display: grid;
   gap: 10px;
@@ -526,7 +587,8 @@ ul {
   .workspace,
   .heroGrid,
   .summaryPanel,
-  .trustPanel {
+  .trustPanel,
+  .conversionPanel {
     grid-template-columns: 1fr;
   }
 
@@ -556,7 +618,8 @@ ul {
 
   .workspace,
   .signalStrip,
-  .trustPanel {
+  .trustPanel,
+  .conversionPanel {
     padding-right: 14px;
     padding-left: 14px;
   }

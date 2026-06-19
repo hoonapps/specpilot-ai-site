@@ -19,7 +19,14 @@ import {
 } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 import { demoResponse } from "./demo-data";
-import type { AnalyzeAndShareResponse, AnalyzePayload, AnalyzeResponse, Category } from "./types";
+import type {
+  AnalyzeAndShareResponse,
+  AnalyzePayload,
+  AnalyzeResponse,
+  BetaLead,
+  Category,
+  FeedbackRecord,
+} from "./types";
 
 const starterPayload: AnalyzePayload = {
   query:
@@ -43,6 +50,23 @@ function splitList(value: string) {
     .filter(Boolean);
 }
 
+function statusMessage(
+  status: "idle" | "sending" | "sent" | "error",
+  success: string,
+  error: string,
+) {
+  if (status === "sending") {
+    return "전송 중입니다.";
+  }
+  if (status === "sent") {
+    return success;
+  }
+  if (status === "error") {
+    return error;
+  }
+  return "";
+}
+
 export default function Home() {
   const [payload, setPayload] = useState({
     query: starterPayload.query,
@@ -58,6 +82,25 @@ export default function Home() {
   const [statusText, setStatusText] = useState("데모 리포트");
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const [connectionWarning, setConnectionWarning] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState({
+    rating: "5",
+    purchaseIntent: true,
+    reason: "추천 근거와 구매 타이밍 판단이 결제 결정에 도움이 됩니다.",
+    contact: "",
+  });
+  const [feedbackStatus, setFeedbackStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [betaLead, setBetaLead] = useState({
+    email: "",
+    persona: "creator",
+    useCase: "영상 편집용 PC와 노트북 구매를 반복해서 비교하고 싶습니다.",
+    companySize: "personal",
+    contactConsent: true,
+  });
+  const [betaStatus, setBetaStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
 
   const top = result.report.top_recommendations[0];
   const dealWindow = result.report.deal_windows[0];
@@ -82,6 +125,7 @@ export default function Home() {
     setStatusText("서버 프록시 분석 중");
     setConnectionWarning(null);
     setPublicUrl(null);
+    setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
         method: "POST",
@@ -115,6 +159,75 @@ export default function Home() {
     }
   }
 
+  async function submitFeedback(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setFeedbackStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          trace_id: result.graph_trace_id,
+          rating: Number(feedback.rating),
+          purchase_intent: feedback.purchaseIntent,
+          selected_product_id: result.report.final_pick_id,
+          reason: feedback.reason,
+          improvement_requests: publicUrl
+            ? ["공유 리포트 기반 검토 흐름 유지"]
+            : ["제품 API 연결 상태 확인"],
+          contact: feedback.contact,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`feedback ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        feedback?: FeedbackRecord;
+      };
+      if (!payload.ok) {
+        throw new Error("feedback rejected");
+      }
+      setFeedbackStatus("sent");
+    } catch {
+      setFeedbackStatus("error");
+    }
+  }
+
+  async function submitBetaLead(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBetaStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/beta-leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: betaLead.email,
+          persona: betaLead.persona,
+          use_case: betaLead.useCase,
+          company_size: betaLead.companySize,
+          contact_consent: betaLead.contactConsent,
+          source: "specpilot-ai-site",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`beta ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        lead?: BetaLead;
+      };
+      if (!payload.ok) {
+        throw new Error("beta rejected");
+      }
+      setBetaStatus("sent");
+    } catch {
+      setBetaStatus("error");
+    }
+  }
+
   return (
     <main>
       <header className="topbar">
@@ -130,6 +243,7 @@ export default function Home() {
             제품 API <ExternalLink size={14} />
           </a>
           <a href="#analysis">분석</a>
+          <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
         </nav>
       </header>
@@ -384,6 +498,205 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="conversionPanel" id="conversion">
+        <article className="conversionCard">
+          <div className="sectionLabel">
+            <CheckCircle2 size={16} />
+            추천 피드백
+          </div>
+          <h2>추천 결과가 실제 구매 판단에 도움이 됐나요?</h2>
+          <p>
+            만족도와 구매 의향은 제품 API의 피드백 저장소에 연결됩니다. 분석을
+            한 번 실행한 뒤 제출하면 trace id와 최종 후보가 함께 저장됩니다.
+          </p>
+          <form className="conversionForm" onSubmit={submitFeedback}>
+            <div className="fieldGrid">
+              <label>
+                만족도
+                <select
+                  value={feedback.rating}
+                  onChange={(event) =>
+                    setFeedback((current) => ({
+                      ...current,
+                      rating: event.target.value,
+                    }))
+                  }
+                >
+                  <option value="5">5 - 바로 쓰고 싶음</option>
+                  <option value="4">4 - 유용함</option>
+                  <option value="3">3 - 보통</option>
+                  <option value="2">2 - 부족함</option>
+                  <option value="1">1 - 다시 설계 필요</option>
+                </select>
+              </label>
+              <label className="toggleLabel">
+                <input
+                  type="checkbox"
+                  checked={feedback.purchaseIntent}
+                  onChange={(event) =>
+                    setFeedback((current) => ({
+                      ...current,
+                      purchaseIntent: event.target.checked,
+                    }))
+                  }
+                />
+                구매 의향 있음
+              </label>
+            </div>
+            <label>
+              의견
+              <textarea
+                value={feedback.reason}
+                onChange={(event) =>
+                  setFeedback((current) => ({
+                    ...current,
+                    reason: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              연락처 선택 입력
+              <input
+                placeholder="buyer@example.com"
+                value={feedback.contact}
+                onChange={(event) =>
+                  setFeedback((current) => ({
+                    ...current,
+                    contact: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <button type="submit" disabled={feedbackStatus === "sending" || isDemo}>
+              {feedbackStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Activity size={18} />
+              )}
+              피드백 보내기
+            </button>
+            <p className="formStatus">
+              {isDemo
+                ? "제품 API 연결 후 분석을 실행하면 피드백을 저장할 수 있습니다."
+                : statusMessage(
+                    feedbackStatus,
+                    "피드백이 저장됐습니다.",
+                    "피드백 저장에 실패했습니다.",
+                  )}
+            </p>
+          </form>
+        </article>
+
+        <article className="conversionCard">
+          <div className="sectionLabel">
+            <Bell size={16} />
+            베타 신청
+          </div>
+          <h2>반복 구매 비교가 필요한 사용자부터 초대합니다</h2>
+          <p>
+            이메일은 제품 API에서 마스킹되어 저장됩니다. 공개 베타에서는
+            크리에이터, 게이머, 개발자, 소규모 사업자 시나리오를 우선 봅니다.
+          </p>
+          <form className="conversionForm" onSubmit={submitBetaLead}>
+            <label>
+              이메일
+              <input
+                required
+                type="email"
+                placeholder="creator@example.com"
+                value={betaLead.email}
+                onChange={(event) =>
+                  setBetaLead((current) => ({
+                    ...current,
+                    email: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <div className="fieldGrid">
+              <label>
+                사용자군
+                <select
+                  value={betaLead.persona}
+                  onChange={(event) =>
+                    setBetaLead((current) => ({
+                      ...current,
+                      persona: event.target.value,
+                    }))
+                  }
+                >
+                  <option value="creator">크리에이터</option>
+                  <option value="gamer">게이머</option>
+                  <option value="developer">개발자</option>
+                  <option value="small_business">소규모 사업자</option>
+                </select>
+              </label>
+              <label>
+                규모
+                <select
+                  value={betaLead.companySize}
+                  onChange={(event) =>
+                    setBetaLead((current) => ({
+                      ...current,
+                      companySize: event.target.value,
+                    }))
+                  }
+                >
+                  <option value="personal">개인</option>
+                  <option value="freelancer">프리랜서</option>
+                  <option value="team_2_10">2-10명 팀</option>
+                  <option value="business">사업자</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              필요한 구매 비교
+              <textarea
+                value={betaLead.useCase}
+                onChange={(event) =>
+                  setBetaLead((current) => ({
+                    ...current,
+                    useCase: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={betaLead.contactConsent}
+                onChange={(event) =>
+                  setBetaLead((current) => ({
+                    ...current,
+                    contactConsent: event.target.checked,
+                  }))
+                }
+              />
+              베타 초대와 후속 인터뷰 연락에 동의
+            </label>
+            <button
+              type="submit"
+              disabled={betaStatus === "sending" || !betaLead.contactConsent}
+            >
+              {betaStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Bell size={18} />
+              )}
+              베타 신청하기
+            </button>
+            <p className="formStatus">
+              {statusMessage(
+                betaStatus,
+                "베타 신청이 저장됐습니다.",
+                "베타 신청 저장에 실패했습니다.",
+              )}
+            </p>
+          </form>
+        </article>
       </section>
     </main>
   );

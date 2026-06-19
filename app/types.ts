@@ -93,3 +93,41 @@ export type AnalyzeAndShareResponse = {
   mode: "live" | "demo";
   warning?: string;
 };
+
+export type FeedbackRequest = {
+  trace_id: string;
+  rating: number;
+  purchase_intent: boolean;
+  selected_product_id: string | null;
+  reason: string;
+  improvement_requests: string[];
+  contact: string;
+};
+
+export type FeedbackRecord = FeedbackRequest & {
+  feedback_id: string;
+  workspace_id: string;
+  contact_masked: string;
+  created_at: string;
+};
+
+export type BetaLeadRequest = {
+  email: string;
+  persona: string;
+  use_case: string;
+  company_size: string;
+  contact_consent: boolean;
+  source: string;
+};
+
+export type BetaLead = {
+  lead_id: string;
+  workspace_id: string;
+  email_masked: string;
+  persona: string;
+  use_case: string;
+  company_size: string;
+  contact_consent: boolean;
+  source: string;
+  created_at: string;
+};

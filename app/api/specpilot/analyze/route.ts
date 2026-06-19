@@ -7,35 +7,7 @@ import type {
   SaveReportResponse,
   ShareReportResponse,
 } from "../../../types";
-
-const productApiBase =
-  process.env.SPECPILOT_API_URL?.replace(/\/$/, "") ||
-  process.env.NEXT_PUBLIC_SPECPILOT_API_URL?.replace(/\/$/, "") ||
-  "http://127.0.0.1:8000";
-
-const productApiKey = process.env.SPECPILOT_API_KEY || "specpilot-site-demo";
-
-function headers() {
-  return {
-    "Content-Type": "application/json",
-    "X-SpecPilot-Key": productApiKey,
-  };
-}
-
-async function postJson<T>(path: string, body?: unknown): Promise<T> {
-  const response = await fetch(`${productApiBase}${path}`, {
-    method: "POST",
-    headers: headers(),
-    body: body === undefined ? undefined : JSON.stringify(body),
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error(`${path} failed with ${response.status}`);
-  }
-
-  return (await response.json()) as T;
-}
+import { postJson, productPublicUrl } from "../_client";
 
 function reportTitle(analysis: AnalyzeResponse) {
   const top = analysis.report.top_recommendations[0];
@@ -58,7 +30,7 @@ export async function POST(request: Request) {
     const share = await postJson<ShareReportResponse>(
       `/reports/${savedReport.report_id}/share`,
     );
-    const publicUrl = new URL(share.public_path, productApiBase).toString();
+    const publicUrl = productPublicUrl(share.public_path);
 
     return NextResponse.json<AnalyzeAndShareResponse>({
       analysis,

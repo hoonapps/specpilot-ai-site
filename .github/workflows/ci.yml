@@ -21,3 +21,5 @@ jobs:
         run: npm ci
       - name: Typecheck and build
         run: npm run check
+      - name: Docker build
+        run: docker build -t specpilot-ai-site:ci .

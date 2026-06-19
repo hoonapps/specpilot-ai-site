@@ -27,10 +27,36 @@ SPECPILOT_API_KEY=specpilot-site-demo
 
 브라우저는 제품 API를 직접 호출하지 않습니다. Next.js 서버 라우트(`/api/specpilot/analyze`)가 제품 API의 `/analyze`, `/reports/save`, `/reports/{id}/share`를 순서대로 호출해 CORS와 공개 API 키 노출 리스크를 줄입니다.
 
+## Docker 실행
+
+```bash
+docker build -t specpilot-ai-site:local .
+docker run --rm -p 3000:3000 \
+  -e SPECPILOT_API_URL=http://host.docker.internal:8000 \
+  -e SPECPILOT_API_KEY=specpilot-site-demo \
+  specpilot-ai-site:local
+```
+
+Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+헬스체크:
+
+```bash
+curl http://127.0.0.1:3000/api/health
+```
+
+`SPECPILOT_REQUIRE_PRODUCT_READY=true`를 설정하면 제품 API `/ready`가 실패할 때 사이트 헬스체크도 503을 반환합니다. 기본값은 데모 fallback을 살리기 위해 제품 API가 내려가도 사이트 자체는 ready로 반환합니다.
+
 ## 검증
 
 ```bash
 npm run check
+npm audit --audit-level=moderate
+docker build -t specpilot-ai-site:local .
 ```
 
 `check`는 TypeScript 타입 검사와 Next.js production build를 실행합니다.

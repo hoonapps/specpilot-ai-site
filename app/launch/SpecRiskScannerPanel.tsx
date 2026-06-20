@@ -13,6 +13,7 @@ import {
 import type {
   Category,
   PublicCheckoutNudgeKit,
+  PublicListingDecoderKit,
   PublicSpecRescueKit,
   PublicSpecRiskScanner,
   SpecRiskScannerRequest,
@@ -107,15 +108,72 @@ export function SpecRiskScannerPanel({
 }: SpecRiskScannerPanelProps) {
   const [form, setForm] = useState<FormState>(demoForm);
   const [result, setResult] = useState<SpecRiskScannerResult | null>(null);
+  const [decoderKit, setDecoderKit] = useState<PublicListingDecoderKit | null>(null);
   const [nudgeKit, setNudgeKit] = useState<PublicCheckoutNudgeKit | null>(null);
   const [rescueKit, setRescueKit] = useState<PublicSpecRescueKit | null>(null);
   const [status, setStatus] = useState<"idle" | "scanning" | "error">("idle");
+  const [decoderStatus, setDecoderStatus] = useState<"idle" | "decoding" | "error">("idle");
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [decoderCopyStatus, setDecoderCopyStatus] = useState<"idle" | "copied" | "error">("idle");
   const [nudgeCopyStatus, setNudgeCopyStatus] = useState<"idle" | "copied" | "error">("idle");
   const [rescueCopyStatus, setRescueCopyStatus] = useState<"idle" | "copied" | "error">("idle");
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
+  }
+
+  function applyScannerPrefill(kit: PublicListingDecoderKit) {
+    const prefill = kit.scanner_prefill;
+    setForm((current) => ({
+      ...current,
+      category: prefill.category,
+      productTitle: prefill.product_title,
+      optionText: prefill.option_text,
+      cartTotal: prefill.cart_total_krw == null ? current.cartTotal : String(prefill.cart_total_krw),
+      budget: String(prefill.budget_krw),
+      expectedCpu: prefill.expected_cpu,
+      expectedGpu: prefill.expected_gpu,
+      expectedRam: prefill.expected_ram_gb == null ? "" : String(prefill.expected_ram_gb),
+      expectedStorage:
+        prefill.expected_storage_gb == null ? "" : String(prefill.expected_storage_gb),
+      expectedOs: prefill.expected_os,
+      evidenceText: current.evidenceText || prefill.evidence_text,
+    }));
+  }
+
+  async function decodeListing() {
+    setDecoderStatus("decoding");
+    setDecoderCopyStatus("idle");
+    try {
+      const response = await fetch("/api/specpilot/listing-decoder-kit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: form.category,
+          product_title: form.productTitle,
+          option_text: form.optionText,
+          budget_krw: parseNumber(form.budget) ?? 2_200_000,
+          cart_total_krw: parseNumber(form.cartTotal),
+          purpose: form.category === "laptop" ? "portable_creator" : "qhd_creator",
+          source: "launch_spec_scanner",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`decoder ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        kit?: PublicListingDecoderKit;
+      };
+      if (!payload.ok || !payload.kit) {
+        throw new Error("decoder rejected");
+      }
+      setDecoderKit(payload.kit);
+      applyScannerPrefill(payload.kit);
+      setDecoderStatus("idle");
+    } catch {
+      setDecoderStatus("error");
+    }
   }
 
   async function scan() {
@@ -227,6 +285,18 @@ export function SpecRiskScannerPanel({
     }
   }
 
+  async function copyDecoder() {
+    if (!decoderKit) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(decoderKit.share_copy);
+      setDecoderCopyStatus("copied");
+    } catch {
+      setDecoderCopyStatus("error");
+    }
+  }
+
   async function copyNudge() {
     if (!nudgeKit) {
       return;
@@ -311,6 +381,85 @@ export function SpecRiskScannerPanel({
               onChange={(event) => update("optionText", event.target.value)}
             />
           </label>
+          <div className="launchListingDecoder">
+            <div>
+              <span className="pill warn">상품명 해석</span>
+              <strong>쇼핑몰 상품명을 먼저 구조화합니다</strong>
+              <p>
+                CPU/GPU/RAM/SSD/OS와 리퍼·전시·해외 조건을 먼저 뽑아 검수 폼에 채웁니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void decodeListing()}
+              disabled={decoderStatus === "decoding"}
+            >
+              {decoderStatus === "decoding" ? (
+                <LoaderCircle size={16} />
+              ) : (
+                <ClipboardCheck size={16} />
+              )}
+              상품명 해석
+            </button>
+            {decoderStatus === "error" ? (
+              <p className="launchPersonaError">
+                상품명 해석 결과를 만들지 못했습니다. 상품명과 옵션명을 확인하세요.
+              </p>
+            ) : null}
+            {decoderKit ? (
+              <div className="launchListingDecoderResult">
+                <div>
+                  <strong>{decoderKit.headline}</strong>
+                  <p>{decoderKit.summary}</p>
+                  <small>해석 신뢰도 {Math.round(decoderKit.confidence_score)}점</small>
+                </div>
+                <div className="launchListingFactGrid">
+                  {decoderKit.decoded_specs.slice(0, 7).map((fact) => (
+                    <article className={fact.status} key={fact.slot}>
+                      <span>{fact.label}</span>
+                      <strong>{fact.value}</strong>
+                      <small>{fact.recommendation}</small>
+                    </article>
+                  ))}
+                </div>
+                <div className="launchSpecScannerActions">
+                  <LaunchAnalysisLink
+                    className="miniCta"
+                    handoff={{
+                      source: "listing-decoder-kit",
+                      label: decoderKit.primary_cta_label,
+                      query: decoderKit.analysis_prefill,
+                      category: decoderKit.category,
+                      budget_krw: decoderKit.scanner_prefill.budget_krw,
+                      purpose: decoderKit.product_title,
+                    }}
+                  >
+                    {decoderKit.primary_cta_label}
+                  </LaunchAnalysisLink>
+                  <button type="button" onClick={() => void applyScannerPrefill(decoderKit)}>
+                    <ClipboardCheck size={16} />
+                    검수 폼 채우기
+                  </button>
+                  <button type="button" onClick={() => void copyDecoder()}>
+                    <Copy size={16} />
+                    {decoderCopyStatus === "copied" ? "복사됨" : "해석 공유"}
+                  </button>
+                </div>
+                {decoderKit.seller_questions.length ? (
+                  <ul>
+                    {decoderKit.seller_questions.slice(0, 3).map((question) => (
+                      <li key={question}>{question}</li>
+                    ))}
+                  </ul>
+                ) : null}
+                {decoderCopyStatus === "error" ? (
+                  <p className="launchPersonaError">
+                    클립보드 권한이 없어 상품명 해석 문구를 복사하지 못했습니다.
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
           <div className="launchSpecScannerControls dense">
             <label>
               기대 CPU

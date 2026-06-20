@@ -2809,6 +2809,9 @@ ul {
 .launchSpecScannerChecks div,
 .launchSpecSafetyBrief,
 .launchSpecBriefGrid div,
+.launchListingDecoder,
+.launchListingDecoderResult,
+.launchListingFactGrid article,
 .launchCheckoutNudge,
 .launchCheckoutNudgeSteps article,
 .launchSpecRescue,
@@ -2865,6 +2868,86 @@ ul {
 
 .launchSpecScannerForm .primaryButton {
   width: fit-content;
+}
+
+.launchListingDecoder {
+  align-content: start;
+  background: #f7fbff;
+}
+
+.launchListingDecoder > div:first-child,
+.launchListingDecoderResult {
+  min-width: 0;
+}
+
+.launchListingDecoder strong,
+.launchListingDecoderResult strong,
+.launchListingFactGrid strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchListingDecoder p,
+.launchListingDecoder li,
+.launchListingDecoder small,
+.launchListingFactGrid small {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.58;
+  overflow-wrap: anywhere;
+}
+
+.launchListingDecoder button {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid rgba(49, 95, 140, 0.22);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 0 12px;
+  font-weight: 900;
+}
+
+.launchListingDecoderResult {
+  background: #fff;
+  padding: 12px;
+}
+
+.launchListingFactGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.launchListingFactGrid article {
+  align-content: start;
+  background: #fff;
+  padding: 10px;
+}
+
+.launchListingFactGrid article.ok {
+  border-color: rgba(12, 116, 108, 0.2);
+}
+
+.launchListingFactGrid article.warning {
+  border-color: rgba(176, 112, 0, 0.24);
+  background: #fffaf0;
+}
+
+.launchListingFactGrid article.blocker {
+  border-color: rgba(170, 45, 45, 0.24);
+  background: #fff5f3;
+}
+
+.launchListingFactGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .launchSpecScannerResult {
@@ -7704,6 +7787,7 @@ ul {
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
   .launchSpecBriefGrid,
+  .launchListingFactGrid,
   .launchCheckoutNudgeSteps,
   .launchSpecRescueGrid,
   .launchStartConciergeControls,
@@ -7972,6 +8056,7 @@ ul {
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
   .launchSpecBriefGrid,
+  .launchListingFactGrid,
   .launchCheckoutNudgeSteps,
   .launchSpecRescueGrid,
   .launchCandidateCompareGrid,

@@ -1168,6 +1168,48 @@ export type SpecRiskScannerResult = {
   next_actions: string[];
 };
 
+export type ListingDecoderRequest = {
+  category: Category;
+  product_title: string;
+  option_text: string;
+  budget_krw: number;
+  cart_total_krw: number | null;
+  purpose: string;
+  source: string;
+};
+
+export type ListingSpecFact = {
+  slot: string;
+  label: string;
+  value: string;
+  status: OpsStatus;
+  evidence: string;
+  recommendation: string;
+};
+
+export type PublicListingDecoderKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  option_text: string;
+  normalized_title: string;
+  confidence_score: number;
+  headline: string;
+  summary: string;
+  decoded_specs: ListingSpecFact[];
+  blocker_count: number;
+  warning_count: number;
+  ambiguity_notes: string[];
+  seller_questions: string[];
+  scanner_prefill: SpecRiskScannerRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

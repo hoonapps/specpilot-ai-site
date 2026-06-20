@@ -4846,6 +4846,180 @@ ul {
   font-weight: 950;
 }
 
+.launchUpgradeReadiness {
+  background: #fbfff8;
+}
+
+.launchUpgradeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchUpgradeForm,
+.launchUpgradeResult,
+.launchUpgradeScore,
+.launchUpgradeItemGrid article,
+.launchUpgradePathGrid article,
+.launchUpgradeColumns > div {
+  border: 1px solid rgba(56, 118, 78, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(56, 118, 78, 0.07);
+}
+
+.launchUpgradeForm,
+.launchUpgradeResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchUpgradeControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchUpgradeControls.dense {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchUpgradeForm label {
+  display: grid;
+  gap: 7px;
+  color: #38764e;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchUpgradeForm input,
+.launchUpgradeForm select,
+.launchUpgradeForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(56, 118, 78, 0.18);
+  border-radius: 8px;
+  background: #fbfff8;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchUpgradeForm textarea {
+  resize: vertical;
+}
+
+.launchUpgradeForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchUpgradeResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchUpgradeResult p,
+.launchUpgradeResult li,
+.launchUpgradeResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchUpgradeScore {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.launchUpgradeScore strong {
+  color: #38764e;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1;
+}
+
+.launchUpgradeScore span,
+.launchUpgradeItemGrid span,
+.launchUpgradePathGrid span {
+  color: #38764e;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchUpgradeItemGrid,
+.launchUpgradePathGrid,
+.launchUpgradeColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchUpgradeItemGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchUpgradePathGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchUpgradeItemGrid article,
+.launchUpgradePathGrid article,
+.launchUpgradeColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchUpgradeItemGrid span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.launchUpgradeItemGrid article.ok,
+.launchUpgradePathGrid article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchUpgradeItemGrid article.warning,
+.launchUpgradePathGrid article.warning {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchUpgradeItemGrid article.blocker,
+.launchUpgradePathGrid article.blocker {
+  border-color: rgba(220, 38, 38, 0.26);
+  background: #fef2f2;
+}
+
+.launchUpgradePathGrid strong,
+.launchUpgradeColumns strong {
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.launchUpgradeColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchUpgradeColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -8694,6 +8868,7 @@ ul {
   .launchDealWatchGrid,
   .launchAftercareGrid,
   .launchFirstBootGrid,
+  .launchUpgradeGrid,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchObjectionHero,
@@ -8848,6 +9023,11 @@ ul {
   .launchFirstBootTaskGrid,
   .launchFirstBootColumns,
   .launchFirstBootMessages,
+  .launchUpgradeControls,
+  .launchUpgradeControls.dense,
+  .launchUpgradeItemGrid,
+  .launchUpgradePathGrid,
+  .launchUpgradeColumns,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
@@ -9151,6 +9331,12 @@ ul {
   .launchFirstBootTaskGrid,
   .launchFirstBootColumns,
   .launchFirstBootMessages,
+  .launchUpgradeGrid,
+  .launchUpgradeControls,
+  .launchUpgradeControls.dense,
+  .launchUpgradeItemGrid,
+  .launchUpgradePathGrid,
+  .launchUpgradeColumns,
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,

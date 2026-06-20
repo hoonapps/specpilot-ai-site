@@ -64,6 +64,7 @@ import { ShoppingCartIntakePanel } from "./ShoppingCartIntakePanel";
 import { SetupCompatibilityPanel } from "./SetupCompatibilityPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
+import { UpgradeReadinessPanel } from "./UpgradeReadinessPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -1401,6 +1402,8 @@ export default async function LaunchPage() {
       />
 
       <SetupCompatibilityPanel />
+
+      <UpgradeReadinessPanel />
 
       <ShoppingCartIntakePanel />
 

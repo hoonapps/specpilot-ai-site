@@ -60,6 +60,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/mistake-cost-calculator`: 제품 API의 `/public/mistake-cost-calculator`, `/public/mistake-cost-calculator/result`로 예산/수량/위험 유형별 예상 구매 실패 비용, 방지 플랜, 분석 prefill 조회
 - `/api/specpilot/buyer-challenge-kit`: 제품 API의 `/public/buyer-challenge-kit`로 성향 진단, 실패 비용 계산, 체크리스트를 3단계 구매 챌린지와 채널별 복사 문구로 패키징
 - `/api/specpilot/setup-compatibility-kit`: 제품 API의 `/public/setup-compatibility-kit`로 CPU/GPU/RAM/SSD/모니터/파워/폼팩터 또는 노트북 휴대성 조합의 병목과 호환성 리스크 조회
+- `/api/specpilot/upgrade-readiness-kit`: 제품 API의 `/public/upgrade-readiness-kit`로 RAM/SSD 슬롯, 플랫폼, 파워, 케이스, 노트북 온보드 제약을 장기 사용 점수와 판매자 질문으로 변환
 - `/api/specpilot/shopping-cart-intake-kit`: 제품 API의 `/public/shopping-cart-intake-kit`로 쇼핑몰 장바구니 텍스트/항목을 총액, 필수 슬롯 누락, 검수/승인 prefill로 변환
 - `/api/specpilot/listing-decoder-kit`: 제품 API의 `/public/listing-decoder-kit`로 쇼핑몰 상품명/옵션명에서 CPU/GPU/RAM/SSD/OS와 리퍼·전시·해외 조건을 구조화하고 검수 prefill 조회
 - `/api/specpilot/spec-risk-scanner`: 제품 API의 `/public/spec-risk-scanner`, `/public/spec-risk-scanner/result`로 장바구니 옵션명, 최종가, 기대 사양, 배송/반품/AS 증거를 결제 전 blocker/warning으로 검수하고 구매 세이프티 브리프, 판매자 질문, 승인 요약, 캡처 체크리스트를 렌더링
@@ -109,6 +110,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`는 `/public/setup-compatibility-kit`을 구매 챌린지 다음에 렌더링해 CPU/GPU/RAM/SSD/모니터/파워 조합을 먼저 검수하고 분석/장바구니 검수 prefill로 연결한다.
 - `/launch`는 `/public/shopping-cart-intake-kit`을 세팅 호환성 다음에 렌더링해 쇼핑몰 장바구니 텍스트를 총액, 필수 슬롯 누락, 옵션/사양 검수 prefill, 구매 승인 prefill로 변환한다.
 - `/launch`는 `/public/seller-evidence-kit`을 장바구니 인테이크 다음에 렌더링해 실제 출고 사양, 배송, 반품, AS, 리퍼/해외/FreeDOS 조건을 판매자에게 물을 문구와 답변 판정 기준을 보여준다.
+- `/launch`는 `/public/upgrade-readiness-kit`을 세팅 호환성 다음에 렌더링해 RAM/SSD 슬롯, 파워, 케이스, 플랫폼, 노트북 온보드 조건을 목표 보유 기간 기준으로 점수화한다.
 - `/launch`의 옵션/사양 빠른 검수 폼은 `/public/listing-decoder-kit`을 먼저 호출해 쇼핑몰 상품명/옵션명에서 사양과 위험 조건을 구조화하고 검수 prefill을 자동 적용한다.
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/checkout-nudge-kit` 후속 넛지 키트도 호출해 판매자 답변 요청, 가격 재확인, 구매 결과 회수 단계와 복사용 후속 알림을 함께 보여준다.
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/spec-rescue-kit` 대체 후보 rescue도 호출해 보류 후보 대신 비교할 예산 내 대체안, 판매자 확인 메시지, 검색 문구를 함께 보여준다.

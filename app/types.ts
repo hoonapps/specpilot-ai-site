@@ -1525,6 +1525,66 @@ export type PublicFirstBootSetupKit = {
   next_actions: string[];
 };
 
+export type UpgradeReadinessRequest = {
+  category: Category;
+  product_title: string;
+  cpu_platform: string;
+  gpu_name: string;
+  ram_gb: number;
+  ram_slots_total: number;
+  ram_slots_used: number;
+  storage_slots_total: number;
+  storage_slots_used: number;
+  psu_watt: number | null;
+  case_form_factor: string;
+  laptop_ram_upgradeable: boolean | null;
+  laptop_storage_upgradeable: boolean | null;
+  target_years: number;
+  planned_upgrades: string[];
+  constraints: string[];
+  budget_krw: number | null;
+  source: string;
+};
+
+export type UpgradeReadinessItem = {
+  item_id: string;
+  label: string;
+  status: OpsStatus;
+  finding: string;
+  recommendation: string;
+};
+
+export type UpgradePathOption = {
+  path_id: string;
+  label: string;
+  priority: OpsStatus;
+  timing: string;
+  estimated_cost_krw: number;
+  expected_gain: string;
+  evidence_to_confirm: string[];
+};
+
+export type PublicUpgradeReadinessKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  priority: OpsStatus;
+  readiness_score: number;
+  horizon_months: number;
+  headline: string;
+  summary: string;
+  readiness_items: UpgradeReadinessItem[];
+  upgrade_paths: UpgradePathOption[];
+  lifecycle_risks: string[];
+  seller_questions: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

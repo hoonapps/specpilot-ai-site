@@ -12,7 +12,11 @@ import {
   Star,
 } from "lucide-react";
 import { getJson } from "../api/specpilot/_client";
-import type { PublicLaunchRoom, PublicSocialProofWall } from "../types";
+import type {
+  PublicBuyerChecklist,
+  PublicLaunchRoom,
+  PublicSocialProofWall,
+} from "../types";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 
 export const dynamic = "force-dynamic";
@@ -204,6 +208,71 @@ const fallbackSocialProofWall: PublicSocialProofWall = {
   ],
 };
 
+const fallbackBuyerChecklist: PublicBuyerChecklist = {
+  checklist_version: "specpilot.public_buyer_checklist.fallback",
+  generated_at: new Date(0).toISOString(),
+  category: "desktop_pc",
+  persona: "first_pc_buyer",
+  budget_krw: 2_200_000,
+  headline: "데스크톱 PC 구매 전 7개 항목만 확인하면 실패 가능성을 줄일 수 있습니다.",
+  summary:
+    "예산, 필수 조건, 실구매가, 옵션명, 판매자 답변, 결제 전 증거를 한 장으로 정리합니다.",
+  readiness_score: 64,
+  budget_fit: "예산은 맞지만 쿠폰 종료, 배송비, 옵션 변경을 결제 직전 확인해야 합니다.",
+  primary_cta_label: "내 조건으로 분석 시작",
+  primary_cta_anchor: "#analysis",
+  analysis_prefill:
+    "데스크톱을 220만원 안에서 추천해줘. 가격 타이밍과 결제 전 검수까지 같이 봐줘.",
+  sections: [
+    {
+      section_id: "fit",
+      title: "용도와 필수 조건",
+      summary: "성능보다 먼저 사용 목적과 제외 조건을 고정합니다.",
+      items: [
+        {
+          item_id: "purpose",
+          label: "주 사용 목적을 한 문장으로 고정",
+          status: "ok",
+          why_it_matters: "같은 예산에서도 게임, 개발, 영상 편집 우선순위가 다릅니다.",
+          user_input_hint: "예: QHD 게임과 영상 편집, 32GB RAM, RTX 4070급",
+          failure_if_missing: "필요 없는 성능에 과투자할 수 있습니다.",
+        },
+      ],
+    },
+    {
+      section_id: "checkout",
+      title: "결제 전 검수",
+      summary: "모델명, 옵션명, 최종 결제 금액을 주문 직전에 대조합니다.",
+      items: [
+        {
+          item_id: "option_name",
+          label: "리포트 후보와 주문 옵션명 일치 확인",
+          status: "blocker",
+          why_it_matters: "동일 시리즈라도 RAM, SSD, GPU 옵션이 다를 수 있습니다.",
+          user_input_hint: "장바구니 옵션명과 판매 페이지 모델명을 붙여 넣으세요.",
+          failure_if_missing: "비슷한 이름의 하위 옵션을 주문할 수 있습니다.",
+        },
+      ],
+    },
+  ],
+  red_flags: [
+    "최종 결제 금액이 리포트 가격보다 높아졌는데 이유를 설명할 수 없음",
+    "판매 페이지 모델명과 장바구니 옵션명이 다름",
+    "리뷰 반복 불만이나 AS 조건을 확인하지 않음",
+  ],
+  evidence_to_capture: [
+    "최종 결제 화면의 총액, 배송비, 쿠폰/카드 혜택",
+    "장바구니 옵션명과 판매 페이지 모델명",
+    "판매자 답변, 배송 예정일, 반품/AS 조건",
+  ],
+  share_copy:
+    "데스크톱 PC 구매 전에 SpecPilot AI 체크리스트로 실구매가, 옵션명, 결제 전 검수 항목을 확인했습니다.",
+  next_actions: [
+    "체크리스트의 입력 힌트를 분석 요청에 붙여 넣으세요.",
+    "상위 후보가 나오면 공개 리포트로 주변 검토를 먼저 받으세요.",
+  ],
+};
+
 async function loadLaunchRoom(): Promise<{
   room: PublicLaunchRoom;
   isFallback: boolean;
@@ -230,6 +299,20 @@ async function loadSocialProofWall(): Promise<{
   }
 }
 
+async function loadBuyerChecklist(): Promise<{
+  checklist: PublicBuyerChecklist;
+  isFallback: boolean;
+}> {
+  try {
+    const checklist = await getJson<PublicBuyerChecklist>(
+      "/public/buyer-checklist?category=desktop_pc&budget_krw=2200000&persona=creator_gamer",
+    );
+    return { checklist, isFallback: false };
+  } catch {
+    return { checklist: fallbackBuyerChecklist, isFallback: true };
+  }
+}
+
 function tone(status: PublicLaunchRoom["status"] | PublicSocialProofWall["status"]) {
   if (status === "ok") {
     return "ok";
@@ -245,8 +328,15 @@ function hrefFor(path: string) {
 }
 
 export default async function LaunchPage() {
-  const [{ room, isFallback }, { wall, isFallback: proofFallback }] =
-    await Promise.all([loadLaunchRoom(), loadSocialProofWall()]);
+  const [
+    { room, isFallback },
+    { wall, isFallback: proofFallback },
+    { checklist, isFallback: checklistFallback },
+  ] = await Promise.all([
+    loadLaunchRoom(),
+    loadSocialProofWall(),
+    loadBuyerChecklist(),
+  ]);
   const heroPills = room.proof_strip.slice(0, 3);
   const proofMetricCards = [
     ["피드백", wall.metric_cards.feedback_count ?? 0],
@@ -323,6 +413,70 @@ export default async function LaunchPage() {
           <strong>{room.channel_posts.length}개</strong>
           <p>커뮤니티와 지인 공유용</p>
         </article>
+      </section>
+
+      <section className="launchPublicSection launchBuyerChecklist">
+        <div className="sectionHeader">
+          <div>
+            <div className="sectionLabel">
+              <CheckCircle2 size={16} />
+              Buyer checklist
+            </div>
+            <h2>{checklist.headline}</h2>
+            <p>{checklist.summary}</p>
+          </div>
+          <span className={`pill ${tone(checklist.sections[0]?.items[0]?.status ?? "warning")}`}>
+            준비도 {Math.round(checklist.readiness_score)}점
+          </span>
+        </div>
+        <div className="launchBuyerChecklistGrid">
+          <article className="launchBuyerChecklistLead">
+            <span>{checklist.category === "desktop_pc" ? "Desktop PC" : "Laptop"}</span>
+            <strong>{checklist.budget_krw.toLocaleString("ko-KR")}원</strong>
+            <p>{checklist.budget_fit}</p>
+            <a className="miniCta" href={hrefFor(checklist.primary_cta_anchor)}>
+              {checklist.primary_cta_label}
+            </a>
+            {checklistFallback ? (
+              <small>체크리스트 API 폴백</small>
+            ) : (
+              <small>{checklist.checklist_version}</small>
+            )}
+          </article>
+          {checklist.sections.slice(0, 3).map((section) => (
+            <article className="launchBuyerChecklistSection" key={section.section_id}>
+              <span>{section.title}</span>
+              <p>{section.summary}</p>
+              <ul>
+                {section.items.slice(0, 2).map((item) => (
+                  <li key={item.item_id}>
+                    <strong>{item.label}</strong>
+                    <small>{item.failure_if_missing}</small>
+                    <span className={`pill ${tone(item.status)}`}>{item.status}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <div className="launchBuyerChecklistFooter">
+          <div>
+            <strong>결제 전 캡처할 증거</strong>
+            <ul>
+              {checklist.evidence_to_capture.slice(0, 4).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <strong>위험 신호</strong>
+            <ul>
+              {checklist.red_flags.slice(0, 4).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </section>
 
       <section className="launchPublicSection launchSocialProofWall">

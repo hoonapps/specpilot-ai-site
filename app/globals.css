@@ -1647,6 +1647,120 @@ ul {
   font-size: 13px;
 }
 
+.launchBuyerChecklist {
+  gap: 18px;
+}
+
+.launchBuyerChecklistGrid {
+  display: grid;
+  grid-template-columns: 0.9fr repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchBuyerChecklistLead,
+.launchBuyerChecklistSection,
+.launchBuyerChecklistFooter > div {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchBuyerChecklistLead {
+  background: #102b2d;
+  color: #fff;
+}
+
+.launchBuyerChecklistLead span,
+.launchBuyerChecklistLead small,
+.launchBuyerChecklistSection > span {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 950;
+  opacity: 0.76;
+}
+
+.launchBuyerChecklistLead strong {
+  font-size: clamp(26px, 4vw, 42px);
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerChecklistLead p,
+.launchBuyerChecklistSection p,
+.launchBuyerChecklistFooter li {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerChecklistLead p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.launchBuyerChecklistLead .miniCta {
+  width: fit-content;
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.launchBuyerChecklistSection ul,
+.launchBuyerChecklistFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.launchBuyerChecklistSection li {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.launchBuyerChecklistSection li strong,
+.launchBuyerChecklistFooter strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerChecklistSection li small {
+  color: var(--muted);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerChecklistSection li .pill {
+  justify-self: start;
+}
+
+.launchBuyerChecklistFooter {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchBuyerChecklistFooter li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.launchBuyerChecklistFooter li::before {
+  position: absolute;
+  left: 0;
+  content: "•";
+  color: var(--teal);
+  font-weight: 950;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -2732,6 +2846,7 @@ ul {
   .publicGrid,
   .publicConversionPanel,
   .launchPublicMetrics,
+  .launchBuyerChecklistFooter,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchPublicGrid.three,
@@ -2791,6 +2906,7 @@ ul {
   .decisionBoardGrid,
   .marketReportGrid,
   .growthStepGrid,
+  .launchBuyerChecklistGrid,
   .launchDistributionSlotGrid,
   .conciergeResultGrid,
   .launchSocialProofGrid {
@@ -2954,6 +3070,8 @@ ul {
   .publicGrid,
   .publicConversionPanel,
   .launchPublicMetrics,
+  .launchBuyerChecklistGrid,
+  .launchBuyerChecklistFooter,
   .launchSocialProofMetrics,
   .launchSocialProofGrid,
   .launchSocialProofFooter,

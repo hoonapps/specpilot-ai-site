@@ -880,6 +880,42 @@ export type PurchaseOnboardingPlaybook = {
   cta_anchor: string;
 };
 
+export type BuyerChecklistItem = {
+  item_id: string;
+  label: string;
+  status: OpsStatus;
+  why_it_matters: string;
+  user_input_hint: string;
+  failure_if_missing: string;
+};
+
+export type BuyerChecklistSection = {
+  section_id: string;
+  title: string;
+  summary: string;
+  items: BuyerChecklistItem[];
+};
+
+export type PublicBuyerChecklist = {
+  checklist_version: string;
+  generated_at: string;
+  category: Category;
+  persona: string;
+  budget_krw: number;
+  headline: string;
+  summary: string;
+  readiness_score: number;
+  budget_fit: string;
+  primary_cta_label: string;
+  primary_cta_anchor: string;
+  analysis_prefill: string;
+  sections: BuyerChecklistSection[];
+  red_flags: string[];
+  evidence_to_capture: string[];
+  share_copy: string;
+  next_actions: string[];
+};
+
 export type StartConciergeMilestone = {
   step: string;
   title: string;

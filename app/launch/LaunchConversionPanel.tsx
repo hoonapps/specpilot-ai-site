@@ -22,6 +22,14 @@ type PricingPayload = {
   bundle?: PricingOpsBundle;
 };
 
+type LaunchConversionPanelProps = {
+  initialReferralCode?: string;
+  source?: string;
+  surface?: string;
+  title?: string;
+  subtitle?: string;
+};
+
 function statusText(status: FormStatus, sent: string, error: string) {
   if (status === "sending") {
     return "저장 중입니다.";
@@ -45,6 +53,8 @@ function won(value: number | null | undefined) {
 async function recordLaunchEvent(
   event_type: "share_cta" | "subscription_cta",
   label: string,
+  source: string,
+  surface: string,
   metadata?: Record<string, string | number | boolean>,
 ) {
   await fetch("/api/specpilot/growth-funnel", {
@@ -53,8 +63,8 @@ async function recordLaunchEvent(
     body: JSON.stringify({
       event: {
         event_type,
-        source: "specpilot-launch-page",
-        surface: "launch",
+        source,
+        surface,
         label,
         metadata,
       },
@@ -63,7 +73,13 @@ async function recordLaunchEvent(
   });
 }
 
-export function LaunchConversionPanel() {
+export function LaunchConversionPanel({
+  initialReferralCode = "",
+  source = "specpilot-launch-page",
+  surface = "launch",
+  title = "관심을 바로 대기열과 유료 수요로 저장합니다",
+  subtitle,
+}: LaunchConversionPanelProps = {}) {
   const [referralStatus, setReferralStatus] = useState<FormStatus>("idle");
   const [pricingStatus, setPricingStatus] = useState<FormStatus>("idle");
   const [referral, setReferral] = useState<WaitlistReferral | null>(null);
@@ -75,7 +91,7 @@ export function LaunchConversionPanel() {
     email: "",
     persona: "first_pc_buyer",
     useCase: "컴퓨터 또는 노트북 구매 리포트를 먼저 받아보고 싶습니다.",
-    referredByCode: "",
+    referredByCode: initialReferralCode,
     contactConsent: true,
   });
   const [pricingForm, setPricingForm] = useState({
@@ -90,13 +106,13 @@ export function LaunchConversionPanel() {
 
   useEffect(() => {
     const ref = new URLSearchParams(window.location.search).get("ref");
-    if (ref) {
+    if (ref || initialReferralCode) {
       setReferralForm((current) => ({
         ...current,
-        referredByCode: ref,
+        referredByCode: ref || initialReferralCode,
       }));
     }
-  }, []);
+  }, [initialReferralCode]);
 
   async function submitReferral(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -111,7 +127,7 @@ export function LaunchConversionPanel() {
           persona: referralForm.persona,
           use_case: referralForm.useCase,
           referred_by_code: referralForm.referredByCode,
-          source: "specpilot-launch-page",
+          source,
           contact_consent: referralForm.contactConsent,
         }),
       });
@@ -129,9 +145,16 @@ export function LaunchConversionPanel() {
         referredByCode: payload.referral?.referral_code || current.referredByCode,
       }));
       setReferralStatus("sent");
-      await recordLaunchEvent("share_cta", "런칭 페이지 추천 대기열 가입", {
-        referral_code: payload.referral.referral_code,
-      });
+      await recordLaunchEvent(
+        "share_cta",
+        surface === "join" ? "추천 초대 페이지 대기열 가입" : "런칭 페이지 추천 대기열 가입",
+        source,
+        surface,
+        {
+          referral_code: payload.referral.referral_code,
+          referred_by_code: referralForm.referredByCode,
+        },
+      );
     } catch {
       setReferralStatus("error");
     }
@@ -159,7 +182,7 @@ export function LaunchConversionPanel() {
           feature_priorities: ["가격 알림", "공개 리포트", "결제 전 검수"],
           purchase_timing: pricingForm.purchaseTiming,
           contact_consent: pricingForm.contactConsent,
-          source: "specpilot-launch-page",
+          source,
           limit: 20,
         }),
       });
@@ -173,10 +196,16 @@ export function LaunchConversionPanel() {
       setIntent(payload.bundle.created_intent);
       setPricingBundle(payload.bundle);
       setPricingStatus("sent");
-      await recordLaunchEvent("subscription_cta", "런칭 페이지 요금제 관심 등록", {
-        plan_id: pricingForm.planId,
-        billing_cycle: pricingForm.billingCycle,
-      });
+      await recordLaunchEvent(
+        "subscription_cta",
+        surface === "join" ? "추천 초대 페이지 요금제 관심 등록" : "런칭 페이지 요금제 관심 등록",
+        source,
+        surface,
+        {
+          plan_id: pricingForm.planId,
+          billing_cycle: pricingForm.billingCycle,
+        },
+      );
     } catch {
       setPricingStatus("error");
     }
@@ -190,7 +219,8 @@ export function LaunchConversionPanel() {
             <MailPlus size={16} />
             Launch conversion
           </div>
-          <h2>관심을 바로 대기열과 유료 수요로 저장합니다</h2>
+          <h2>{title}</h2>
+          {subtitle ? <p>{subtitle}</p> : null}
         </div>
         {referralDashboard ? (
           <span className="pill ok">

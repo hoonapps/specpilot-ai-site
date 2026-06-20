@@ -1751,6 +1751,105 @@ ul {
   overflow-wrap: anywhere;
 }
 
+.joinPublicHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.4fr);
+  gap: 18px;
+  align-items: stretch;
+  margin: 18px 24px 34px;
+}
+
+.joinHeroCopy,
+.joinInviteCard,
+.joinTrustBand {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.joinHeroCopy {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  min-height: 420px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(244, 246, 242, 0.98) 0%,
+      rgba(244, 246, 242, 0.9) 48%,
+      rgba(244, 246, 242, 0.52) 100%
+    ),
+    url("/product-workbench.png") center right / cover no-repeat;
+  padding: clamp(28px, 5vw, 58px);
+}
+
+.joinHeroCopy h1 {
+  max-width: 760px;
+  margin: 0;
+}
+
+.joinHeroCopy p {
+  max-width: 720px;
+  margin: 0;
+  font-size: 18px;
+}
+
+.joinInviteCard {
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.joinInviteCard span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.joinInviteCard strong {
+  color: var(--teal);
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.joinInviteCard p {
+  margin: 0;
+}
+
+.joinTrustBand {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.55fr);
+  gap: 18px;
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.joinTrustBand p {
+  margin-bottom: 0;
+}
+
+.joinTrustList {
+  display: grid;
+  gap: 10px;
+  align-content: center;
+}
+
+.joinTrustList span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #fbfffc;
+  color: var(--ink);
+  padding: 12px;
+  font-weight: 900;
+}
+
 .purchaseLinkGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2216,6 +2315,8 @@ ul {
   .launchPublicMetrics,
   .launchPublicGrid.three,
   .launchConversionGrid,
+  .joinPublicHero,
+  .joinTrustBand,
   .launchSharePanel,
   .purchaseLinkGrid,
   .trustPanel,
@@ -2376,6 +2477,8 @@ ul {
   .publicHeroCard,
   .launchPublicHero,
   .launchPublicHeroContent,
+  .joinHeroCopy,
+  .joinInviteCard,
   .card,
   .scenarioCard,
   .stressCard,
@@ -2425,6 +2528,8 @@ ul {
   .launchPublicGrid.three,
   .launchMarketGrid,
   .launchConversionGrid,
+  .joinPublicHero,
+  .joinTrustBand,
   .launchSharePanel,
   .purchaseLinkGrid,
   .sourceMonitorGrid,
@@ -2473,5 +2578,22 @@ ul {
 
   .launchMarketCard dl {
     grid-template-columns: 1fr;
+  }
+
+  .joinPublicHero {
+    margin-right: 14px;
+    margin-left: 14px;
+  }
+
+  .joinHeroCopy {
+    min-height: auto;
+    background:
+      linear-gradient(rgba(244, 246, 242, 0.94), rgba(244, 246, 242, 0.98)),
+      url("/product-workbench.png") center top / cover no-repeat;
+    padding: 24px 18px;
+  }
+
+  .joinHeroCopy p {
+    font-size: 16px;
   }
 }

@@ -26,6 +26,7 @@ import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
+import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
@@ -871,6 +872,8 @@ export default async function LaunchPage() {
       </section>
 
       <StartConciergePanel />
+
+      <LaunchExperimentStrip />
 
       <section className="launchPublicSection launchBuyerChecklist" id="buyer-checklist">
         <div className="sectionHeader">

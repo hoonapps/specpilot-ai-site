@@ -1864,6 +1864,169 @@ ul {
   padding: clamp(18px, 3vw, 28px);
 }
 
+.launchExperimentStrip {
+  gap: 18px;
+  border: 1px solid rgba(184, 119, 33, 0.2);
+  background: #fffaf1;
+}
+
+.launchExperimentStripGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 14px;
+}
+
+.launchExperimentWinner,
+.launchExperimentVariantGrid article {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(184, 119, 33, 0.18);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: clamp(14px, 2.4vw, 18px);
+}
+
+.launchExperimentWinner {
+  align-content: start;
+  background: #231f18;
+  color: #fff;
+}
+
+.launchExperimentWinner h3,
+.launchExperimentWinner p,
+.launchExperimentWinner small,
+.launchExperimentVariantGrid strong,
+.launchExperimentVariantGrid p,
+.launchExperimentVariantGrid small,
+.launchExperimentStripFooter span {
+  overflow-wrap: anywhere;
+}
+
+.launchExperimentWinner h3 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(24px, 3.4vw, 38px);
+  line-height: 1.08;
+}
+
+.launchExperimentWinner p,
+.launchExperimentWinner small {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.6;
+}
+
+.launchExperimentWinner button,
+.launchExperimentStripFooter button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 8px;
+  background: #b87721;
+  color: #fff;
+  padding: 0 14px;
+  font-weight: 950;
+}
+
+.launchExperimentWinner button {
+  width: fit-content;
+  background: #fff;
+  color: #231f18;
+}
+
+.launchExperimentWinner button:disabled,
+.launchExperimentStripFooter button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.launchExperimentWinnerStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.launchExperimentWinnerStats div {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 10px;
+}
+
+.launchExperimentWinnerStats span {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchExperimentWinnerStats strong {
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.18;
+}
+
+.launchExperimentVariantGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchExperimentVariantGrid article {
+  align-content: start;
+  background: #fffdf8;
+}
+
+.launchExperimentVariantGrid article > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.launchExperimentVariantGrid strong {
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.launchExperimentVariantGrid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.launchExperimentVariantGrid small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.launchExperimentStripFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchExperimentStripFooter button:nth-child(2) {
+  border: 1px solid rgba(184, 119, 33, 0.25);
+  background: #fff;
+  color: #8b570f;
+}
+
+.launchExperimentStripFooter span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+}
+
 .launchBuyerChecklist {
   gap: 18px;
 }
@@ -4280,6 +4443,7 @@ ul {
   .publicConversionPanel,
   .launchPublicMetrics,
   .launchStartConciergeGrid,
+  .launchExperimentStripGrid,
   .launchBuyerChecklistFooter,
   .launchPersonaResultGrid,
   .launchPersonaColumns,
@@ -4360,6 +4524,8 @@ ul {
   .launchStartConciergeControls,
   .launchStartConciergeMetrics,
   .launchStartConciergeMilestones,
+  .launchExperimentVariantGrid,
+  .launchExperimentWinnerStats,
   .launchCandidateControls,
   .launchCandidateItems,
   .launchCandidateLeadStats,
@@ -4535,6 +4701,9 @@ ul {
   .launchStartConciergeControls,
   .launchStartConciergeMetrics,
   .launchStartConciergeMilestones,
+  .launchExperimentStripGrid,
+  .launchExperimentVariantGrid,
+  .launchExperimentWinnerStats,
   .launchBuyerChecklistGrid,
   .launchBuyerChecklistFooter,
   .launchBuyerChallengeGrid,

@@ -4,6 +4,7 @@ import type {
   LaunchExperiment,
   LaunchExperimentDashboard,
   LaunchExperimentEvent,
+  LaunchExperimentEventRequest,
   LaunchExperimentRequest,
 } from "../../../types";
 import { getJson, postJson } from "../_client";
@@ -142,12 +143,47 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const payload = (await request.json()) as {
-    action?: "seed_experiment";
+    action?: "seed_experiment" | "record_event";
     category?: Category | "all";
+    event_type?: LaunchExperimentEventRequest["event_type"];
+    experiment_id?: string;
+    label?: string;
     limit?: number;
+    metadata?: Record<string, string | number | boolean>;
+    source?: string;
+    surface?: string;
+    variant_id?: string;
   };
 
   try {
+    if (payload.action === "record_event") {
+      if (!payload.experiment_id || !payload.variant_id) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error: "실험 ID와 variant ID가 필요합니다.",
+          },
+          { status: 400 },
+        );
+      }
+      const event = await postJson<LaunchExperimentEvent>(
+        `/growth/launch-experiments/${encodeURIComponent(payload.experiment_id)}/events`,
+        {
+          variant_id: payload.variant_id,
+          event_type: payload.event_type || "impression",
+          source: payload.source || "site-launch-page",
+          surface: payload.surface || "launch-page",
+          label: payload.label || "런칭 페이지 CTA 이벤트",
+          metadata: payload.metadata,
+        },
+      );
+      return NextResponse.json({
+        ok: true,
+        event,
+        dashboard: await loadDashboard(String(payload.limit || 20)),
+      });
+    }
+
     const experiment = await postJson<LaunchExperiment>(
       "/growth/launch-experiments",
       seedExperiment(payload.category || "all"),

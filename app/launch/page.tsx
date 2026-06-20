@@ -21,6 +21,7 @@ import type {
   PublicDealTimingWindow,
   PublicLaunchRoom,
   PublicLaunchRoomCard,
+  PublicPriceWatchKit,
   PublicSocialProofWall,
   PublicSpecRiskScanner,
 } from "../types";
@@ -779,6 +780,83 @@ const fallbackDealTimingWindow: PublicDealTimingWindow = {
   ],
 };
 
+const fallbackPriceWatchKit: PublicPriceWatchKit = {
+  watch_version: "specpilot.public_price_watch_kit.fallback",
+  generated_at: new Date(0).toISOString(),
+  category: "desktop_pc",
+  budget_krw: 2_200_000,
+  purpose: "qhd_creator",
+  headline: "데스크톱 PC 목표가를 놓치지 않도록 대기 조건을 알림으로 바꿉니다.",
+  summary:
+    "가격 비교 후 '조금 더 기다릴까'에서 멈추지 않도록 후보별 목표가, 알림 기준, 재확인 주기, 결제 판단 문구를 한 번에 제공합니다.",
+  watched_count: 3,
+  immediate_buy_count: 2,
+  total_target_savings_krw: 1_061_000,
+  primary_watch_product_id: "build-official-safe",
+  primary_watch_label: "목표가 근접 알림",
+  candidates: [
+    {
+      product_id: "build-creator-4070s",
+      model_name: "Creator RTX 4070 SUPER Build",
+      status: "ok",
+      current_price_krw: 2_185_000,
+      target_price_krw: 2_097_000,
+      target_gap_krw: 88_000,
+      alert_threshold_krw: 2_185_000,
+      cadence: "결제 전 1회 최종 확인",
+      alert_reason: "이미 예산권이라 옵션명과 최종 결제 금액만 틀어지지 않으면 됩니다.",
+      notification_copy:
+        "Creator RTX 4070 SUPER Build 최종가가 2,185,000원입니다. 옵션/AS 조건 확인 후 결제하세요.",
+      decision_rule: "장바구니 가격, 배송비, 판매자, 반품/AS 조건이 현재 스냅샷과 같으면 결제합니다.",
+      fallback_action: "조건이 달라졌다면 공개 후보 비교표로 같은 예산대 대체 후보를 다시 확인합니다.",
+    },
+    {
+      product_id: "build-official-safe",
+      model_name: "Official Store Creator PC",
+      status: "warning",
+      current_price_krw: 2_240_000,
+      target_price_krw: 2_105_000,
+      target_gap_krw: 135_000,
+      alert_threshold_krw: 2_126_050,
+      cadence: "매일 오전 1회, 쿠폰/카드 조건 변동 시 즉시 확인",
+      alert_reason: "목표가까지 135,000원 차이라 쿠폰/카드 조건 한 번으로 결제권에 들어올 수 있습니다.",
+      notification_copy:
+        "Official Store Creator PC가 2,126,050원 이하로 내려왔습니다. 결제 전 판매자와 배송비를 확인하세요.",
+      decision_rule: "목표가 이하이면서 판매자/배송비/쿠폰 조건이 바뀌지 않았을 때만 결제 검토합니다.",
+      fallback_action: "48시간 안에 목표가가 오지 않으면 현재 결제 가능 후보와 다시 비교합니다.",
+    },
+    {
+      product_id: "build-4080s-pro",
+      model_name: "Creator RTX 4080 SUPER Pro",
+      status: "blocker",
+      current_price_krw: 2_890_000,
+      target_price_krw: 2_200_000,
+      target_gap_krw: 690_000,
+      alert_threshold_krw: 2_200_000,
+      cadence: "3일마다 확인, 목표가 도달 알림만 즉시 확인",
+      alert_reason: "목표가까지 690,000원 이상 차이가 있어 대기 없이는 과소비 가능성이 큽니다.",
+      notification_copy:
+        "Creator RTX 4080 SUPER Pro가 2,200,000원 이하로 내려왔습니다. 예산 승인 후에만 검토하세요.",
+      decision_rule: "목표가 이하로 내려와도 예산 승인 또는 고성능 작업 목적이 확정되지 않으면 보류합니다.",
+      fallback_action: "7일 안에 목표가가 오지 않으면 예산을 유지하고 상위 후보를 제외합니다.",
+    },
+  ],
+  alert_script:
+    "데스크톱 PC 3개 후보를 목표가 알림에 등록합니다. 1순위는 Official Store Creator PC, 기준가는 2,126,050원입니다. 알림이 오면 옵션명, 판매자, 배송비, 쿠폰/카드 조건을 캡처한 뒤 결제 판단으로 이동하세요.",
+  analysis_prefill:
+    "데스크톱 PC를 2,200,000원 예산으로 구매하려고 해. 목적은 qhd_creator이고 Official Store Creator PC를 2,126,050원 이하 목표가로 감시하려고 해. 알림이 왔을 때 바로 결제해도 되는지 옵션/판매자/배송비/AS 조건까지 검수해줘.",
+  share_copy:
+    "SpecPilot AI 공개 목표가 감시\n- 카테고리: 데스크톱 PC\n- 예산: 2,200,000원\n- 1순위 알림: Official Store Creator PC\n- Creator RTX 4070 SUPER Build: 현재 2,185,000원, 알림 2,185,000원\n- Official Store Creator PC: 현재 2,240,000원, 알림 2,126,050원\n- Creator RTX 4080 SUPER Pro: 현재 2,890,000원, 알림 2,200,000원\n목표가가 오면 바로 결제할지, 대체 후보로 갈지 의견 부탁드립니다.",
+  primary_cta_label: "목표가 조건으로 분석 시작",
+  primary_cta_path: "#analysis",
+  next_actions: [
+    "목표가 후보는 가격만 보지 말고 판매자, 배송비, 쿠폰/카드 조건까지 같은 알림 메모에 남기세요.",
+    "알림이 오면 장바구니 캡처를 먼저 만들고 옵션/사양 빠른 검수기로 마지막 오구매를 막으세요.",
+    "48시간 이상 목표가가 오지 않으면 현재 결제 가능 후보와 가격 차이를 다시 비교하세요.",
+    "즉시 결제 후보는 목표가 알림이 아니라 결제 전 조건 변경 감시로 분리하세요.",
+  ],
+};
+
 async function loadLaunchRoom(): Promise<{
   room: PublicLaunchRoom;
   isFallback: boolean;
@@ -886,6 +964,20 @@ async function loadDealTimingWindow(): Promise<{
     return { timing, isFallback: false };
   } catch {
     return { timing: fallbackDealTimingWindow, isFallback: true };
+  }
+}
+
+async function loadPriceWatchKit(): Promise<{
+  watchKit: PublicPriceWatchKit;
+  isFallback: boolean;
+}> {
+  try {
+    const watchKit = await getJson<PublicPriceWatchKit>(
+      "/public/price-watch-kit?category=desktop_pc&budget_krw=2200000&purpose=qhd_creator",
+    );
+    return { watchKit, isFallback: false };
+  } catch {
+    return { watchKit: fallbackPriceWatchKit, isFallback: true };
   }
 }
 
@@ -1014,6 +1106,7 @@ export default async function LaunchPage() {
     { scanner: specScanner, isFallback: scannerFallback },
     { compare: candidateCompare, isFallback: compareFallback },
     { timing: dealTiming, isFallback: dealTimingFallback },
+    { watchKit: priceWatchKit, isFallback: priceWatchFallback },
   ] = await Promise.all([
     loadLaunchRoom(),
     loadSocialProofWall(),
@@ -1023,6 +1116,7 @@ export default async function LaunchPage() {
     loadSpecRiskScanner(),
     loadCandidateCompare(),
     loadDealTimingWindow(),
+    loadPriceWatchKit(),
   ]);
   const heroPills = room.proof_strip.slice(0, 3);
   const publicMetrics = publicMetricCards(room, wall, checklist);
@@ -1312,7 +1406,8 @@ export default async function LaunchPage() {
 
       <DealTimingWindowPanel
         timing={dealTiming}
-        isFallback={dealTimingFallback}
+        watchKit={priceWatchKit}
+        isFallback={dealTimingFallback || priceWatchFallback}
       />
 
       <section className="launchPublicSection launchSocialProofWall">

@@ -1333,6 +1333,43 @@ export type PublicDealTimingWindow = {
   next_actions: string[];
 };
 
+export type PriceWatchCandidate = {
+  product_id: string;
+  model_name: string;
+  status: "ok" | "warning" | "blocker";
+  current_price_krw: number;
+  target_price_krw: number;
+  target_gap_krw: number;
+  alert_threshold_krw: number;
+  cadence: string;
+  alert_reason: string;
+  notification_copy: string;
+  decision_rule: string;
+  fallback_action: string;
+};
+
+export type PublicPriceWatchKit = {
+  watch_version: string;
+  generated_at: string;
+  category: Category;
+  budget_krw: number;
+  purpose: string;
+  headline: string;
+  summary: string;
+  watched_count: number;
+  immediate_buy_count: number;
+  total_target_savings_krw: number;
+  primary_watch_product_id: string | null;
+  primary_watch_label: string;
+  candidates: PriceWatchCandidate[];
+  alert_script: string;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type StartConciergeMilestone = {
   step: string;
   title: string;

@@ -8,13 +8,21 @@ import {
   LoaderCircle,
   RefreshCw,
   ShieldAlert,
+  Target,
   Wallet,
 } from "lucide-react";
-import type { Category, DealWindow, PublicDealTimingWindow } from "../types";
+import type {
+  Category,
+  DealWindow,
+  PriceWatchCandidate,
+  PublicDealTimingWindow,
+  PublicPriceWatchKit,
+} from "../types";
 import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 
 type DealTimingWindowPanelProps = {
   timing: PublicDealTimingWindow;
+  watchKit: PublicPriceWatchKit;
   isFallback?: boolean;
 };
 
@@ -61,6 +69,50 @@ function findLead(data: PublicDealTimingWindow) {
   return data.windows.find((window) => window.product_id === data.lead_product_id) ?? data.windows[0] ?? null;
 }
 
+function findPrimaryWatch(data: PublicPriceWatchKit) {
+  if (!data.primary_watch_product_id) {
+    return data.candidates[0] ?? null;
+  }
+  return (
+    data.candidates.find((candidate) => candidate.product_id === data.primary_watch_product_id) ??
+    data.candidates[0] ??
+    null
+  );
+}
+
+function watchLabel(status: PriceWatchCandidate["status"]) {
+  if (status === "ok") {
+    return "결제 확인";
+  }
+  return status === "blocker" ? "보류 감시" : "근접 감시";
+}
+
+function WatchCandidateCard({ candidate }: { candidate: PriceWatchCandidate }) {
+  return (
+    <article className="launchDealWatchCard">
+      <div className="launchDealWindowHeader">
+        <span className={`pill ${tone(candidate.status)}`}>{watchLabel(candidate.status)}</span>
+        <small>{candidate.target_gap_krw > 0 ? won(candidate.target_gap_krw) : "조건 확인"}</small>
+      </div>
+      <h3>{candidate.model_name}</h3>
+      <div className="launchDealWindowNumbers">
+        <div>
+          <span>현재가</span>
+          <strong>{won(candidate.current_price_krw)}</strong>
+        </div>
+        <div>
+          <span>알림 기준</span>
+          <strong>{won(candidate.alert_threshold_krw)}</strong>
+        </div>
+      </div>
+      <p>{candidate.cadence}</p>
+      <p>{candidate.alert_reason}</p>
+      <strong>{candidate.decision_rule}</strong>
+      <small>{candidate.fallback_action}</small>
+    </article>
+  );
+}
+
 function WindowCard({ window }: { window: DealWindow }) {
   return (
     <article className="launchDealWindowCard">
@@ -97,9 +149,11 @@ function WindowCard({ window }: { window: DealWindow }) {
 
 export function DealTimingWindowPanel({
   timing,
+  watchKit,
   isFallback = false,
 }: DealTimingWindowPanelProps) {
   const [data, setData] = useState(timing);
+  const [watchData, setWatchData] = useState(watchKit);
   const [form, setForm] = useState<FormState>({
     category: timing.category,
     budget: String(timing.budget_krw),
@@ -107,7 +161,9 @@ export function DealTimingWindowPanel({
   });
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [watchCopyStatus, setWatchCopyStatus] = useState<"idle" | "copied" | "error">("idle");
   const lead = useMemo(() => findLead(data), [data]);
+  const primaryWatch = useMemo(() => findPrimaryWatch(watchData), [watchData]);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -116,19 +172,29 @@ export function DealTimingWindowPanel({
   async function refresh() {
     setStatus("loading");
     setCopyStatus("idle");
+    setWatchCopyStatus("idle");
     try {
-      const response = await fetch(`/api/specpilot/deal-timing-window?${buildQuery(form)}`);
-      if (!response.ok) {
-        throw new Error(`deal timing ${response.status}`);
+      const query = buildQuery(form);
+      const [timingResponse, watchResponse] = await Promise.all([
+        fetch(`/api/specpilot/deal-timing-window?${query}`),
+        fetch(`/api/specpilot/price-watch-kit?${query}`),
+      ]);
+      if (!timingResponse.ok || !watchResponse.ok) {
+        throw new Error(`deal timing ${timingResponse.status} watch ${watchResponse.status}`);
       }
-      const payload = (await response.json()) as {
+      const timingPayload = (await timingResponse.json()) as {
         ok: boolean;
         timing?: PublicDealTimingWindow;
       };
-      if (!payload.ok || !payload.timing) {
+      const watchPayload = (await watchResponse.json()) as {
+        ok: boolean;
+        watchKit?: PublicPriceWatchKit;
+      };
+      if (!timingPayload.ok || !timingPayload.timing || !watchPayload.ok || !watchPayload.watchKit) {
         throw new Error("deal timing rejected");
       }
-      setData(payload.timing);
+      setData(timingPayload.timing);
+      setWatchData(watchPayload.watchKit);
       setStatus("idle");
     } catch {
       setStatus("error");
@@ -141,6 +207,15 @@ export function DealTimingWindowPanel({
       setCopyStatus("copied");
     } catch {
       setCopyStatus("error");
+    }
+  }
+
+  async function copyWatch() {
+    try {
+      await navigator.clipboard.writeText(watchData.share_copy);
+      setWatchCopyStatus("copied");
+    } catch {
+      setWatchCopyStatus("error");
     }
   }
 
@@ -226,6 +301,11 @@ export function DealTimingWindowPanel({
           <span>목표 절감</span>
           <strong>{won(data.target_savings_krw)}</strong>
         </article>
+        <article>
+          <Target size={16} />
+          <span>알림 후보</span>
+          <strong>{watchData.watched_count}개</strong>
+        </article>
       </div>
 
       <div className="launchDealTimingGrid">
@@ -276,6 +356,63 @@ export function DealTimingWindowPanel({
                 : "공유 문구 복사"}
           </button>
         </article>
+      </div>
+
+      <div className="launchDealWatch">
+        <article className="launchDealWatchLead">
+          <div className="sectionLabel">
+            <BellRing size={16} />
+            목표가 감시 키트
+          </div>
+          <h3>{watchData.headline}</h3>
+          <p>{watchData.summary}</p>
+          {primaryWatch ? (
+            <div className="launchDealLeadNumbers">
+              <div>
+                <span>1순위</span>
+                <strong>{primaryWatch.model_name}</strong>
+              </div>
+              <div>
+                <span>알림 기준</span>
+                <strong>{won(primaryWatch.alert_threshold_krw)}</strong>
+              </div>
+            </div>
+          ) : null}
+          <p>{watchData.alert_script}</p>
+          <LaunchAnalysisLink
+            className="miniCta"
+            handoff={{
+              source: "price-watch-kit",
+              label: watchData.primary_cta_label,
+              query: watchData.analysis_prefill,
+              category: watchData.category,
+              budget_krw: watchData.budget_krw,
+              purpose: watchData.purpose,
+            }}
+          >
+            {watchData.primary_cta_label}
+          </LaunchAnalysisLink>
+        </article>
+        <article className="launchDealCopy">
+          <strong>{watchData.primary_watch_label}</strong>
+          <p>{watchData.analysis_prefill}</p>
+          <strong>목표가 알림 공유 문구</strong>
+          <pre>{watchData.share_copy}</pre>
+          <button type="button" onClick={copyWatch}>
+            <Copy size={15} />
+            {watchCopyStatus === "copied"
+              ? "복사 완료"
+              : watchCopyStatus === "error"
+                ? "복사 실패"
+                : "알림 문구 복사"}
+          </button>
+        </article>
+      </div>
+
+      <div className="launchDealWatchGrid">
+        {watchData.candidates.slice(0, 3).map((candidate) => (
+          <WatchCandidateCard key={candidate.product_id} candidate={candidate} />
+        ))}
       </div>
 
       <div className="launchDealWindowGrid">

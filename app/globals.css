@@ -3503,18 +3503,22 @@ ul {
 
 .launchDealTimingMetrics,
 .launchDealTimingGrid,
+.launchDealWatch,
+.launchDealWatchGrid,
 .launchDealWindowGrid {
   display: grid;
   gap: 12px;
 }
 
 .launchDealTimingMetrics {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .launchDealTimingMetrics article,
 .launchDealLead,
+.launchDealWatchLead,
 .launchDealCopy,
+.launchDealWatchCard,
 .launchDealWindowCard {
   display: grid;
   min-width: 0;
@@ -3553,6 +3557,52 @@ ul {
   align-content: start;
   background: #192f43;
   color: #fff;
+}
+
+.launchDealWatch {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+}
+
+.launchDealWatchLead {
+  align-content: start;
+  background: #f4faf7;
+}
+
+.launchDealWatchLead h3,
+.launchDealWatchCard h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(20px, 2.3vw, 28px);
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+}
+
+.launchDealWatchLead p,
+.launchDealWatchCard p,
+.launchDealWatchCard small {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.launchDealWatchLead .miniCta {
+  width: fit-content;
+}
+
+.launchDealWatchGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchDealWatchCard {
+  align-content: start;
+  background: #fff;
+}
+
+.launchDealWatchCard strong {
+  color: var(--ink);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .launchDealLead span,
@@ -7546,6 +7596,8 @@ ul {
   .launchCandidateAxes,
   .launchCandidateScenarios,
   .launchDealTimingGrid,
+  .launchDealWatch,
+  .launchDealWatchGrid,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchObjectionHero,
@@ -7664,6 +7716,8 @@ ul {
   .launchCandidateLeadStats,
   .launchDealTimingControls,
   .launchDealTimingMetrics,
+  .launchDealWatch,
+  .launchDealWatchGrid,
   .launchDealWindowGrid,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
@@ -7929,6 +7983,8 @@ ul {
   .launchDealTimingGrid,
   .launchDealTimingControls,
   .launchDealTimingMetrics,
+  .launchDealWatch,
+  .launchDealWatchGrid,
   .launchDealLeadNumbers,
   .launchDealWindowGrid,
   .launchPersonaQuestionGrid,

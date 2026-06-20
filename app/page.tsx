@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Gauge,
   Laptop,
+  Link2,
   Loader2,
   Monitor,
   ShieldCheck,
@@ -33,6 +34,8 @@ import type {
   LaunchReadinessBundle,
   OpsLearningDashboard,
   OpsStatus,
+  PurchaseLink,
+  PurchaseLinkGovernance,
   PurchaseOutcome,
   PurchaseOutcomeStatus,
   ReportAdvisorAnswer,
@@ -170,6 +173,23 @@ export default function Home() {
     useState<AlertSubscription | null>(null);
   const [latestAlertEvaluation, setLatestAlertEvaluation] =
     useState<AlertEvaluationResponse | null>(null);
+  const [purchaseLink, setPurchaseLink] = useState({
+    sellerName: "공식 스토어",
+    url: "https://shop.example.com/specpilot-desktop",
+    affiliateNetwork: "specpilot-partner",
+    price: String(
+      demoResponse.report.top_recommendations[0]?.price.effective_price_krw || "",
+    ),
+    shippingFee: "0",
+    coupon: "0",
+  });
+  const [purchaseLinkStatus, setPurchaseLinkStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestPurchaseLink, setLatestPurchaseLink] =
+    useState<PurchaseLink | null>(null);
+  const [latestPurchaseLinkGovernance, setLatestPurchaseLinkGovernance] =
+    useState<PurchaseLinkGovernance | null>(null);
   const [checkoutReview, setCheckoutReview] = useState({
     confirmedPrice: "",
     sellerAnswer: "판매 페이지 옵션명, 배송비, 카드 혜택, 반품 조건 확인 완료",
@@ -269,6 +289,9 @@ export default function Home() {
     setAlertEvalStatus("idle");
     setLatestAlertSubscription(null);
     setLatestAlertEvaluation(null);
+    setPurchaseLinkStatus("idle");
+    setLatestPurchaseLink(null);
+    setLatestPurchaseLinkGovernance(null);
     setCheckoutStatus("idle");
     setLatestCheckoutReview(null);
     setOutcomeStatus("idle");
@@ -313,6 +336,13 @@ export default function Home() {
             current.finalPaidPrice,
         ),
       }));
+      setPurchaseLink((current) => ({
+        ...current,
+        price: String(
+          data.analysis.report.top_recommendations[0]?.price.effective_price_krw ||
+            current.price,
+        ),
+      }));
       const nextAlert =
         data.analysis.report.price_alerts[0] || data.analysis.report.deal_windows[0];
       if (nextAlert) {
@@ -336,6 +366,8 @@ export default function Home() {
       setLatestAdvisorAnswer(null);
       setLatestAlertSubscription(null);
       setLatestAlertEvaluation(null);
+      setLatestPurchaseLink(null);
+      setLatestPurchaseLinkGovernance(null);
       setLatestCheckoutReview(null);
       setLatestPurchaseOutcome(null);
       setLatestLearningDashboard(null);
@@ -496,6 +528,80 @@ export default function Home() {
       setAlertEvalStatus("sent");
     } catch {
       setAlertEvalStatus("error");
+    }
+  }
+
+  async function savePurchaseLink(isAffiliate: boolean) {
+    setPurchaseLinkStatus("sending");
+
+    try {
+      if (!savedReportId) {
+        throw new Error("missing report");
+      }
+      const response = await fetch("/api/specpilot/purchase-links", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          report_id: savedReportId,
+          product_id: result.report.final_pick_id || top.product.id,
+          seller_name: purchaseLink.sellerName,
+          url: purchaseLink.url,
+          is_affiliate: isAffiliate,
+          affiliate_network: isAffiliate ? purchaseLink.affiliateNetwork : "",
+          price_krw: Number(purchaseLink.price || 0) || null,
+          shipping_fee_krw: Number(purchaseLink.shippingFee || 0),
+          coupon_krw: Number(purchaseLink.coupon || 0),
+          rank: isAffiliate ? 1 : 2,
+          active: true,
+          notes: isAffiliate ? "웹사이트 제휴 구매 링크" : "웹사이트 비제휴 대안 링크",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`purchase link ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        link?: PurchaseLink;
+        governance?: PurchaseLinkGovernance;
+      };
+      if (!payload.ok || !payload.link || !payload.governance) {
+        throw new Error("purchase link rejected");
+      }
+      setLatestPurchaseLink(payload.link);
+      setLatestPurchaseLinkGovernance(payload.governance);
+      setPurchaseLinkStatus("sent");
+    } catch {
+      setPurchaseLinkStatus("error");
+    }
+  }
+
+  async function loadPurchaseLinkGovernance() {
+    setPurchaseLinkStatus("sending");
+
+    try {
+      if (!savedReportId) {
+        throw new Error("missing report");
+      }
+      const response = await fetch(
+        `/api/specpilot/purchase-links?report_id=${encodeURIComponent(savedReportId)}`,
+        {
+          method: "GET",
+        },
+      );
+      if (!response.ok) {
+        throw new Error(`purchase link governance ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        governance?: PurchaseLinkGovernance;
+      };
+      if (!payload.ok || !payload.governance) {
+        throw new Error("purchase link governance rejected");
+      }
+      setLatestPurchaseLinkGovernance(payload.governance);
+      setPurchaseLinkStatus("sent");
+    } catch {
+      setPurchaseLinkStatus("error");
     }
   }
 
@@ -779,6 +885,7 @@ export default function Home() {
           </a>
           <a href="#analysis">분석</a>
           <a href="#price-alert">가격 알림</a>
+          <a href="#purchase-links">구매 링크</a>
           <a href="#source-check">상품 검수</a>
           <a href="#checkout-review">결제 검수</a>
           <a href="#purchase-outcome">구매 결과</a>
@@ -1218,6 +1325,213 @@ export default function Home() {
                 </ul>
               </div>
             </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="purchaseLinkPanel" id="purchase-links">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Link2 size={16} />
+            구매 링크 거버넌스
+          </div>
+          <h2>제휴 링크와 비제휴 대안을 함께 관리합니다</h2>
+          <p>
+            저장 리포트 후보에 판매처 링크를 붙이고, 제휴 고지와 비제휴 대안
+            정책을 공개 전 확인합니다. 공개 리포트의 링크는 내부 redirect로
+            클릭 지표를 남깁니다.
+          </p>
+          <div className="advisorMeta">
+            <span className={savedReportId ? "pill ok" : "pill warn"}>
+              {savedReportId ? `Report ${savedReportId}` : "라이브 분석 필요"}
+            </span>
+            <span
+              className={`pill ${
+                latestPurchaseLinkGovernance
+                  ? gateTone(latestPurchaseLinkGovernance.status)
+                  : "warn"
+              }`}
+            >
+              {latestPurchaseLinkGovernance
+                ? `governance ${latestPurchaseLinkGovernance.status}`
+                : "거버넌스 미조회"}
+            </span>
+          </div>
+        </div>
+
+        <div className="conversionForm advisorForm">
+          <div className="fieldGrid">
+            <label>
+              판매처
+              <input
+                value={purchaseLink.sellerName}
+                onChange={(event) =>
+                  setPurchaseLink((current) => ({
+                    ...current,
+                    sellerName: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              구매 URL
+              <input
+                value={purchaseLink.url}
+                onChange={(event) =>
+                  setPurchaseLink((current) => ({
+                    ...current,
+                    url: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <div className="fieldGrid">
+            <label>
+              표시 가격
+              <input
+                inputMode="numeric"
+                value={purchaseLink.price}
+                onChange={(event) =>
+                  setPurchaseLink((current) => ({
+                    ...current,
+                    price: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              제휴 네트워크
+              <input
+                value={purchaseLink.affiliateNetwork}
+                onChange={(event) =>
+                  setPurchaseLink((current) => ({
+                    ...current,
+                    affiliateNetwork: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <div className="fieldGrid">
+            <label>
+              배송비
+              <input
+                inputMode="numeric"
+                value={purchaseLink.shippingFee}
+                onChange={(event) =>
+                  setPurchaseLink((current) => ({
+                    ...current,
+                    shippingFee: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              쿠폰/할인
+              <input
+                inputMode="numeric"
+                value={purchaseLink.coupon}
+                onChange={(event) =>
+                  setPurchaseLink((current) => ({
+                    ...current,
+                    coupon: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <div className="alertActionGrid">
+            <button
+              type="button"
+              disabled={purchaseLinkStatus === "sending" || !savedReportId}
+              onClick={() => savePurchaseLink(true)}
+            >
+              {purchaseLinkStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Link2 size={18} />
+              )}
+              제휴 링크 등록
+            </button>
+            <button
+              className="secondaryButton"
+              type="button"
+              disabled={purchaseLinkStatus === "sending" || !savedReportId}
+              onClick={() => savePurchaseLink(false)}
+            >
+              비제휴 대안 등록
+            </button>
+          </div>
+          <button
+            className="secondaryButton"
+            type="button"
+            disabled={purchaseLinkStatus === "sending" || !savedReportId}
+            onClick={loadPurchaseLinkGovernance}
+          >
+            거버넌스만 다시 확인
+          </button>
+          <p className="formStatus">
+            {!savedReportId
+              ? "제품 API 연결 후 분석을 실행하면 저장 리포트 기준으로 구매 링크를 등록할 수 있습니다."
+              : statusMessage(
+                  purchaseLinkStatus,
+                  "구매 링크 거버넌스를 확인했습니다.",
+                  "구매 링크 처리에 실패했습니다.",
+                )}
+          </p>
+        </div>
+
+        {latestPurchaseLinkGovernance ? (
+          <div className="purchaseLinkResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestPurchaseLinkGovernance.status)}`}>
+                {latestPurchaseLinkGovernance.status}
+              </span>
+              <span className="pill muted">
+                제휴 {latestPurchaseLinkGovernance.affiliate_link_count}
+              </span>
+              <span className="pill muted">
+                비제휴 {latestPurchaseLinkGovernance.non_affiliate_link_count}
+              </span>
+              <span className="pill muted">
+                클릭 {latestPurchaseLinkGovernance.click_count}
+              </span>
+            </div>
+            <h3>{latestPurchaseLinkGovernance.summary}</h3>
+            <div className="advisorLists">
+              <div>
+                <strong>필수 보강 액션</strong>
+                <ul>
+                  {latestPurchaseLinkGovernance.required_actions.length ? (
+                    latestPurchaseLinkGovernance.required_actions
+                      .slice(0, 4)
+                      .map((item) => <li key={item}>{item}</li>)
+                  ) : (
+                    <li>현재 구매 링크 정책 보강 액션은 없습니다.</li>
+                  )}
+                </ul>
+              </div>
+              <div>
+                <strong>최근 등록 링크</strong>
+                <ul>
+                  {latestPurchaseLinkGovernance.links.slice(0, 4).map((link) => (
+                    <li key={link.link_id}>
+                      {link.seller_name} · {link.is_affiliate ? "제휴" : "비제휴"} ·{" "}
+                      {link.effective_price_krw
+                        ? won(link.effective_price_krw)
+                        : "가격 확인 필요"}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            {latestPurchaseLink ? (
+              <p className="formStatus">
+                최근 링크 {latestPurchaseLink.link_id} · 공개 경로{" "}
+                {latestPurchaseLink.click_path}
+              </p>
+            ) : null}
           </div>
         ) : null}
       </section>

@@ -154,6 +154,36 @@ export type PurchaseLink = {
   policy_warnings: string[];
   click_path: string;
   click_count: number;
+  notes?: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type PurchaseLinkRequest = {
+  product_id: string | null;
+  seller_name: string;
+  url: string;
+  is_affiliate: boolean;
+  affiliate_network: string;
+  price_krw: number | null;
+  shipping_fee_krw: number;
+  coupon_krw: number;
+  rank: number;
+  active: boolean;
+  notes: string;
+};
+
+export type PurchaseLinkGovernance = {
+  workspace_id: string;
+  report_id: string;
+  status: OpsStatus;
+  affiliate_link_count: number;
+  non_affiliate_link_count: number;
+  active_link_count: number;
+  click_count: number;
+  summary: string;
+  required_actions: string[];
+  links: PurchaseLink[];
 };
 
 export type PublicReport = {

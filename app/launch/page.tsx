@@ -32,6 +32,7 @@ import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
 import { LaunchProofHubPanel } from "./LaunchProofHubPanel";
 import { LaunchReadinessGatePanel } from "./LaunchReadinessGatePanel";
 import { LaunchRetentionLoopPanel } from "./LaunchRetentionLoopPanel";
+import { LaunchTeamConsultPreviewPanel } from "./LaunchTeamConsultPreviewPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
@@ -1127,6 +1128,8 @@ export default async function LaunchPage() {
           ))}
         </div>
       </section>
+
+      <LaunchTeamConsultPreviewPanel />
 
       <LaunchConversionPanel />
 

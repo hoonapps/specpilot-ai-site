@@ -28,7 +28,9 @@ import type {
   AnalyzeAndShareResponse,
   AnalyzePayload,
   AnalyzeResponse,
+  BetaBacklogStatus,
   BetaLead,
+  BetaOpsBundle,
   Category,
   CheckoutReview,
   CompletionReportWorkflowResponse,
@@ -329,6 +331,24 @@ export default function Home() {
   >("idle");
   const [latestLaunchDashboard, setLatestLaunchDashboard] =
     useState<LaunchReadinessBundle | null>(null);
+  const [betaOps, setBetaOps] = useState({
+    name: "크리에이터 데스크톱 공개 베타",
+    scenario: "영상 편집과 QHD 게이밍 PC 구매",
+    persona: "creator",
+    targetSize: "25",
+    successMetric: "purchase_intent_rate",
+    keywords: "영상 편집, QHD, RTX 4070, 32GB RAM",
+    notes: "URL 모니터, 결제 검수, 구매 결과 회수까지 포함한 공개 베타 cohort",
+    backlogStatus: "in_progress" as BetaBacklogStatus,
+    assignee: "growth-ops",
+    slaDueAt: "",
+    completionSummary: "원인 확인, 담당자 지정, 다음 배포 검증 기준까지 정리했습니다.",
+  });
+  const [betaOpsStatus, setBetaOpsStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestBetaOpsBundle, setLatestBetaOpsBundle] =
+    useState<BetaOpsBundle | null>(null);
 
   const top = result.report.top_recommendations[0];
   const dealWindow = result.report.deal_windows[0];
@@ -423,6 +443,8 @@ export default function Home() {
     setLatestIntegrationProvider(null);
     setLaunchStatus("idle");
     setLatestLaunchDashboard(null);
+    setBetaOpsStatus("idle");
+    setLatestBetaOpsBundle(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -1369,6 +1391,132 @@ export default function Home() {
     }
   }
 
+  async function loadBetaOps() {
+    setBetaOpsStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/beta-ops?limit=20");
+      if (!response.ok) {
+        throw new Error(`beta ops ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: BetaOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("beta ops rejected");
+      }
+      setLatestBetaOpsBundle(payload.bundle);
+      setBetaOpsStatus("sent");
+    } catch {
+      setBetaOpsStatus("error");
+    }
+  }
+
+  async function createBetaCohort() {
+    setBetaOpsStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/beta-ops", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "create_cohort",
+          limit: 20,
+          cohort: {
+            name: betaOps.name,
+            scenario: betaOps.scenario,
+            category: formPayload.category,
+            target_persona: betaOps.persona,
+            target_size: Number(betaOps.targetSize || 1),
+            success_metric: betaOps.successMetric,
+            keywords: splitList(betaOps.keywords),
+            notes: betaOps.notes,
+            active: true,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`beta cohort ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: BetaOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("beta cohort rejected");
+      }
+      setLatestBetaOpsBundle(payload.bundle);
+      setBetaOpsStatus("sent");
+      await loadLaunchReadiness();
+    } catch {
+      setBetaOpsStatus("error");
+    }
+  }
+
+  async function loadBetaCohortReport(cohortId: string) {
+    setBetaOpsStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/beta-ops", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "cohort_report",
+          cohort_id: cohortId,
+          limit: 20,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`beta cohort report ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: BetaOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("beta cohort report rejected");
+      }
+      setLatestBetaOpsBundle(payload.bundle);
+      setBetaOpsStatus("sent");
+    } catch {
+      setBetaOpsStatus("error");
+    }
+  }
+
+  async function updateBetaBacklog(backlogId: string) {
+    setBetaOpsStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/beta-ops", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "update_backlog",
+          backlog_id: backlogId,
+          backlog_status: betaOps.backlogStatus,
+          assignee: betaOps.assignee,
+          note: "웹사이트 베타 운영 콘솔에서 우선순위와 담당자를 갱신했습니다.",
+          sla_due_at: betaOps.slaDueAt || null,
+          completion_summary:
+            betaOps.backlogStatus === "done" ? betaOps.completionSummary : "",
+          limit: 20,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`beta backlog ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: BetaOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("beta backlog rejected");
+      }
+      setLatestBetaOpsBundle(payload.bundle);
+      setBetaOpsStatus("sent");
+      await loadLaunchReadiness();
+    } catch {
+      setBetaOpsStatus("error");
+    }
+  }
+
   return (
     <main>
       <header className="topbar">
@@ -1395,6 +1543,7 @@ export default function Home() {
           <a href="#advisor">구매 상담</a>
           <a href="#observability">품질 회귀</a>
           <a href="#integrations">외부 연동</a>
+          <a href="#beta-ops">베타 운영</a>
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -3829,6 +3978,328 @@ export default function Home() {
                   <p>{check.recommendation}</p>
                 </article>
               ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="betaOpsPanel" id="beta-ops">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <ClipboardCheck size={16} />
+            베타 운영 액션
+          </div>
+          <h2>cohort 리포트와 개선 백로그를 출시 게이트 전에 닫습니다</h2>
+          <p>
+            구매 시나리오별 베타 cohort를 만들고 JSON/Markdown 리포트, 자동 개선
+            백로그, 담당자와 SLA 상태를 운영자가 바로 갱신합니다.
+          </p>
+          <div className="advisorMeta">
+            <span className="pill muted">
+              cohort {latestBetaOpsBundle?.cohorts.length ?? 0}개
+            </span>
+            <span
+              className={`pill ${
+                latestBetaOpsBundle?.backlog_summary.blocker_count ? "warn" : "ok"
+              }`}
+            >
+              blocker {latestBetaOpsBundle?.backlog_summary.blocker_count ?? 0}건
+            </span>
+          </div>
+        </div>
+
+        <div className="betaOpsForm">
+          <div className="fieldGrid">
+            <label>
+              Cohort 이름
+              <input
+                value={betaOps.name}
+                onChange={(event) =>
+                  setBetaOps((current) => ({
+                    ...current,
+                    name: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              목표 인원
+              <input
+                inputMode="numeric"
+                value={betaOps.targetSize}
+                onChange={(event) =>
+                  setBetaOps((current) => ({
+                    ...current,
+                    targetSize: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label>
+            시나리오
+            <input
+              value={betaOps.scenario}
+              onChange={(event) =>
+                setBetaOps((current) => ({
+                  ...current,
+                  scenario: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <div className="fieldGrid">
+            <label>
+              Persona
+              <input
+                value={betaOps.persona}
+                onChange={(event) =>
+                  setBetaOps((current) => ({
+                    ...current,
+                    persona: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              성공 지표
+              <select
+                value={betaOps.successMetric}
+                onChange={(event) =>
+                  setBetaOps((current) => ({
+                    ...current,
+                    successMetric: event.target.value,
+                  }))
+                }
+              >
+                <option value="purchase_intent_rate">구매 의향률</option>
+                <option value="average_satisfaction">평균 만족도</option>
+                <option value="purchase_conversion_rate">구매 전환율</option>
+                <option value="completion_rate">리포트 완료율</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            키워드
+            <input
+              value={betaOps.keywords}
+              onChange={(event) =>
+                setBetaOps((current) => ({
+                  ...current,
+                  keywords: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            운영 메모
+            <textarea
+              value={betaOps.notes}
+              onChange={(event) =>
+                setBetaOps((current) => ({
+                  ...current,
+                  notes: event.target.value,
+                }))
+              }
+            />
+          </label>
+
+          <div className="fieldGrid">
+            <label>
+              백로그 상태
+              <select
+                value={betaOps.backlogStatus}
+                onChange={(event) =>
+                  setBetaOps((current) => ({
+                    ...current,
+                    backlogStatus: event.target.value as BetaBacklogStatus,
+                  }))
+                }
+              >
+                <option value="in_progress">진행 중</option>
+                <option value="done">완료</option>
+                <option value="dismissed">제외</option>
+                <option value="open">열림</option>
+              </select>
+            </label>
+            <label>
+              담당자
+              <input
+                value={betaOps.assignee}
+                onChange={(event) =>
+                  setBetaOps((current) => ({
+                    ...current,
+                    assignee: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label>
+            SLA due at
+            <input
+              placeholder="2026-06-27T09:00:00+09:00"
+              value={betaOps.slaDueAt}
+              onChange={(event) =>
+                setBetaOps((current) => ({
+                  ...current,
+                  slaDueAt: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            완료 요약
+            <textarea
+              value={betaOps.completionSummary}
+              onChange={(event) =>
+                setBetaOps((current) => ({
+                  ...current,
+                  completionSummary: event.target.value,
+                }))
+              }
+            />
+          </label>
+
+          <div className="alertActionGrid">
+            <button
+              type="button"
+              disabled={betaOpsStatus === "sending" || betaOps.name.length < 2}
+              onClick={createBetaCohort}
+            >
+              {betaOpsStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Send size={18} />
+              )}
+              cohort 생성
+            </button>
+            <button
+              type="button"
+              className="secondaryButton"
+              disabled={betaOpsStatus === "sending"}
+              onClick={loadBetaOps}
+            >
+              <Activity size={18} />
+              운영 상태 조회
+            </button>
+          </div>
+          <p className="formStatus">
+            {statusMessage(
+              betaOpsStatus,
+              "베타 운영 상태를 갱신했습니다.",
+              "베타 운영 작업에 실패했습니다.",
+            ) || "cohort 리포트와 자동 개선 백로그를 출시 게이트 전에 정리합니다."}
+          </p>
+        </div>
+
+        {latestBetaOpsBundle ? (
+          <div className="betaOpsResult">
+            <div className="answerHeader">
+              <span className="pill muted">
+                총 백로그 {latestBetaOpsBundle.backlog_summary.total_count}건
+              </span>
+              <span className="pill muted">
+                진행 {latestBetaOpsBundle.backlog_summary.in_progress_count}건
+              </span>
+              <span className="pill ok">
+                완료 {latestBetaOpsBundle.backlog_summary.done_count}건
+              </span>
+              {latestBetaOpsBundle.backlog_action ? (
+                <span className="pill muted">
+                  updated {latestBetaOpsBundle.backlog_action.status}
+                </span>
+              ) : null}
+            </div>
+
+            {latestBetaOpsBundle.cohort_report ? (
+              <article className="betaReportBox">
+                <h3>{latestBetaOpsBundle.cohort_report.cohort.name}</h3>
+                <p>{latestBetaOpsBundle.cohort_report.summary}</p>
+                <dl className="sourceMetricGrid">
+                  {Object.entries(latestBetaOpsBundle.cohort_report.metric_cards)
+                    .slice(0, 4)
+                    .map(([key, value]) => (
+                      <div key={key}>
+                        <dt>{key}</dt>
+                        <dd>{String(value)}</dd>
+                      </div>
+                    ))}
+                </dl>
+                <div className="advisorLists">
+                  <div>
+                    <strong>추천 액션</strong>
+                    <ul>
+                      {latestBetaOpsBundle.cohort_report.recommendations
+                        .slice(0, 5)
+                        .map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <strong>Markdown export</strong>
+                    <pre>{latestBetaOpsBundle.cohort_report.markdown.slice(0, 420)}</pre>
+                  </div>
+                </div>
+              </article>
+            ) : null}
+
+            <div className="sourceMonitorGrid">
+              <article>
+                <h3>Cohorts</h3>
+                {latestBetaOpsBundle.cohorts.length ? (
+                  <div className="reviewQueueList">
+                    {latestBetaOpsBundle.cohorts.slice(0, 5).map((cohort) => (
+                      <div key={cohort.cohort_id}>
+                        <strong>{cohort.name}</strong>
+                        <span>
+                          {cohort.scenario} · 리드 {cohort.lead_count}명 · 구매 의향{" "}
+                          {percent(cohort.purchase_intent_rate)}
+                        </span>
+                        <button
+                          className="secondaryButton"
+                          type="button"
+                          disabled={betaOpsStatus === "sending"}
+                          onClick={() => loadBetaCohortReport(cohort.cohort_id)}
+                        >
+                          리포트 보기
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>아직 등록된 베타 cohort가 없습니다.</p>
+                )}
+              </article>
+
+              <article>
+                <h3>개선 백로그</h3>
+                {latestBetaOpsBundle.backlog.length ? (
+                  <div className="reviewQueueList">
+                    {latestBetaOpsBundle.backlog.slice(0, 5).map((item) => (
+                      <div key={item.backlog_id}>
+                        <strong>{item.title}</strong>
+                        <span>
+                          {item.severity} · {item.status} ·{" "}
+                          {item.assignee || "담당자 미지정"}
+                        </span>
+                        <span>{item.suggested_action}</span>
+                        <button
+                          className="secondaryButton"
+                          type="button"
+                          disabled={betaOpsStatus === "sending"}
+                          onClick={() => updateBetaBacklog(item.backlog_id)}
+                        >
+                          선택 상태로 갱신
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>현재 자동 개선 백로그가 없습니다.</p>
+                )}
+              </article>
             </div>
           </div>
         ) : null}

@@ -619,6 +619,7 @@ ul {
 .learningPanel,
 .observabilityPanel,
 .integrationPanel,
+.betaOpsPanel,
 .launchPanel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
@@ -667,6 +668,7 @@ ul {
 .learningResult,
 .observabilityResult,
 .integrationResult,
+.betaOpsResult,
 .launchResult {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);
@@ -686,6 +688,12 @@ ul {
 }
 
 .observabilityForm {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.betaOpsForm {
   display: grid;
   align-content: start;
   gap: 12px;
@@ -732,6 +740,60 @@ ul {
   background: var(--teal);
   color: white;
   font-weight: 950;
+}
+
+.betaOpsForm button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: white;
+  font-weight: 950;
+}
+
+.betaOpsForm button.secondaryButton,
+.betaOpsResult button.secondaryButton {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(12, 116, 108, 0.28);
+  border-radius: 8px;
+  background: #f5fbf8;
+  color: var(--teal);
+  font-weight: 950;
+}
+
+.betaOpsForm button:disabled,
+.betaOpsResult button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.betaReportBox {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 16px;
+}
+
+.betaReportBox pre {
+  max-height: 180px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  padding: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 750;
 }
 
 .sourceMonitorForm button.secondaryButton {
@@ -1249,6 +1311,7 @@ ul {
   .learningPanel,
   .observabilityPanel,
   .integrationPanel,
+  .betaOpsPanel,
   .launchPanel,
   .conversionPanel {
     grid-template-columns: 1fr;
@@ -1294,6 +1357,7 @@ ul {
   .learningPanel,
   .observabilityPanel,
   .integrationPanel,
+  .betaOpsPanel,
   .launchPanel,
   .conversionPanel {
     padding-right: 14px;

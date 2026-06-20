@@ -2,7 +2,7 @@
 
 SpecPilot AI 제품 API를 공개 사용자에게 보여주는 Next.js 웹사이트입니다.
 
-이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 구매 조건을 입력하고, 분석 전 조건 진단, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 가격 알림, 구매 링크 거버넌스, 완료 리포트 batch 발송, 상품 페이지 근거 검수, URL 모니터 운영, 결제 전 검수, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 품질 회귀와 observability export, 외부 연동 준비도, 출시 게이트, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
+이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 구매 조건을 입력하고, 분석 전 조건 진단, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 가격 알림, 구매 링크 거버넌스, 완료 리포트 batch 발송, 상품 페이지 근거 검수, URL 모니터 운영, 결제 전 검수, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 품질 회귀와 observability export, 외부 연동 준비도, 베타 cohort와 개선 백로그 운영, 출시 게이트, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
 
 ## 실행
 
@@ -44,6 +44,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/learning-insights`: 제품 API의 `/ops/learning-insights`로 구매 결과, 결제 검수, 피드백 기반 제품별 개선 액션 조회
 - `/api/specpilot/observability`: 제품 API의 `/ops/regression`, `/ops/observability/exports`, `/ops/observability/dispatch`로 품질 회귀와 trace export outbox 관리
 - `/api/specpilot/integrations`: 제품 API의 `/ops/integrations`, `/ops/integration-readiness`로 외부 provider 등록과 공개 전 필수 연동 준비도 조회
+- `/api/specpilot/beta-ops`: 제품 API의 `/beta/cohorts`, `/beta/cohorts/{cohort_id}/report`, `/beta/backlog`, `/beta/backlog/{backlog_id}`, `/beta/backlog/summary`로 cohort 리포트와 개선 백로그 운영 상태 관리
 - `/api/specpilot/launch-readiness`: 제품 API의 `/beta/readiness`, `/beta/launch-gate`, `/beta/backlog/summary`를 묶어 공개 go/no-go, 준비도 점수, 필수 액션, 백로그 SLA 조회
 
 공개 페이지:
@@ -121,6 +122,12 @@ docker build -t specpilot-ai-site:local .
 - `GET /ops/integration-readiness`
 - `GET /beta/readiness`
 - `GET /beta/launch-gate`
+- `POST /beta/cohorts`
+- `GET /beta/cohorts`
+- `GET /beta/cohorts/{cohort_id}/report`
+- `GET /beta/cohorts/{cohort_id}/report.md`
+- `GET /beta/backlog`
+- `PATCH /beta/backlog/{backlog_id}`
 - `GET /beta/backlog/summary`
 - `POST /feedback`
 - `POST /beta/leads`

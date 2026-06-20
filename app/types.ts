@@ -935,6 +935,74 @@ export type LaunchGateDashboard = {
   metric_cards: Record<string, number | string>;
 };
 
+export type BetaBacklogStatus = "open" | "in_progress" | "done" | "dismissed";
+
+export type BetaCohortRequest = {
+  name: string;
+  scenario: string;
+  category: Category;
+  target_persona: string;
+  target_size: number;
+  success_metric: string;
+  keywords: string[];
+  notes: string;
+  active: boolean;
+};
+
+export type BetaCohort = BetaCohortRequest & {
+  cohort_id: string;
+  workspace_id: string;
+  lead_count: number;
+  feedback_count: number;
+  average_satisfaction: number;
+  purchase_intent_rate: number;
+  readiness_score: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type BetaBacklogItem = {
+  backlog_id: string;
+  workspace_id: string;
+  source_type: string;
+  source_id: string;
+  severity: OpsStatus;
+  title: string;
+  evidence: string;
+  suggested_action: string;
+  status: BetaBacklogStatus;
+  assignee: string;
+  action_note: string;
+  action_updated_at: string | null;
+  sla_due_at: string | null;
+  is_overdue: boolean;
+  completed_at: string | null;
+  completion_summary: string;
+  created_at: string;
+};
+
+export type BetaBacklogAction = {
+  backlog_id: string;
+  workspace_id: string;
+  status: BetaBacklogStatus;
+  assignee: string;
+  note: string;
+  sla_due_at: string | null;
+  completed_at: string | null;
+  completion_summary: string;
+  updated_at: string;
+};
+
+export type BetaCohortReport = {
+  cohort: BetaCohort;
+  generated_at: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  recommendations: string[];
+  backlog: BetaBacklogItem[];
+  markdown: string;
+};
+
 export type BetaBacklogSummary = {
   workspace_id: string;
   total_count: number;
@@ -953,4 +1021,13 @@ export type LaunchReadinessBundle = {
   readiness: BetaReadinessDashboard;
   launch_gate: LaunchGateDashboard;
   backlog_summary: BetaBacklogSummary;
+};
+
+export type BetaOpsBundle = {
+  cohorts: BetaCohort[];
+  backlog: BetaBacklogItem[];
+  backlog_summary: BetaBacklogSummary;
+  created_cohort?: BetaCohort | null;
+  cohort_report?: BetaCohortReport | null;
+  backlog_action?: BetaBacklogAction | null;
 };

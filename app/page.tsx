@@ -31,6 +31,7 @@ import type {
   Category,
   CheckoutReview,
   FeedbackRecord,
+  IntakeDiagnosisResponse,
   LaunchReadinessBundle,
   OpsLearningDashboard,
   OpsStatus,
@@ -122,6 +123,11 @@ export default function Home() {
   const [result, setResult] = useState<AnalyzeResponse>(demoResponse);
   const [isDemo, setIsDemo] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [diagnosisStatus, setDiagnosisStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestDiagnosis, setLatestDiagnosis] =
+    useState<IntakeDiagnosisResponse | null>(null);
   const [statusText, setStatusText] = useState("데모 리포트");
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const [savedReportId, setSavedReportId] = useState<string | null>(null);
@@ -275,6 +281,48 @@ export default function Home() {
     }),
     [payload],
   );
+
+  function applyDiagnosedRequest() {
+    if (!latestDiagnosis) {
+      return;
+    }
+    const diagnosed = latestDiagnosis.normalized_request;
+    setPayload({
+      query: diagnosed.query,
+      category: diagnosed.category,
+      budget: String(diagnosed.budget_krw || ""),
+      purpose: diagnosed.purpose,
+      mustHaves: diagnosed.must_haves.join(", "),
+      exclusions: diagnosed.exclusions.join(", "),
+    });
+  }
+
+  async function diagnoseIntake() {
+    setDiagnosisStatus("sending");
+    setConnectionWarning(null);
+    try {
+      const response = await fetch("/api/specpilot/intake-diagnose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formPayload),
+      });
+      if (!response.ok) {
+        throw new Error(`API ${response.status}`);
+      }
+      const data = (await response.json()) as {
+        ok: boolean;
+        diagnosis: IntakeDiagnosisResponse;
+      };
+      setLatestDiagnosis(data.diagnosis);
+      setDiagnosisStatus("sent");
+    } catch (error) {
+      setLatestDiagnosis(null);
+      setDiagnosisStatus("error");
+      setConnectionWarning(
+        error instanceof Error ? error.message : "구매 조건 진단에 실패했습니다.",
+      );
+    }
+  }
 
   async function analyze(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -983,6 +1031,71 @@ export default function Home() {
                 }
               />
             </label>
+            <div className="diagnosisActions">
+              <button
+                type="button"
+                className="secondaryAction"
+                disabled={diagnosisStatus === "sending" || isLoading}
+                onClick={diagnoseIntake}
+              >
+                {diagnosisStatus === "sending" ? (
+                  <Loader2 className="spin" size={18} />
+                ) : (
+                  <Gauge size={18} />
+                )}
+                조건 진단
+              </button>
+              {latestDiagnosis ? (
+                <button
+                  type="button"
+                  className="secondaryAction quiet"
+                  onClick={applyDiagnosedRequest}
+                >
+                  <CheckCircle2 size={18} />
+                  진단 조건 적용
+                </button>
+              ) : null}
+            </div>
+            {latestDiagnosis ? (
+              <section className="diagnosisPanel" aria-live="polite">
+                <div className="diagnosisHeader">
+                  <div>
+                    <span>준비도</span>
+                    <strong>{latestDiagnosis.readiness_score}점</strong>
+                  </div>
+                  <span
+                    className={
+                      latestDiagnosis.missing_slots.length
+                        ? "pill danger"
+                        : latestDiagnosis.warnings.length
+                          ? "pill warn"
+                          : "pill ok"
+                    }
+                  >
+                    {latestDiagnosis.readiness_label}
+                  </span>
+                </div>
+                <p>{latestDiagnosis.next_action}</p>
+                <div className="diagnosisList">
+                  {latestDiagnosis.slot_diagnostics.slice(0, 4).map((item) => (
+                    <article key={item.slot}>
+                      <span className={`pill ${gateTone(item.status)}`}>
+                        {item.label}
+                      </span>
+                      <strong>{item.message}</strong>
+                      <small>{item.recommendation}</small>
+                    </article>
+                  ))}
+                </div>
+                {latestDiagnosis.clarifying_questions.length ? (
+                  <ul>
+                    {latestDiagnosis.clarifying_questions.slice(0, 3).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </section>
+            ) : null}
             <button type="submit" disabled={isLoading}>
               {isLoading ? <Loader2 className="spin" size={18} /> : <Activity size={18} />}
               분석 실행

@@ -10,6 +10,32 @@ export type AnalyzePayload = {
   channels: string[];
 };
 
+export type IntakeSlotDiagnosis = {
+  slot: string;
+  label: string;
+  status: OpsStatus;
+  message: string;
+  recommendation: string;
+};
+
+export type IntakeNormalizedRequest = Omit<AnalyzePayload, "budget_krw"> & {
+  budget_krw: number | null;
+  purchase_timing: string;
+};
+
+export type IntakeDiagnosisResponse = {
+  readiness_score: number;
+  readiness_label: string;
+  next_action: string;
+  missing_slots: string[];
+  clarifying_questions: string[];
+  suggested_must_haves: string[];
+  suggested_exclusions: string[];
+  slot_diagnostics: IntakeSlotDiagnosis[];
+  normalized_request: IntakeNormalizedRequest;
+  warnings: string[];
+};
+
 export type Recommendation = {
   rank: number;
   product: {

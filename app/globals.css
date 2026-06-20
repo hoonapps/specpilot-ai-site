@@ -271,6 +271,94 @@ textarea:focus {
   opacity: 0.72;
 }
 
+.diagnosisActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.analysisForm .secondaryAction {
+  border: 1px solid rgba(12, 116, 108, 0.28);
+  background: #f5fbf8;
+  color: var(--teal);
+}
+
+.analysisForm .secondaryAction.quiet {
+  border-color: var(--line);
+  background: #fbfcf9;
+  color: var(--ink);
+}
+
+.diagnosisPanel {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(12, 116, 108, 0.24);
+  border-radius: 8px;
+  background: #fbfffc;
+  padding: 14px;
+}
+
+.diagnosisPanel p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.diagnosisPanel ul {
+  margin-top: 0;
+}
+
+.diagnosisHeader,
+.diagnosisList article {
+  display: grid;
+  gap: 8px;
+}
+
+.diagnosisHeader {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.diagnosisHeader span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.diagnosisHeader strong {
+  display: block;
+  font-size: 28px;
+}
+
+.diagnosisList {
+  display: grid;
+  gap: 8px;
+}
+
+.diagnosisList article {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 11px;
+}
+
+.diagnosisList strong,
+.diagnosisList small {
+  overflow-wrap: anywhere;
+}
+
+.diagnosisList strong {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.diagnosisList small {
+  color: var(--muted);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 .spin {
   animation: spin 0.9s linear infinite;
 }
@@ -986,6 +1074,7 @@ ul {
   }
 
   .fieldGrid,
+  .diagnosisActions,
   .cards.three,
   .cards.two,
   .signalStrip,

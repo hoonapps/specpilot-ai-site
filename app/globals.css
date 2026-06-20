@@ -3579,6 +3579,77 @@ ul {
   margin: 0;
 }
 
+.launchPricingPlanGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchPricingPlanGrid button,
+.launchPricingPlanLoading {
+  display: grid;
+  min-width: 0;
+  min-height: 132px;
+  align-content: start;
+  justify-content: stretch;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 12px;
+  text-align: left;
+}
+
+.launchPricingPlanGrid button:hover,
+.launchPricingPlanGrid button:focus-visible,
+.launchPricingPlanGrid button.active {
+  border-color: rgba(12, 116, 108, 0.42);
+  background: #f1fbf7;
+}
+
+.launchPricingPlanGrid button.passive {
+  cursor: default;
+}
+
+.launchPricingPlanGrid button.passive:hover,
+.launchPricingPlanGrid button.passive:focus-visible {
+  border-color: var(--line);
+  background: #ffffff;
+}
+
+.launchPricingPlanGrid span,
+.launchPricingPlanGrid strong,
+.launchPricingPlanGrid small,
+.launchPricingPlanGrid em {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchPricingPlanGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchPricingPlanGrid strong {
+  font-size: 18px;
+  line-height: 1.15;
+}
+
+.launchPricingPlanGrid small,
+.launchPricingPlanGrid em,
+.launchPricingPlanLoading {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.launchPricingPlanGrid em {
+  font-style: normal;
+}
+
 .launchConversionCard textarea {
   min-height: 96px;
 }
@@ -4738,6 +4809,7 @@ ul {
   .launchPublicGrid.three,
   .launchMarketGrid,
   .launchConversionGrid,
+  .launchPricingPlanGrid,
   .joinPublicHero,
   .joinTrustBand,
   .launchSharePanel,

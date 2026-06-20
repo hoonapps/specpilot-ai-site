@@ -10,6 +10,7 @@ import {
   Share2,
 } from "lucide-react";
 import type {
+  PricingPlan,
   PricingOpsBundle,
   PublicReferralLeaderboard,
   ReferralRewardProgress,
@@ -117,6 +118,8 @@ export function LaunchConversionPanel({
     useState<PublicReferralLeaderboard | null>(null);
   const [intent, setIntent] = useState<SubscriptionIntent | null>(null);
   const [pricingBundle, setPricingBundle] = useState<PricingOpsBundle | null>(null);
+  const [pricingPreviewStatus, setPricingPreviewStatus] =
+    useState<FormStatus>("idle");
   const [browserOrigin, setBrowserOrigin] = useState("");
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "shared" | "error">(
     "idle",
@@ -150,6 +153,36 @@ export function LaunchConversionPanel({
       }));
     }
   }, [initialReferralCode]);
+
+  useEffect(() => {
+    let alive = true;
+    async function loadPricingPreview() {
+      setPricingPreviewStatus("sending");
+      try {
+        const response = await fetch("/api/specpilot/pricing-ops?limit=8");
+        if (!response.ok) {
+          throw new Error(`pricing preview ${response.status}`);
+        }
+        const payload = (await response.json()) as PricingPayload;
+        if (!payload.ok || !payload.bundle) {
+          throw new Error("pricing preview rejected");
+        }
+        if (alive) {
+          setPricingBundle(payload.bundle);
+          setPricingPreviewStatus("sent");
+        }
+      } catch {
+        if (alive) {
+          setPricingPreviewStatus("error");
+        }
+      }
+    }
+
+    void loadPricingPreview();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const referralShareUrl = referral
     ? absoluteReferralUrl(browserOrigin, referral.referral_url)
@@ -352,6 +385,16 @@ export function LaunchConversionPanel({
     } catch {
       setPricingStatus("error");
     }
+  }
+
+  function choosePlan(plan: PricingPlan) {
+    const planId = plan.plan_id === "team" ? "team" : "premium";
+    setPricingForm((current) => ({
+      ...current,
+      planId,
+      teamSize: planId === "team" ? "3" : "1",
+      maxBudget: String(plan.monthly_price_krw || current.maxBudget),
+    }));
   }
 
   return (
@@ -581,6 +624,42 @@ export function LaunchConversionPanel({
             Premium 또는 Team 관심을 저장해 예상 MRR과 상위 요금제 신호를
             런칭룸 proof에 연결합니다.
           </p>
+          <div className="launchPricingPlanGrid">
+            {(pricingBundle?.plans ?? []).map((plan) => {
+              const selectable =
+                plan.plan_id === "premium" || plan.plan_id === "team";
+              return (
+                <button
+                  aria-pressed={pricingForm.planId === plan.plan_id}
+                  className={[
+                    pricingForm.planId === plan.plan_id ? "active" : "",
+                    selectable ? "" : "passive",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  key={plan.plan_id}
+                  type="button"
+                  onClick={() => {
+                    if (selectable) {
+                      choosePlan(plan);
+                    }
+                  }}
+                >
+                  <span>{plan.name}</span>
+                  <strong>
+                    {plan.monthly_price_krw > 0
+                      ? `${won(plan.monthly_price_krw)}/월`
+                      : "무료"}
+                  </strong>
+                  <small>{plan.audience}</small>
+                  <em>{plan.recommended_for.slice(0, 2).join(" · ")}</em>
+                </button>
+              );
+            })}
+            {!pricingBundle?.plans.length && pricingPreviewStatus === "sending" ? (
+              <div className="launchPricingPlanLoading">요금제 정보를 불러오는 중입니다.</div>
+            ) : null}
+          </div>
           <form className="conversionForm" onSubmit={submitPricing}>
             <label>
               이메일

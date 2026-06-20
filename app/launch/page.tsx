@@ -58,6 +58,7 @@ import { LaunchWarRoomPanel } from "./LaunchWarRoomPanel";
 import { LaunchWeekRecapPanel } from "./LaunchWeekRecapPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { OwnershipCostPanel } from "./OwnershipCostPanel";
+import { PriceBreakdownPanel } from "./PriceBreakdownPanel";
 import { PurchaseApprovalBriefPanel } from "./PurchaseApprovalBriefPanel";
 import { PurchaseAftercarePanel } from "./PurchaseAftercarePanel";
 import { SellerEvidencePanel } from "./SellerEvidencePanel";
@@ -1410,6 +1411,8 @@ export default async function LaunchPage() {
       <OwnershipCostPanel />
 
       <WarrantyReturnPanel />
+
+      <PriceBreakdownPanel />
 
       <ShoppingCartIntakePanel />
 

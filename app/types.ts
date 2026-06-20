@@ -1697,6 +1697,60 @@ export type PublicWarrantyReturnKit = {
   next_actions: string[];
 };
 
+export type PriceBreakdownRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  listed_price_krw: number;
+  quantity: number;
+  shipping_fee_krw: number;
+  assembly_fee_krw: number;
+  os_fee_krw: number;
+  coupon_discount_krw: number;
+  card_discount_krw: number;
+  point_rebate_krw: number;
+  budget_krw: number | null;
+  expected_report_price_krw: number | null;
+  discount_expires_hours: number | null;
+  stock_count: number | null;
+  risk_terms: string[];
+  source: string;
+};
+
+export type PriceBreakdownLine = {
+  line_id: string;
+  label: string;
+  amount_krw: number;
+  kind: string;
+  explanation: string;
+};
+
+export type PublicPriceBreakdownKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  priority: OpsStatus;
+  price_score: number;
+  subtotal_krw: number;
+  effective_price_krw: number;
+  per_unit_price_krw: number;
+  budget_delta_krw: number | null;
+  report_price_delta_krw: number | null;
+  headline: string;
+  summary: string;
+  price_lines: PriceBreakdownLine[];
+  risk_flags: string[];
+  seller_questions: string[];
+  evidence_checklist: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

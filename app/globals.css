@@ -5388,6 +5388,177 @@ ul {
   padding-left: 18px;
 }
 
+.launchPriceBreakdown {
+  background: #f7fffd;
+}
+
+.launchPriceBreakdownGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchPriceBreakdownForm,
+.launchPriceBreakdownResult,
+.launchPriceBreakdownScore,
+.launchPriceBreakdownMetrics article,
+.launchPriceBreakdownLineGrid article,
+.launchPriceBreakdownColumns > div,
+.launchPriceBreakdownQuestions {
+  border: 1px solid rgba(15, 118, 110, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 118, 110, 0.07);
+}
+
+.launchPriceBreakdownForm,
+.launchPriceBreakdownResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchPriceBreakdownControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchPriceBreakdownControls.dense {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPriceBreakdownForm label {
+  display: grid;
+  gap: 7px;
+  color: #0f766e;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchPriceBreakdownForm input,
+.launchPriceBreakdownForm select,
+.launchPriceBreakdownForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: 8px;
+  background: #f7fffd;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchPriceBreakdownForm textarea {
+  resize: vertical;
+}
+
+.launchPriceBreakdownForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchPriceBreakdownResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchPriceBreakdownResult p,
+.launchPriceBreakdownResult li,
+.launchPriceBreakdownResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchPriceBreakdownScore {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.launchPriceBreakdownScore strong {
+  color: #0f766e;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.launchPriceBreakdownScore span,
+.launchPriceBreakdownMetrics span,
+.launchPriceBreakdownLineGrid span {
+  color: #0f766e;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchPriceBreakdownMetrics,
+.launchPriceBreakdownLineGrid,
+.launchPriceBreakdownColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchPriceBreakdownMetrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPriceBreakdownLineGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPriceBreakdownMetrics article,
+.launchPriceBreakdownLineGrid article,
+.launchPriceBreakdownColumns > div,
+.launchPriceBreakdownQuestions {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchPriceBreakdownMetrics strong,
+.launchPriceBreakdownLineGrid strong,
+.launchPriceBreakdownColumns strong,
+.launchPriceBreakdownQuestions strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchPriceBreakdownLineGrid article.discount {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchPriceBreakdownLineGrid article.add {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchPriceBreakdownLineGrid article.total {
+  border-color: rgba(15, 118, 110, 0.24);
+  background: #ecfdf5;
+}
+
+.launchPriceBreakdownColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchPriceBreakdownColumns ul,
+.launchPriceBreakdownQuestions ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -9239,6 +9410,7 @@ ul {
   .launchUpgradeGrid,
   .launchOwnershipGrid,
   .launchWarrantyGrid,
+  .launchPriceBreakdownGrid,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchObjectionHero,
@@ -9409,6 +9581,11 @@ ul {
   .launchWarrantyCheckGrid,
   .launchWarrantyCostGrid,
   .launchWarrantyColumns,
+  .launchPriceBreakdownControls,
+  .launchPriceBreakdownControls.dense,
+  .launchPriceBreakdownMetrics,
+  .launchPriceBreakdownLineGrid,
+  .launchPriceBreakdownColumns,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
@@ -9731,6 +9908,12 @@ ul {
   .launchWarrantyCheckGrid,
   .launchWarrantyCostGrid,
   .launchWarrantyColumns,
+  .launchPriceBreakdownGrid,
+  .launchPriceBreakdownControls,
+  .launchPriceBreakdownControls.dense,
+  .launchPriceBreakdownMetrics,
+  .launchPriceBreakdownLineGrid,
+  .launchPriceBreakdownColumns,
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,

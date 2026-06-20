@@ -55,6 +55,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/onboarding-playbooks`: 제품 API의 `/public/onboarding/playbooks`로 공개 시작 질문, 예산 힌트, 필수 입력 슬롯, 신뢰 검수 게이트 조회
 - `/api/specpilot/growth-funnel`: 제품 API의 `/growth/events`, `/growth/funnel`로 분석 결과 조회, 추천/대안 카드, 공유/알림/구독 CTA 반응 이벤트와 전환율 조회
 - `/api/specpilot/referrals`: 제품 API의 `/growth/waitlist-referrals`, `/growth/referral-dashboard`로 추천 코드, 공유 URL, 추천 유입 리더보드 조회
+- `/api/specpilot/launch-pulse`: 제품 API의 `/growth/launch-pulse`로 공개 반응 Pulse, 신호별 점수, 다음 액션, 최근 피드백/이벤트 조회
 - `/api/specpilot/launch-kit`: 제품 API의 `/growth/launch-kit`으로 커뮤니티/검색/추천 채널별 공개 베타 카피, CTA 실험, 출시 체크리스트, 측정 계획 조회
 - `/api/specpilot/pricing-ops`: 제품 API의 `/pricing/plans`, `/billing/subscription-intents`, `/ops/pricing-dashboard`로 요금제별 수요, 예상 MRR, 연환산 매출, 최근 intent 관리
 
@@ -105,6 +106,7 @@ docker build -t specpilot-ai-site:local .
 - `POST /analyze`
 - `POST /intake/diagnose`
 - `GET /demo/scenarios`
+- `GET /growth/launch-pulse`
 - `POST /reports/save`
 - `POST /reports/{report_id}/share`
 - `POST /alerts/subscribe`

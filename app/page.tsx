@@ -50,6 +50,7 @@ import type {
   IntegrationReadinessDashboard,
   IntegrationStatus,
   LaunchCampaignKit,
+  LaunchPulseDashboard,
   LaunchReadinessBundle,
   ObservabilityOpsBundle,
   OpsLearningDashboard,
@@ -415,6 +416,11 @@ export default function Home() {
     useState<GrowthFunnelDashboard | null>(null);
   const [latestGrowthEvent, setLatestGrowthEvent] =
     useState<GrowthEventRecord | null>(null);
+  const [launchPulseStatus, setLaunchPulseStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestLaunchPulse, setLatestLaunchPulse] =
+    useState<LaunchPulseDashboard | null>(null);
   const [launchKitStatus, setLaunchKitStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -639,6 +645,8 @@ export default function Home() {
     setGrowthStatus("idle");
     setLatestGrowthDashboard(null);
     setLatestGrowthEvent(null);
+    setLaunchPulseStatus("idle");
+    setLatestLaunchPulse(null);
     setLaunchKitStatus("idle");
     setLatestLaunchKit(null);
     setFeedbackStatus("idle");
@@ -1932,6 +1940,27 @@ export default function Home() {
     }
   }
 
+  async function loadLaunchPulse() {
+    setLaunchPulseStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/launch-pulse?limit=12");
+      if (!response.ok) {
+        throw new Error(`launch pulse ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        pulse?: LaunchPulseDashboard;
+      };
+      if (!payload.ok || !payload.pulse) {
+        throw new Error("launch pulse rejected");
+      }
+      setLatestLaunchPulse(payload.pulse);
+      setLaunchPulseStatus("sent");
+    } catch {
+      setLaunchPulseStatus("error");
+    }
+  }
+
   async function loadLaunchKit() {
     setLaunchKitStatus("sending");
     try {
@@ -2141,6 +2170,7 @@ export default function Home() {
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#market-reports">시장 리포트</a>
           <a href="#growth-funnel">성장 퍼널</a>
+          <a href="#launch-pulse">런치 Pulse</a>
           <a href="#launch-kit">출시 키트</a>
           <a href="#pricing-ops">수익화</a>
           <a href="#conversion">피드백</a>
@@ -6314,6 +6344,144 @@ export default function Home() {
 
             <div className="gateCheckGrid">
               {latestGrowthDashboard.recent_events.slice(0, 6).map((event) => (
+                <article className="gateCheckCard" key={event.event_id}>
+                  <div className="answerHeader">
+                    <span className="pill ok">{event.event_type}</span>
+                    <span className="pill muted">{event.surface}</span>
+                  </div>
+                  <h4>{event.label || event.event_id}</h4>
+                  <p>{event.product_id || event.report_id || event.trace_id || "workspace"}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="launchPulsePanel" id="launch-pulse">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Activity size={16} />
+            런치 반응 Pulse
+          </div>
+          <h2>공개 직후 반응 온도와 다음 액션을 한 화면에서 봅니다</h2>
+          <p>
+            성장 이벤트, 만족도, 구매 의향, 추천 대기열, 요금제 관심, readiness를
+            합성해 공개 베타를 키울지 보강할지 판단합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestLaunchPulse ? gateTone(latestLaunchPulse.status) : "warn"
+              }`}
+            >
+              {latestLaunchPulse
+                ? `${Math.round(latestLaunchPulse.pulse_score)}점 · ${latestLaunchPulse.status}`
+                : "launch-pulse 미조회"}
+            </span>
+            <span className="pill muted">reaction + love + referral + pricing</span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={launchPulseStatus === "sending"}
+            onClick={loadLaunchPulse}
+          >
+            {launchPulseStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <Activity size={18} />
+            )}
+            Pulse 새로고침
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              launchPulseStatus,
+              "런치 반응 Pulse를 업데이트했습니다.",
+              "런치 반응 Pulse 조회에 실패했습니다.",
+            ) || "공개 후 강한 반응, 확산, 유료 수요, 안정성 신호를 합성합니다."}
+          </p>
+        </div>
+
+        {latestLaunchPulse ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestLaunchPulse.status)}`}>
+                {latestLaunchPulse.status}
+              </span>
+              <span className="pill muted">{latestLaunchPulse.pulse_version}</span>
+              <span className="pill muted">Workspace {latestLaunchPulse.workspace_id}</span>
+            </div>
+            <h3>{latestLaunchPulse.headline}</h3>
+            <p>{latestLaunchPulse.summary}</p>
+
+            <dl className="sourceMetricGrid">
+              {latestLaunchPulse.metrics.map((metric) => (
+                <div key={metric.key}>
+                  <dt>{metric.label}</dt>
+                  <dd>
+                    {metric.key === "estimated_mrr"
+                      ? won(Number(metric.value))
+                      : `${metric.value}${metric.unit}`}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="growthStepGrid">
+              {latestLaunchPulse.signals.map((signal) => (
+                <article className="growthStepCard" key={signal.area}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(signal.status)}`}>
+                      {signal.status}
+                    </span>
+                    <span className="pill muted">{Math.round(signal.score)}점</span>
+                  </div>
+                  <h4>{signal.label}</h4>
+                  <p>{signal.evidence}</p>
+                  <p>{signal.recommendation}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>상위 반응 표면</strong>
+                <ul>
+                  {(latestLaunchPulse.hot_surfaces.length
+                    ? latestLaunchPulse.hot_surfaces
+                    : ["아직 수집된 표면이 없습니다."]
+                  ).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestLaunchPulse.top_actions.slice(0, 6).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestLaunchPulse.recent_feedback.slice(0, 3).map((item) => (
+                <article className="gateCheckCard" key={item.feedback_id}>
+                  <div className="answerHeader">
+                    <span className="pill ok">만족도 {item.rating}</span>
+                    <span className="pill muted">
+                      구매 의향 {item.purchase_intent ? "있음" : "없음"}
+                    </span>
+                  </div>
+                  <h4>{item.reason || item.feedback_id}</h4>
+                  <p>{item.improvement_requests.slice(0, 2).join(", ") || "추가 요청 없음"}</p>
+                </article>
+              ))}
+              {latestLaunchPulse.recent_growth_events.slice(0, 3).map((event) => (
                 <article className="gateCheckCard" key={event.event_id}>
                   <div className="answerHeader">
                     <span className="pill ok">{event.event_type}</span>

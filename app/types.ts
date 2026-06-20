@@ -838,6 +838,40 @@ export type LaunchCampaignKit = {
   measurement_plan: string[];
 };
 
+export type LaunchPulseMetric = {
+  key: string;
+  label: string;
+  value: number | string;
+  unit: string;
+  status: OpsStatus;
+  detail: string;
+};
+
+export type LaunchPulseSignal = {
+  area: string;
+  label: string;
+  status: OpsStatus;
+  score: number;
+  evidence: string;
+  recommendation: string;
+};
+
+export type LaunchPulseDashboard = {
+  pulse_version: string;
+  workspace_id: string;
+  generated_at: string;
+  pulse_score: number;
+  status: OpsStatus;
+  headline: string;
+  summary: string;
+  metrics: LaunchPulseMetric[];
+  signals: LaunchPulseSignal[];
+  hot_surfaces: string[];
+  top_actions: string[];
+  recent_feedback: FeedbackRecord[];
+  recent_growth_events: GrowthEventRecord[];
+};
+
 export type ReportAdvisorQuestionRequest = {
   report_id: string;
   question: string;

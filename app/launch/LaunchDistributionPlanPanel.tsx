@@ -78,7 +78,7 @@ export function LaunchDistributionPlanPanel() {
   }, []);
 
   return (
-    <section className="launchPublicSection launchPublicDistribution">
+    <section className="launchPublicSection launchPublicDistribution" id="launch-distribution-plan">
       <div className="sectionHeader">
         <div>
           <div className="sectionLabel">

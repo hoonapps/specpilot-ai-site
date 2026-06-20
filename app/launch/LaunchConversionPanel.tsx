@@ -398,7 +398,7 @@ export function LaunchConversionPanel({
   }
 
   return (
-    <section className="launchPublicSection launchConversionPanel">
+    <section className="launchPublicSection launchConversionPanel" id="launch-conversion">
       <div className="sectionHeader">
         <div>
           <div className="sectionLabel">

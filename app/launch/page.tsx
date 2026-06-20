@@ -1125,7 +1125,14 @@ export default async function LaunchPage() {
 
       <LaunchProofHubPanel />
 
-      <LaunchReadinessGatePanel />
+      <LaunchDeferredPanel
+        anchorId="launch-readiness-gate"
+        label="공개 출시 게이트"
+        title="go/no-go 운영 게이트를 지연 로드합니다."
+        summary="준비도, 백로그, 데이터 거버넌스 합산은 운영 섹션이 가까워질 때 시작해 첫 화면 API 부하를 낮춥니다."
+      >
+        <LaunchReadinessGatePanel />
+      </LaunchDeferredPanel>
 
       <LaunchDeferredPanel
         anchorId="launch-preflight"
@@ -1303,15 +1310,50 @@ export default async function LaunchPage() {
         </div>
       </section>
 
-      <LaunchTeamConsultPreviewPanel />
+      <LaunchDeferredPanel
+        anchorId="team-consult-preview"
+        label="Team 구매 표준안 프리뷰"
+        title="Team 상담 키트는 하단 진입 시 로드합니다."
+        summary="Team 관심 리드의 상담 브리프, 안건, ROI 포인트 계산을 첫 화면 이후로 분산합니다."
+      >
+        <LaunchTeamConsultPreviewPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchReferralMomentumPanel />
+      <LaunchDeferredPanel
+        anchorId="referral-momentum"
+        label="가입 전 추천 확산 키트"
+        title="추천 확산 신호를 지연 로드합니다."
+        summary="추천 보상 사다리, 공유 문구, 리더보드 프리뷰는 해당 섹션에 가까워질 때 불러옵니다."
+      >
+        <LaunchReferralMomentumPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchPublicOpsPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-public-ops"
+        label="공개 반응 운영 패널"
+        title="공개 유입/전환/Pulse 운영 신호를 지연 로드합니다."
+        summary="전환 보드, 유입 허브, 런치 Pulse 호출을 첫 화면 렌더링에서 분리합니다."
+      >
+        <LaunchPublicOpsPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchConversionPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-conversion"
+        label="요금제 전환 패널"
+        title="요금제와 대기열 폼은 하단에서 로드합니다."
+        summary="Free/Premium/Team 카드, 추천 대기열, 요금제 관심 상태를 스크롤 시점에 확인합니다."
+      >
+        <LaunchConversionPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchDistributionPlanPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-distribution-plan"
+        label="첫 주 배포 플랜"
+        title="첫 주 채널 배포 플랜을 지연 로드합니다."
+        summary="커뮤니티, 검색, 추천 채널별 배포 문구와 측정 이벤트 계산을 필요한 시점에 시작합니다."
+      >
+        <LaunchDistributionPlanPanel />
+      </LaunchDeferredPanel>
 
       <section className="launchPublicSection launchSharePanel">
         <div>

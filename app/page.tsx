@@ -68,6 +68,7 @@ import type {
   PublicAcquisitionHub,
   ReportShareAssets,
   ReportAdvisorAnswer,
+  RetentionHubDashboard,
   SourceCandidate,
   SourceMonitorOpsBundle,
   SubscriptionIntent,
@@ -144,6 +145,23 @@ function gateTone(status: OpsStatus) {
     return "ok";
   }
   return status === "blocker" ? "danger" : "warn";
+}
+
+function retentionMetricLabel(key: string) {
+  const labels: Record<string, string> = {
+    saved_reports: "저장 리포트",
+    active_alerts: "활성 알림",
+    public_share_views: "공유 조회",
+    advisor_answers: "상담 답변",
+    purchase_outcomes: "구매 결과",
+    missing_outcomes: "결과 미기록",
+    purchase_conversion_rate: "구매 전환율",
+    sent_alert_deliveries: "알림 발송",
+    completion_engagements: "완료 리포트 반응",
+    ready_value_krw: "구매 가능 금액",
+    unresolved_decisions: "미해결 결정",
+  };
+  return labels[key] ?? key.replaceAll("_", " ");
 }
 
 export default function Home() {
@@ -428,6 +446,11 @@ export default function Home() {
   >("idle");
   const [latestAcquisitionHub, setLatestAcquisitionHub] =
     useState<PublicAcquisitionHub | null>(null);
+  const [retentionHubStatus, setRetentionHubStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestRetentionHub, setLatestRetentionHub] =
+    useState<RetentionHubDashboard | null>(null);
   const [growthStatus, setGrowthStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -726,6 +749,8 @@ export default function Home() {
     setLatestMarketReport(null);
     setAcquisitionHubStatus("idle");
     setLatestAcquisitionHub(null);
+    setRetentionHubStatus("idle");
+    setLatestRetentionHub(null);
     setGrowthStatus("idle");
     setLatestGrowthDashboard(null);
     setLatestGrowthEvent(null);
@@ -2067,6 +2092,27 @@ export default function Home() {
     }
   }
 
+  async function loadRetentionHub() {
+    setRetentionHubStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/retention-hub?limit=12");
+      if (!response.ok) {
+        throw new Error(`retention hub ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        hub?: RetentionHubDashboard;
+      };
+      if (!payload.ok || !payload.hub) {
+        throw new Error("retention hub rejected");
+      }
+      setLatestRetentionHub(payload.hub);
+      setRetentionHubStatus("sent");
+    } catch {
+      setRetentionHubStatus("error");
+    }
+  }
+
   async function loadGrowthFunnel() {
     setGrowthStatus("sending");
     try {
@@ -2318,6 +2364,7 @@ export default function Home() {
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#market-reports">시장 리포트</a>
           <a href="#acquisition-hub">유입 허브</a>
+          <a href="#retention-hub">리텐션 허브</a>
           <a href="#growth-funnel">성장 퍼널</a>
           <a href="#launch-pulse">런치 Pulse</a>
           <a href="#launch-kit">출시 키트</a>
@@ -6683,6 +6730,195 @@ export default function Home() {
                     ))}
                   {!latestAcquisitionHub.recent_growth_events.length ? (
                     <li>아직 최근 성장 이벤트가 없습니다.</li>
+                  ) : null}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="retentionHubPanel" id="retention-hub">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <TimerReset size={16} />
+            리텐션 허브
+          </div>
+          <h2>한 번 비교한 사용자가 다시 구매 결정으로 돌아오게 만듭니다</h2>
+          <p>
+            저장 리포트, 가격 알림, 공유 조회, 구매 상담, 구매 결과, 완료 리포트를
+            함께 읽어 재방문 신호와 재참여 플레이를 우선순위로 정리합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestRetentionHub ? gateTone(latestRetentionHub.status) : "warn"
+              }`}
+            >
+              {latestRetentionHub
+                ? `${Math.round(latestRetentionHub.retention_score)}점 · ${
+                    latestRetentionHub.status
+                  }`
+                : "리텐션 허브 미조회"}
+            </span>
+            <span className="pill muted">retention-hub</span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={retentionHubStatus === "sending"}
+            onClick={loadRetentionHub}
+          >
+            {retentionHubStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <TimerReset size={18} />
+            )}
+            리텐션 허브 새로고침
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              retentionHubStatus,
+              "리텐션 허브를 업데이트했습니다.",
+              "리텐션 허브 조회에 실패했습니다.",
+            ) || "구매 결정 전후의 재참여 루프가 충분히 닫혔는지 확인합니다."}
+          </p>
+        </div>
+
+        {latestRetentionHub ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestRetentionHub.status)}`}>
+                {latestRetentionHub.status}
+              </span>
+              <span className="pill muted">{latestRetentionHub.hub_version}</span>
+              <span className="pill muted">
+                Workspace {latestRetentionHub.workspace_id}
+              </span>
+            </div>
+            <h3>{latestRetentionHub.headline}</h3>
+            <p>{latestRetentionHub.summary}</p>
+
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>리텐션 점수</dt>
+                <dd>{Math.round(latestRetentionHub.retention_score)}점</dd>
+              </div>
+              {Object.entries(latestRetentionHub.metric_cards)
+                .slice(0, 5)
+                .map(([key, value]) => (
+                  <div key={key}>
+                    <dt>{retentionMetricLabel(key)}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+            </dl>
+
+            <div className="growthStepGrid">
+              {latestRetentionHub.signals.map((signal) => (
+                <article className="growthStepCard" key={signal.key}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(signal.status)}`}>
+                      {signal.status}
+                    </span>
+                    <span className="pill muted">{Math.round(signal.score)}점</span>
+                  </div>
+                  <h4>{signal.label}</h4>
+                  <p>{signal.metric}</p>
+                  <p>{signal.insight}</p>
+                  <p>{signal.next_action}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="growthStepGrid">
+              {latestRetentionHub.plays.map((play) => (
+                <article className="growthStepCard" key={play.play_id}>
+                  <div className="answerHeader">
+                    <span className="pill ok">{play.channel}</span>
+                    <span className="pill muted">{play.audience}</span>
+                  </div>
+                  <h4>{play.label}</h4>
+                  <p>{play.trigger}</p>
+                  <p>
+                    {play.cta_label} · {play.cta_target}
+                  </p>
+                  <p>{play.expected_impact}</p>
+                  <ul>
+                    {play.evidence.slice(0, 3).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestRetentionHub.next_actions.slice(0, 6).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>최근 재참여 이벤트</strong>
+                <ul>
+                  {(latestRetentionHub.recent_events.length
+                    ? latestRetentionHub.recent_events
+                    : []
+                  )
+                    .slice(0, 5)
+                    .map((event) => (
+                      <li key={event.event_id}>
+                        {event.event_type} · {event.surface || "workspace"}
+                      </li>
+                    ))}
+                  {!latestRetentionHub.recent_events.length ? (
+                    <li>아직 최근 재참여 이벤트가 없습니다.</li>
+                  ) : null}
+                </ul>
+              </div>
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>최근 구매 상담</strong>
+                <ul>
+                  {(latestRetentionHub.recent_advisor_answers.length
+                    ? latestRetentionHub.recent_advisor_answers
+                    : []
+                  )
+                    .slice(0, 4)
+                    .map((answer) => (
+                      <li key={answer.answer_id}>
+                        {answer.buyer_stage} · {answer.selected_model_name}
+                      </li>
+                    ))}
+                  {!latestRetentionHub.recent_advisor_answers.length ? (
+                    <li>아직 구매 상담 기록이 없습니다.</li>
+                  ) : null}
+                </ul>
+              </div>
+              <div>
+                <strong>최근 구매 결과</strong>
+                <ul>
+                  {(latestRetentionHub.recent_purchase_outcomes.length
+                    ? latestRetentionHub.recent_purchase_outcomes
+                    : []
+                  )
+                    .slice(0, 4)
+                    .map((outcome) => (
+                      <li key={outcome.outcome_id}>
+                        {purchaseOutcomeLabel(outcome.status)} ·{" "}
+                        {outcome.model_name || outcome.product_id || "선택 제품 미기록"}
+                      </li>
+                    ))}
+                  {!latestRetentionHub.recent_purchase_outcomes.length ? (
+                    <li>아직 구매 결과 피드백이 없습니다.</li>
                   ) : null}
                 </ul>
               </div>

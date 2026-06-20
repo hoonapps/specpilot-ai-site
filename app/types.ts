@@ -960,6 +960,45 @@ export type PublicAcquisitionHub = {
   recent_growth_events: GrowthEventRecord[];
 };
 
+export type RetentionSignal = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  score: number;
+  metric: string;
+  insight: string;
+  next_action: string;
+};
+
+export type RetentionPlay = {
+  play_id: string;
+  label: string;
+  audience: string;
+  trigger: string;
+  channel: string;
+  cta_label: string;
+  cta_target: string;
+  expected_impact: string;
+  evidence: string[];
+};
+
+export type RetentionHubDashboard = {
+  hub_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  retention_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  signals: RetentionSignal[];
+  plays: RetentionPlay[];
+  next_actions: string[];
+  recent_events: GrowthEventRecord[];
+  recent_advisor_answers: ReportAdvisorAnswer[];
+  recent_purchase_outcomes: PurchaseOutcome[];
+};
+
 export type ReportAdvisorQuestionRequest = {
   report_id: string;
   question: string;

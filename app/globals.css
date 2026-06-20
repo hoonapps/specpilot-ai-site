@@ -856,6 +856,7 @@ ul {
 .betaOpsPanel,
 .marketReportPanel,
 .acquisitionHubPanel,
+.retentionHubPanel,
 .growthFunnelPanel,
 .launchPulsePanel,
 .launchKitPanel,
@@ -1313,6 +1314,12 @@ ul {
 .growthStepCard h4 {
   margin: 12px 0 8px;
   font-size: 20px;
+}
+
+.growthStepCard ul {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
 }
 
 .marketReportCard ul {
@@ -1949,6 +1956,7 @@ ul {
   .betaOpsPanel,
   .marketReportPanel,
   .acquisitionHubPanel,
+  .retentionHubPanel,
   .growthFunnelPanel,
   .launchPulsePanel,
   .launchKitPanel,
@@ -2028,6 +2036,7 @@ ul {
   .betaOpsPanel,
   .marketReportPanel,
   .acquisitionHubPanel,
+  .retentionHubPanel,
   .growthFunnelPanel,
   .launchPulsePanel,
   .launchKitPanel,
@@ -2060,6 +2069,7 @@ ul {
   .betaOpsPanel,
   .marketReportPanel,
   .acquisitionHubPanel,
+  .retentionHubPanel,
   .growthFunnelPanel,
   .launchPulsePanel,
   .launchKitPanel,

@@ -1,7 +1,14 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { CreditCard, Loader2, MailPlus, Share2 } from "lucide-react";
+import {
+  ClipboardCheck,
+  CreditCard,
+  Loader2,
+  MailPlus,
+  Send,
+  Share2,
+} from "lucide-react";
 import type {
   PricingOpsBundle,
   SubscriptionIntent,
@@ -50,6 +57,16 @@ function won(value: number | null | undefined) {
   return new Intl.NumberFormat("ko-KR").format(value) + "원";
 }
 
+function absoluteReferralUrl(origin: string, path: string) {
+  if (!path) {
+    return "";
+  }
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+  return `${origin}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
 async function recordLaunchEvent(
   event_type: "share_cta" | "subscription_cta",
   label: string,
@@ -87,6 +104,10 @@ export function LaunchConversionPanel({
     useState<WaitlistReferralDashboard | null>(null);
   const [intent, setIntent] = useState<SubscriptionIntent | null>(null);
   const [pricingBundle, setPricingBundle] = useState<PricingOpsBundle | null>(null);
+  const [browserOrigin, setBrowserOrigin] = useState("");
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "shared" | "error">(
+    "idle",
+  );
   const [referralForm, setReferralForm] = useState({
     email: "",
     persona: "first_pc_buyer",
@@ -105,6 +126,7 @@ export function LaunchConversionPanel({
   });
 
   useEffect(() => {
+    setBrowserOrigin(window.location.origin);
     const ref = new URLSearchParams(window.location.search).get("ref");
     if (ref || initialReferralCode) {
       setReferralForm((current) => ({
@@ -113,6 +135,62 @@ export function LaunchConversionPanel({
       }));
     }
   }, [initialReferralCode]);
+
+  const referralShareUrl = referral
+    ? absoluteReferralUrl(browserOrigin, referral.referral_url)
+    : "";
+
+  async function copyReferralUrl() {
+    if (!referral || !referralShareUrl) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(referralShareUrl);
+      setShareStatus("copied");
+      await recordLaunchEvent(
+        "share_cta",
+        surface === "join" ? "추천 초대 링크 복사" : "런칭 페이지 추천 링크 복사",
+        source,
+        surface,
+        {
+          referral_code: referral.referral_code,
+          share_url: referralShareUrl,
+        },
+      );
+    } catch {
+      setShareStatus("error");
+    }
+  }
+
+  async function shareReferralUrl() {
+    if (!referral || !referralShareUrl) {
+      return;
+    }
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "SpecPilot AI 추천 초대",
+          text: "컴퓨터와 노트북 구매 실패를 줄이는 AI 구매 리포트 공개 베타 초대입니다.",
+          url: referralShareUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(referralShareUrl);
+      }
+      setShareStatus("shared");
+      await recordLaunchEvent(
+        "share_cta",
+        surface === "join" ? "추천 초대 링크 공유" : "런칭 페이지 추천 링크 공유",
+        source,
+        surface,
+        {
+          referral_code: referral.referral_code,
+          share_url: referralShareUrl,
+        },
+      );
+    } catch {
+      setShareStatus("error");
+    }
+  }
 
   async function submitReferral(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -140,6 +218,7 @@ export function LaunchConversionPanel({
       }
       setReferral(payload.referral);
       setReferralDashboard(payload.dashboard);
+      setShareStatus("idle");
       setReferralForm((current) => ({
         ...current,
         referredByCode: payload.referral?.referral_code || current.referredByCode,
@@ -336,10 +415,25 @@ export function LaunchConversionPanel({
             <div className="launchConversionResult">
               <span>추천 코드</span>
               <strong>{referral.referral_code}</strong>
-              <p>{referral.referral_url}</p>
+              <p>{referralShareUrl || referral.referral_url}</p>
+              <div className="launchReferralActions">
+                <button type="button" onClick={() => void copyReferralUrl()}>
+                  <ClipboardCheck size={16} />
+                  초대 링크 복사
+                </button>
+                <button type="button" onClick={() => void shareReferralUrl()}>
+                  <Send size={16} />
+                  바로 공유
+                </button>
+              </div>
               <small>
-                추천 {referral.referred_signup_count}명 · 우선순위{" "}
-                {referral.priority_score}점
+                {shareStatus === "copied"
+                  ? "초대 링크를 복사했습니다."
+                  : shareStatus === "shared"
+                    ? "초대 링크 공유를 실행했습니다."
+                    : shareStatus === "error"
+                      ? "공유에 실패했습니다. 링크를 직접 복사해 주세요."
+                      : `추천 ${referral.referred_signup_count}명 · 우선순위 ${referral.priority_score}점`}
               </small>
             </div>
           ) : null}

@@ -896,6 +896,101 @@ export type LaunchCampaignKit = {
   measurement_plan: string[];
 };
 
+export type LaunchExperimentVariantRequest = {
+  label: string;
+  headline: string;
+  body: string;
+  cta_label: string;
+  cta_path: string;
+  allocation_percent: number;
+};
+
+export type LaunchExperimentRequest = {
+  name: string;
+  channel: string;
+  audience: string;
+  hypothesis: string;
+  primary_metric: GrowthEventType;
+  target_surface: string;
+  category: Category | null;
+  variants: LaunchExperimentVariantRequest[];
+};
+
+export type LaunchExperimentEventRequest = {
+  variant_id: string;
+  event_type: "impression" | "conversion";
+  trace_id?: string | null;
+  source: string;
+  surface: string;
+  label: string;
+  metadata?: Record<string, string | number | boolean>;
+};
+
+export type LaunchExperimentEvent = {
+  event_id: string;
+  experiment_id: string;
+  workspace_id: string;
+  variant_id: string;
+  event_type: string;
+  trace_id: string | null;
+  source: string;
+  surface: string;
+  label: string;
+  metadata: Record<string, string | number | boolean>;
+  created_at: string;
+};
+
+export type LaunchExperimentVariant = {
+  variant_id: string;
+  label: string;
+  headline: string;
+  body: string;
+  cta_label: string;
+  cta_path: string;
+  allocation_percent: number;
+  impressions: number;
+  conversions: number;
+  conversion_rate: number;
+  status: OpsStatus;
+  evidence: string;
+  recommendation: string;
+};
+
+export type LaunchExperiment = {
+  experiment_id: string;
+  workspace_id: string;
+  name: string;
+  channel: string;
+  audience: string;
+  hypothesis: string;
+  primary_metric: GrowthEventType;
+  target_surface: string;
+  category: Category | null;
+  status: OpsStatus;
+  winning_variant_id: string | null;
+  created_at: string;
+  updated_at: string;
+  variants: LaunchExperimentVariant[];
+};
+
+export type LaunchExperimentDashboard = {
+  dashboard_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  experiment_count: number;
+  active_experiment_count: number;
+  total_impressions: number;
+  total_conversions: number;
+  conversion_rate: number;
+  best_variant_label: string;
+  summary: string;
+  experiments: LaunchExperiment[];
+  recommended_experiments: LaunchExperiment[];
+  next_actions: string[];
+  recent_events: LaunchExperimentEvent[];
+};
+
 export type LaunchPulseMetric = {
   key: string;
   label: string;

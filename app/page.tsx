@@ -51,6 +51,7 @@ import type {
   IntegrationReadinessDashboard,
   IntegrationStatus,
   LaunchCampaignKit,
+  LaunchExperimentDashboard,
   LaunchPulseDashboard,
   LaunchReadinessBundle,
   ObservabilityOpsBundle,
@@ -463,6 +464,11 @@ export default function Home() {
   >("idle");
   const [latestLaunchPulse, setLatestLaunchPulse] =
     useState<LaunchPulseDashboard | null>(null);
+  const [launchExperimentStatus, setLaunchExperimentStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestLaunchExperimentDashboard, setLatestLaunchExperimentDashboard] =
+    useState<LaunchExperimentDashboard | null>(null);
   const [launchKitStatus, setLaunchKitStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -756,6 +762,8 @@ export default function Home() {
     setLatestGrowthEvent(null);
     setLaunchPulseStatus("idle");
     setLatestLaunchPulse(null);
+    setLaunchExperimentStatus("idle");
+    setLatestLaunchExperimentDashboard(null);
     setLaunchKitStatus("idle");
     setLatestLaunchKit(null);
     setFeedbackStatus("idle");
@@ -2155,6 +2163,56 @@ export default function Home() {
     }
   }
 
+  async function loadLaunchExperiments() {
+    setLaunchExperimentStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/launch-experiments?limit=20");
+      if (!response.ok) {
+        throw new Error(`launch experiments ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        dashboard?: LaunchExperimentDashboard;
+      };
+      if (!payload.ok || !payload.dashboard) {
+        throw new Error("launch experiments rejected");
+      }
+      setLatestLaunchExperimentDashboard(payload.dashboard);
+      setLaunchExperimentStatus("sent");
+    } catch {
+      setLaunchExperimentStatus("error");
+    }
+  }
+
+  async function seedLaunchExperiment() {
+    setLaunchExperimentStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/launch-experiments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "seed_experiment",
+          category: marketReportCategory,
+          limit: 20,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`seed launch experiment ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        dashboard?: LaunchExperimentDashboard;
+      };
+      if (!payload.ok || !payload.dashboard) {
+        throw new Error("seed launch experiment rejected");
+      }
+      setLatestLaunchExperimentDashboard(payload.dashboard);
+      setLaunchExperimentStatus("sent");
+    } catch {
+      setLaunchExperimentStatus("error");
+    }
+  }
+
   async function loadLaunchKit() {
     setLaunchKitStatus("sending");
     try {
@@ -2367,6 +2425,7 @@ export default function Home() {
           <a href="#retention-hub">리텐션 허브</a>
           <a href="#growth-funnel">성장 퍼널</a>
           <a href="#launch-pulse">런치 Pulse</a>
+          <a href="#launch-experiments">출시 실험</a>
           <a href="#launch-kit">출시 키트</a>
           <a href="#pricing-ops">수익화</a>
           <a href="#conversion">피드백</a>
@@ -7223,6 +7282,211 @@ export default function Home() {
                   </div>
                   <h4>{event.label || event.event_id}</h4>
                   <p>{event.product_id || event.report_id || event.trace_id || "workspace"}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="launchExperimentPanel" id="launch-experiments">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <BarChart3 size={16} />
+            출시 실험 허브
+          </div>
+          <h2>공개 CTA 문구를 실제 노출과 전환으로 검증합니다</h2>
+          <p>
+            커뮤니티, 검색, 추천 대기열에 올릴 카피 variant를 만들고 노출/전환을
+            기록해 승자 후보와 다음 실험 액션을 고릅니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestLaunchExperimentDashboard
+                  ? gateTone(latestLaunchExperimentDashboard.status)
+                  : "warn"
+              }`}
+            >
+              {latestLaunchExperimentDashboard
+                ? `${latestLaunchExperimentDashboard.experiment_count}개 · ${percent(
+                    latestLaunchExperimentDashboard.conversion_rate,
+                  )}`
+                : "출시 실험 미조회"}
+            </span>
+            <span className="pill muted">launch-experiment-hub</span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={launchExperimentStatus === "sending"}
+            onClick={loadLaunchExperiments}
+          >
+            {launchExperimentStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <BarChart3 size={18} />
+            )}
+            실험 허브 조회
+          </button>
+          <button
+            type="button"
+            className="secondaryButton"
+            disabled={launchExperimentStatus === "sending"}
+            onClick={seedLaunchExperiment}
+          >
+            <Send size={18} />
+            샘플 실험 생성
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              launchExperimentStatus,
+              "출시 실험 허브를 업데이트했습니다.",
+              "출시 실험 허브 조회에 실패했습니다.",
+            ) || "출시 키트의 CTA 실험을 실제 전환 지표로 닫습니다."}
+          </p>
+        </div>
+
+        {latestLaunchExperimentDashboard ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span
+                className={`pill ${gateTone(latestLaunchExperimentDashboard.status)}`}
+              >
+                {latestLaunchExperimentDashboard.status}
+              </span>
+              <span className="pill muted">
+                {latestLaunchExperimentDashboard.dashboard_version}
+              </span>
+              <span className="pill muted">
+                Workspace {latestLaunchExperimentDashboard.workspace_id}
+              </span>
+            </div>
+            <h3>{latestLaunchExperimentDashboard.summary}</h3>
+
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>실험</dt>
+                <dd>{latestLaunchExperimentDashboard.experiment_count}개</dd>
+              </div>
+              <div>
+                <dt>활성 실험</dt>
+                <dd>{latestLaunchExperimentDashboard.active_experiment_count}개</dd>
+              </div>
+              <div>
+                <dt>노출</dt>
+                <dd>{latestLaunchExperimentDashboard.total_impressions}</dd>
+              </div>
+              <div>
+                <dt>전환</dt>
+                <dd>{latestLaunchExperimentDashboard.total_conversions}</dd>
+              </div>
+              <div>
+                <dt>전환율</dt>
+                <dd>{percent(latestLaunchExperimentDashboard.conversion_rate)}</dd>
+              </div>
+              <div>
+                <dt>승자 후보</dt>
+                <dd>{latestLaunchExperimentDashboard.best_variant_label || "없음"}</dd>
+              </div>
+            </dl>
+
+            <div className="growthStepGrid">
+              {latestLaunchExperimentDashboard.experiments.slice(0, 4).map((experiment) => (
+                <article className="growthStepCard" key={experiment.experiment_id}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(experiment.status)}`}>
+                      {experiment.status}
+                    </span>
+                    <span className="pill muted">{experiment.channel}</span>
+                  </div>
+                  <h4>{experiment.name}</h4>
+                  <p>{experiment.hypothesis}</p>
+                  <p>
+                    {experiment.primary_metric} · {experiment.target_surface}
+                  </p>
+                  <ul>
+                    {experiment.variants.map((variant) => (
+                      <li key={variant.variant_id}>
+                        {variant.label}: {percent(variant.conversion_rate)} ·{" "}
+                        {variant.evidence}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+
+            <div className="growthStepGrid">
+              {latestLaunchExperimentDashboard.experiments
+                .flatMap((experiment) => experiment.variants)
+                .slice(0, 6)
+                .map((variant) => (
+                  <article className="growthStepCard" key={variant.variant_id}>
+                    <div className="answerHeader">
+                      <span className={`pill ${gateTone(variant.status)}`}>
+                        {variant.status}
+                      </span>
+                      <span className="pill muted">
+                        {percent(variant.conversion_rate)}
+                      </span>
+                    </div>
+                    <h4>{variant.headline}</h4>
+                    <p>{variant.body}</p>
+                    <p>
+                      {variant.cta_label} · {variant.cta_path}
+                    </p>
+                    <p>{variant.recommendation}</p>
+                  </article>
+                ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>추천 실험</strong>
+                <ul>
+                  {(latestLaunchExperimentDashboard.recommended_experiments.length
+                    ? latestLaunchExperimentDashboard.recommended_experiments
+                    : []
+                  )
+                    .slice(0, 5)
+                    .map((experiment) => (
+                      <li key={experiment.experiment_id}>
+                        {experiment.name} · {experiment.status}
+                      </li>
+                    ))}
+                  {!latestLaunchExperimentDashboard.recommended_experiments.length ? (
+                    <li>아직 추천할 실험이 없습니다.</li>
+                  ) : null}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestLaunchExperimentDashboard.next_actions.slice(0, 5).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestLaunchExperimentDashboard.recent_events.slice(0, 6).map((event) => (
+                <article className="gateCheckCard" key={event.event_id}>
+                  <div className="answerHeader">
+                    <span
+                      className={`pill ${
+                        event.event_type === "conversion" ? "ok" : "warn"
+                      }`}
+                    >
+                      {event.event_type}
+                    </span>
+                    <span className="pill muted">{event.surface}</span>
+                  </div>
+                  <h4>{event.label || event.variant_id}</h4>
+                  <p>{event.variant_id}</p>
                 </article>
               ))}
             </div>

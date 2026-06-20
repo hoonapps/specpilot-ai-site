@@ -60,6 +60,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/retention-hub`: 제품 API의 `/growth/retention-hub`로 저장 리포트, 알림, 공유 조회, 상담, 구매 결과, 완료 리포트 반응 기반 재참여 플레이 조회
 - `/api/specpilot/referrals`: 제품 API의 `/growth/waitlist-referrals`, `/growth/referral-dashboard`로 추천 코드, 공유 URL, 추천 유입 리더보드 조회
 - `/api/specpilot/launch-pulse`: 제품 API의 `/growth/launch-pulse`로 공개 반응 Pulse, 신호별 점수, 다음 액션, 최근 피드백/이벤트 조회
+- `/api/specpilot/launch-experiments`: 제품 API의 `/growth/launch-experiments`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-experiment-dashboard`로 CTA 실험 생성, 노출/전환 기록, 승자 후보 조회
 - `/api/specpilot/launch-kit`: 제품 API의 `/growth/launch-kit`으로 커뮤니티/검색/추천 채널별 공개 베타 카피, CTA 실험, 출시 체크리스트, 측정 계획 조회
 - `/api/specpilot/pricing-ops`: 제품 API의 `/pricing/plans`, `/billing/subscription-intents`, `/ops/pricing-dashboard`로 요금제별 수요, 예상 MRR, 연환산 매출, 최근 intent 관리
 
@@ -114,6 +115,9 @@ docker build -t specpilot-ai-site:local .
 - `GET /growth/acquisition-hub`
 - `GET /growth/retention-hub`
 - `GET /growth/launch-pulse`
+- `POST /growth/launch-experiments`
+- `POST /growth/launch-experiments/{experiment_id}/events`
+- `GET /growth/launch-experiment-dashboard`
 - `POST /reports/save`
 - `POST /reports/{report_id}/share`
 - `GET /reports/{report_id}/share-assets`

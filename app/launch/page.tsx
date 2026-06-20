@@ -33,6 +33,7 @@ import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
+import { FirstBootSetupPanel } from "./FirstBootSetupPanel";
 import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { LaunchCommunityKitPanel } from "./LaunchCommunityKitPanel";
@@ -1424,6 +1425,8 @@ export default async function LaunchPage() {
       />
 
       <PurchaseAftercarePanel />
+
+      <FirstBootSetupPanel />
 
       <section className="launchPublicSection launchSocialProofWall">
         <div className="sectionHeader">

@@ -1473,6 +1473,58 @@ export type PublicPurchaseAftercareKit = {
   next_actions: string[];
 };
 
+export type FirstBootSetupRequest = {
+  category: Category;
+  product_title: string;
+  os_name: string;
+  primary_purpose: string;
+  monitor_resolution: string;
+  connection_type: string;
+  peripherals: string[];
+  missing_drivers: string[];
+  observed_issues: string[];
+  warranty_registered: boolean;
+  bios_updated: boolean;
+  source: string;
+};
+
+export type FirstBootSetupTask = {
+  task_id: string;
+  label: string;
+  status: OpsStatus;
+  instruction: string;
+  evidence: string;
+};
+
+export type FirstBootMessage = {
+  channel: string;
+  label: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicFirstBootSetupKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  priority: OpsStatus;
+  setup_score: number;
+  headline: string;
+  summary: string;
+  first_boot_checklist: FirstBootSetupTask[];
+  driver_checklist: FirstBootSetupTask[];
+  benchmark_plan: string[];
+  issue_triage: string[];
+  warranty_actions: string[];
+  messages: FirstBootMessage[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

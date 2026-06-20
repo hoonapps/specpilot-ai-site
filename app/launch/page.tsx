@@ -33,6 +33,7 @@ import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { LaunchCommunityKitPanel } from "./LaunchCommunityKitPanel";
 import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
+import { LaunchDeferredPanel } from "./LaunchDeferredPanel";
 import { LaunchIncidentCenterPanel } from "./LaunchIncidentCenterPanel";
 import { LaunchMediaKitPanel } from "./LaunchMediaKitPanel";
 import { LaunchObjectionKitPanel } from "./LaunchObjectionKitPanel";
@@ -1126,25 +1127,95 @@ export default async function LaunchPage() {
 
       <LaunchReadinessGatePanel />
 
-      <LaunchPreflightPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-preflight"
+        label="공개 출시 최종 체크"
+        title="최종 배포 판단은 화면에 가까워질 때 불러옵니다."
+        summary="스모크, 출시 게이트, 워룸, 인시던트 대응 신호를 필요 시점에 합산해 첫 화면 API 폭주를 줄입니다."
+      >
+        <LaunchPreflightPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchSmokePanel />
+      <LaunchDeferredPanel
+        anchorId="launch-smoke"
+        label="공개 런칭 스모크 체크"
+        title="공개 URL 스모크 체크를 지연 로드합니다."
+        summary="SEO, 공유 미리보기, 측정 이벤트 준비도는 운영자가 해당 섹션에 접근할 때 확인합니다."
+      >
+        <LaunchSmokePanel />
+      </LaunchDeferredPanel>
 
-      <LaunchWarRoomPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-war-room"
+        label="첫 24시간 런칭 워룸"
+        title="런칭 워룸 신호를 지연 로드합니다."
+        summary="Pulse, 전환, 품질 회귀, 추천/유료 수요 합산은 첫 화면 렌더링 이후 순차적으로 시작합니다."
+      >
+        <LaunchWarRoomPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchIncidentCenterPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-incident-center"
+        label="런칭 인시던트 센터"
+        title="인시던트 runbook은 필요할 때 로드합니다."
+        summary="SEV level, commander brief, escalation 경로를 지연 마운트해 공개 첫 방문의 동시 호출을 줄입니다."
+      >
+        <LaunchIncidentCenterPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchWeekRecapPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-week-recap"
+        label="D+7 런칭 리포트"
+        title="첫 주 리캡은 아래쪽 진입 시 불러옵니다."
+        summary="성과, 리스크, founder update 계산을 스크롤 기반으로 분산합니다."
+      >
+        <LaunchWeekRecapPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchCommunityKitPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-community-kit"
+        label="커뮤니티 댓글 대응 키트"
+        title="커뮤니티 답변 템플릿을 지연 로드합니다."
+        summary="반복 질문 답변과 고정 댓글 후보는 해당 운영 섹션에서만 계산합니다."
+      >
+        <LaunchCommunityKitPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchMediaKitPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-media-kit"
+        label="런칭 미디어 키트"
+        title="외부 소개 자산은 스크롤 시 로드합니다."
+        summary="대표 이미지, 피치, 사용 가이드 합성을 첫 화면 이후로 미룹니다."
+      >
+        <LaunchMediaKitPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchActivationOfferPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-activation-offer"
+        label="런칭 전환 오퍼"
+        title="첫 CTA 오퍼 계산을 지연 로드합니다."
+        summary="추천 대기열, 요금제 관심, Team 상담 신호 합산을 필요한 시점에 시작합니다."
+      >
+        <LaunchActivationOfferPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchResponseLoopPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-response-loop"
+        label="런칭 반응 후속 루프"
+        title="후속 답장과 수정 큐는 아래에서 불러옵니다."
+        summary="공개 proof 후보, founder reply, 제품 수정 큐 계산을 첫 화면 호출에서 분리합니다."
+      >
+        <LaunchResponseLoopPanel />
+      </LaunchDeferredPanel>
 
-      <LaunchRetentionLoopPanel />
+      <LaunchDeferredPanel
+        anchorId="launch-retention-loop"
+        label="구매 후속 리텐션 루프"
+        title="리텐션 운영 신호를 지연 로드합니다."
+        summary="가격 알림, 구매 결과, 완료 리포트 engagement 신호를 스크롤 기반으로 확인합니다."
+      >
+        <LaunchRetentionLoopPanel />
+      </LaunchDeferredPanel>
 
       <section className="launchPublicSection">
         <div className="sectionHeader">

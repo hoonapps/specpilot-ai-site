@@ -5971,6 +5971,37 @@ ul {
   margin: 0 24px 34px;
 }
 
+.launchDeferredPanel {
+  min-height: 220px;
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+  border: 1px dashed rgba(12, 116, 108, 0.24);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(242, 248, 246, 0.88)),
+    var(--paper);
+  padding: clamp(20px, 3vw, 30px);
+}
+
+.launchDeferredPanel h2,
+.launchDeferredPanel p {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchDeferredPanel h2 {
+  color: var(--ink);
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.12;
+}
+
+.launchDeferredPanel p {
+  max-width: 760px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .launchPublicGrid,
 .launchMarketGrid {
   display: grid;
@@ -7639,6 +7670,11 @@ ul {
   .launchPublicSection {
     margin-right: 14px;
     margin-left: 14px;
+  }
+
+  .launchDeferredPanel {
+    grid-template-columns: 1fr;
+    align-items: start;
   }
 
   .launchMarketCard dl {

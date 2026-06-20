@@ -4063,6 +4063,138 @@ ul {
   gap: 6px;
 }
 
+.launchPublicOps {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchPublicOpsScoreGrid,
+.launchPublicOpsMetricGrid,
+.launchPublicOpsStageGrid,
+.launchPublicOpsSurfaceGrid,
+.launchPublicOpsFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchPublicOpsScoreGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPublicOpsMetricGrid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.launchPublicOpsStageGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPublicOpsSurfaceGrid,
+.launchPublicOpsFooter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchPublicOpsScoreGrid article,
+.launchPublicOpsMetricGrid article,
+.launchPublicOpsStageGrid article,
+.launchPublicOpsSurfaceGrid article,
+.launchPublicOpsFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchPublicOpsScoreGrid span,
+.launchPublicOpsMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.launchPublicOpsScoreGrid strong,
+.launchPublicOpsMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.3vw, 30px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.launchPublicOps p,
+.launchPublicOps small,
+.launchPublicOps li,
+.launchPublicOpsSurfaceGrid a span {
+  min-width: 0;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.launchPublicOpsStageGrid article > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchPublicOpsStageGrid h3 {
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.launchPublicOpsSurfaceGrid strong,
+.launchPublicOpsFooter strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+}
+
+.launchPublicOpsSurfaceGrid article > div {
+  display: grid;
+  gap: 8px;
+}
+
+.launchPublicOpsSurfaceGrid a {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.launchPublicOpsSurfaceGrid a strong {
+  color: var(--teal);
+}
+
+.launchPublicOpsFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchPublicOpsFooter small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .launchPublicSection {
   display: grid;
   gap: 16px;
@@ -5341,6 +5473,10 @@ ul {
   .launchReferralMomentumMetrics,
   .launchReferralMomentumGrid,
   .launchReferralSharePreview,
+  .launchPublicOpsScoreGrid,
+  .launchPublicOpsMetricGrid,
+  .launchPublicOpsStageGrid,
+  .launchPublicOpsSurfaceGrid,
   .conciergeResultGrid,
   .launchSocialProofGrid {
     grid-template-columns: 1fr 1fr;
@@ -5359,6 +5495,10 @@ ul {
   }
 
   .launchReferralMomentumFooter {
+    grid-template-columns: 1fr;
+  }
+
+  .launchPublicOpsFooter {
     grid-template-columns: 1fr;
   }
 }
@@ -5574,6 +5714,11 @@ ul {
   .launchReferralMomentumGrid,
   .launchReferralSharePreview,
   .launchReferralMomentumFooter,
+  .launchPublicOpsScoreGrid,
+  .launchPublicOpsMetricGrid,
+  .launchPublicOpsStageGrid,
+  .launchPublicOpsSurfaceGrid,
+  .launchPublicOpsFooter,
   .launchDistributionSummary,
   .launchDistributionPublicGrid,
   .launchDistributionGuardrails,

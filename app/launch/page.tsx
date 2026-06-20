@@ -30,6 +30,7 @@ import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
 import { LaunchProofHubPanel } from "./LaunchProofHubPanel";
+import { LaunchPublicOpsPanel } from "./LaunchPublicOpsPanel";
 import { LaunchReadinessGatePanel } from "./LaunchReadinessGatePanel";
 import { LaunchReferralMomentumPanel } from "./LaunchReferralMomentumPanel";
 import { LaunchRetentionLoopPanel } from "./LaunchRetentionLoopPanel";
@@ -1133,6 +1134,8 @@ export default async function LaunchPage() {
       <LaunchTeamConsultPreviewPanel />
 
       <LaunchReferralMomentumPanel />
+
+      <LaunchPublicOpsPanel />
 
       <LaunchConversionPanel />
 

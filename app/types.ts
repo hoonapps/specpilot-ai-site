@@ -1133,6 +1133,11 @@ export type SpecRiskScannerResult = {
   missing_evidence: string[];
   analysis_prefill: string;
   share_copy: string;
+  purchase_safety_brief: string;
+  seller_questions: string[];
+  approval_brief: string;
+  capture_checklist: string[];
+  checkout_next_step: string;
   primary_cta_label: string;
   primary_cta_path: string;
   next_actions: string[];

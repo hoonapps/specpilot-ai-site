@@ -300,6 +300,29 @@ export function SpecRiskScannerPanel({
                   <strong>{result.warning_count}개</strong>
                 </div>
               </div>
+              <div className={`launchSpecSafetyBrief ${result.verdict}`}>
+                <strong>구매 세이프티 브리프</strong>
+                <p>{result.purchase_safety_brief}</p>
+                <small>{result.checkout_next_step}</small>
+              </div>
+              <div className="launchSpecBriefGrid">
+                <div>
+                  <strong>판매자 확인 질문</strong>
+                  <ul>
+                    {result.seller_questions.slice(0, 5).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <strong>결제 전 캡처</strong>
+                  <ul>
+                    {result.capture_checklist.slice(0, 6).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
               <div className="launchSpecScannerChecks">
                 {result.checks.slice(0, 8).map((check) => (
                   <div className={check.status} key={check.check_id}>
@@ -319,6 +342,8 @@ export function SpecRiskScannerPanel({
                 ))}
               </div>
               <div className="launchSpecScannerPrefill">
+                <strong>승인/공유 요약</strong>
+                <p>{result.approval_brief}</p>
                 <strong>분석 요청 prefill</strong>
                 <p>{result.analysis_prefill}</p>
               </div>

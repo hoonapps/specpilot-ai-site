@@ -2735,6 +2735,8 @@ ul {
 .launchSpecScannerForm,
 .launchSpecScannerResult,
 .launchSpecScannerChecks div,
+.launchSpecSafetyBrief,
+.launchSpecBriefGrid div,
 .launchSpecScannerPrefill {
   display: grid;
   min-width: 0;
@@ -2798,6 +2800,9 @@ ul {
 .launchSpecScannerResult p,
 .launchSpecScannerResult li,
 .launchSpecScannerChecks p,
+.launchSpecSafetyBrief p,
+.launchSpecSafetyBrief small,
+.launchSpecBriefGrid li,
 .launchSpecScannerPrefill p {
   margin: 0;
   line-height: 1.6;
@@ -2826,6 +2831,60 @@ ul {
 
 .launchSpecScannerNumbers {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchSpecSafetyBrief {
+  border-color: rgba(12, 116, 108, 0.22);
+  background: #f1fbf6;
+}
+
+.launchSpecSafetyBrief.hold {
+  border-color: rgba(170, 45, 45, 0.24);
+  background: #fff5f3;
+}
+
+.launchSpecSafetyBrief.verify {
+  border-color: rgba(176, 112, 0, 0.24);
+  background: #fffaf0;
+}
+
+.launchSpecSafetyBrief strong,
+.launchSpecBriefGrid strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchSpecSafetyBrief small {
+  color: var(--teal);
+  font-weight: 900;
+}
+
+.launchSpecSafetyBrief.hold small {
+  color: #9c2f24;
+}
+
+.launchSpecSafetyBrief.verify small {
+  color: #8a5b10;
+}
+
+.launchSpecBriefGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchSpecBriefGrid div {
+  align-content: start;
+  background: #fff;
+  padding: 12px;
+}
+
+.launchSpecBriefGrid ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
 }
 
 .launchSpecScannerNumbers div {
@@ -7392,6 +7451,7 @@ ul {
   .launchSpecScannerControls,
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
+  .launchSpecBriefGrid,
   .launchStartConciergeControls,
   .launchStartConciergeMetrics,
   .launchStartConciergeMilestones,
@@ -7653,6 +7713,7 @@ ul {
   .launchSpecScannerControls,
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
+  .launchSpecBriefGrid,
   .launchCandidateCompareGrid,
   .launchCandidateControls,
   .launchCandidateItems,

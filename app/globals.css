@@ -4586,6 +4586,172 @@ ul {
   padding-left: 18px;
 }
 
+.launchCommunityKit {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchCommunityStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchCommunityStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchCommunityMetricGrid,
+.launchCommunityGrid,
+.launchCommunityFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchCommunityMetricGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchCommunityGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchCommunityFooter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchCommunityMetricGrid article,
+.launchCommunityPinned,
+.launchCommunityReply,
+.launchCommunityFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: #f8fffb;
+  padding: 16px;
+}
+
+.launchCommunityMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchCommunityMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.launchCommunityPinned {
+  background: #ffffff;
+}
+
+.launchCommunityPinned > div,
+.launchCommunityReply > div,
+.launchCommunityFooter strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchCommunityPinned > div,
+.launchCommunityReply > div {
+  justify-content: space-between;
+}
+
+.launchCommunityPinned button,
+.launchCommunityReply button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(12, 116, 108, 0.24);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--teal);
+  font-weight: 900;
+}
+
+.launchCommunityPinned pre,
+.launchCommunityReply pre {
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 780;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.launchCommunityReply h3,
+.launchCommunityReply p,
+.launchCommunityReply small,
+.launchCommunityFooter h3,
+.launchCommunityFooter p,
+.launchCommunityFooter b,
+.launchCommunityFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchCommunityReply h3,
+.launchCommunityFooter h3 {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.launchCommunityReply p,
+.launchCommunityReply small,
+.launchCommunityFooter p,
+.launchCommunityFooter b,
+.launchCommunityFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchCommunityFooter > div article {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.launchCommunityFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchCommunityEvents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .launchRetentionLoop {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -6300,6 +6466,9 @@ ul {
   .launchWeekRecapMetricGrid,
   .launchWeekRecapGrid,
   .launchWeekRecapFooter,
+  .launchCommunityMetricGrid,
+  .launchCommunityGrid,
+  .launchCommunityFooter,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -6640,6 +6809,9 @@ ul {
   .launchWeekRecapMetricGrid,
   .launchWeekRecapGrid,
   .launchWeekRecapFooter,
+  .launchCommunityMetricGrid,
+  .launchCommunityGrid,
+  .launchCommunityFooter,
   .launchRetentionMetricGrid,
   .launchRetentionSignalGrid,
   .launchRetentionPlayGrid,

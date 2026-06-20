@@ -29,6 +29,7 @@ import { CandidateComparePanel } from "./CandidateComparePanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
+import { LaunchCommunityKitPanel } from "./LaunchCommunityKitPanel";
 import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
 import { LaunchObjectionKitPanel } from "./LaunchObjectionKitPanel";
@@ -1118,6 +1119,8 @@ export default async function LaunchPage() {
       <LaunchWarRoomPanel />
 
       <LaunchWeekRecapPanel />
+
+      <LaunchCommunityKitPanel />
 
       <LaunchRetentionLoopPanel />
 

@@ -71,6 +71,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/launch-pulse`: 제품 API의 `/growth/launch-pulse`로 공개 반응 Pulse, 신호별 점수, 다음 액션, 최근 피드백/이벤트 조회
 - `/api/specpilot/launch-war-room`: 제품 API의 `/growth/launch-war-room`으로 Pulse, 스모크, 전환 보드, 출시 게이트, 품질 회귀, CTA 실험, 추천/유료 수요를 합성한 첫 24시간 워룸 조회
 - `/api/specpilot/launch-week-recap`: 제품 API의 `/growth/launch-week-recap`으로 첫 주 성장 이벤트, 공유 조회, 추천 대기열, 요금제 관심, CTA 실험, 리텐션, 품질 리스크를 합성한 D+7 런칭 리포트 조회
+- `/api/specpilot/launch-community-kit`: 제품 API의 `/growth/launch-community-kit`으로 D+7 리포트, 반박 FAQ, 공유 확산팩, 액션 라우터를 합성한 커뮤니티 고정 댓글/반복 질문 답변/운영 리스크 조회
 - `/api/specpilot/launch-experiments`: 제품 API의 `/growth/launch-experiments`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-experiment-dashboard`로 CTA 실험 생성, 노출/전환 기록, 승자 후보 조회
 - `/api/specpilot/launch-kit`: 제품 API의 `/growth/launch-kit`으로 커뮤니티/검색/추천 채널별 공개 베타 카피, CTA 실험, 출시 체크리스트, 측정 계획 조회
 - `/api/specpilot/launch-distribution-plan`: 제품 API의 `/growth/launch-distribution-plan`으로 첫 주 채널 배포 슬롯, 복사 문구, 측정 이벤트, 위험 통제 조회
@@ -87,7 +88,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 공개 페이지:
 
 - `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest`: 공개 런칭룸, 추천 초대, 데스크톱/노트북 시장 리포트를 검색 엔진과 공유 미리보기에서 읽히게 하는 배포 메타 자산
-- `/launch`: 제품 API의 `/public/launch-room`, `/public/start-concierge`, `/growth/launch-experiment-dashboard`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-distribution-plan`, `/growth/retention-hub`, `/growth/referral-launch-kit`, `/growth/acquisition-hub`, `/growth/public-conversion-board`, `/growth/launch-pulse`, `/growth/launch-war-room`, `/growth/launch-week-recap`, `/ops/team-purchase-consult-kit`, `/beta/readiness`, `/beta/launch-gate`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/mistake-cost-calculator`, `/public/buyer-challenge-kit`, `/public/spec-risk-scanner`, `/public/candidate-compare`, `/public/deal-timing-window`, `/public/social-proof-wall`, `/public/launch-objection-kit`, `/public/launch-share-pack`, `/public/launch-action-router`, `/public/launch-smoke`, `/public/proof-hub`, `/pricing/plans`를 읽어 공개 데모, 첫 구매 진단 콘시어지, CTA 실험 스트립, 첫 주 채널 배포 플랜, 구매 후속 리텐션 루프, 가입 전 추천 확산 키트, 공개 반응 운영 패널, 첫 24시간 런칭 워룸, D+7 런칭 리포트, 런칭 반박 FAQ, 공유 확산팩, 방문자 액션 라우터, 공개 런칭 스모크 체크, Team 구매 표준안 프리뷰, 공개 출시 게이트, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 구매 실패 비용 계산기, 구매 챌린지 공유 키트, 옵션/사양 빠른 검수기, 공개 후보 비교 스냅샷, 공개 구매 타이밍 윈도우, 공개 검증 허브 evidence kit, Free/Premium/Team 요금제 비교 카드, 실제 반응 proof, 첫 주 founder update, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 각 분석 CTA는 세션 handoff로 메인 분석 폼을 자동 채우며, 방문자 액션 라우터 선택/CTA 클릭, 추천 대기열, 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
+- `/launch`: 제품 API의 `/public/launch-room`, `/public/start-concierge`, `/growth/launch-experiment-dashboard`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-distribution-plan`, `/growth/retention-hub`, `/growth/referral-launch-kit`, `/growth/acquisition-hub`, `/growth/public-conversion-board`, `/growth/launch-pulse`, `/growth/launch-war-room`, `/growth/launch-week-recap`, `/growth/launch-community-kit`, `/ops/team-purchase-consult-kit`, `/beta/readiness`, `/beta/launch-gate`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/mistake-cost-calculator`, `/public/buyer-challenge-kit`, `/public/spec-risk-scanner`, `/public/candidate-compare`, `/public/deal-timing-window`, `/public/social-proof-wall`, `/public/launch-objection-kit`, `/public/launch-share-pack`, `/public/launch-action-router`, `/public/launch-smoke`, `/public/proof-hub`, `/pricing/plans`를 읽어 공개 데모, 첫 구매 진단 콘시어지, CTA 실험 스트립, 첫 주 채널 배포 플랜, 구매 후속 리텐션 루프, 가입 전 추천 확산 키트, 공개 반응 운영 패널, 첫 24시간 런칭 워룸, D+7 런칭 리포트, 커뮤니티 댓글 대응 키트, 런칭 반박 FAQ, 공유 확산팩, 방문자 액션 라우터, 공개 런칭 스모크 체크, Team 구매 표준안 프리뷰, 공개 출시 게이트, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 구매 실패 비용 계산기, 구매 챌린지 공유 키트, 옵션/사양 빠른 검수기, 공개 후보 비교 스냅샷, 공개 구매 타이밍 윈도우, 공개 검증 허브 evidence kit, Free/Premium/Team 요금제 비교 카드, 실제 반응 proof, 첫 주 founder update, 반복 질문 답변 템플릿, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 각 분석 CTA는 세션 handoff로 메인 분석 폼을 자동 채우며, 방문자 액션 라우터 선택/CTA 클릭, 추천 대기열, 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
 - 첫 화면 공개 데모 갤러리는 데스크톱/노트북/팀 구매 preset을 분석 폼에 즉시 적용해 빈 폼 이탈을 줄임
@@ -151,6 +152,7 @@ docker build -t specpilot-ai-site:local .
 - `GET /growth/launch-pulse`
 - `GET /growth/launch-war-room`
 - `GET /growth/launch-week-recap`
+- `GET /growth/launch-community-kit`
 - `POST /growth/waitlist-referrals`
 - `GET /growth/referral-dashboard`
 - `GET /growth/referral-leaderboard`

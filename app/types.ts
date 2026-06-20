@@ -1576,6 +1576,41 @@ export type LaunchWeekRecapDashboard = {
   next_actions: string[];
 };
 
+export type LaunchCommunityReplyTemplate = {
+  key: string;
+  label: string;
+  trigger: string;
+  tone: string;
+  copy_text: string;
+  cta_label: string;
+  cta_path: string;
+  tracking_event: string;
+};
+
+export type LaunchCommunityRisk = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  evidence: string;
+  response_rule: string;
+};
+
+export type LaunchCommunityKit = {
+  kit_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  response_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  pinned_update: string;
+  reply_templates: LaunchCommunityReplyTemplate[];
+  risks: LaunchCommunityRisk[];
+  tracking_events: string[];
+  next_actions: string[];
+};
+
 export type PublicAcquisitionSurface = {
   key: string;
   label: string;

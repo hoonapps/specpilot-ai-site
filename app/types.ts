@@ -1507,6 +1507,42 @@ export type LaunchPulseDashboard = {
   recent_growth_events: GrowthEventRecord[];
 };
 
+export type LaunchWarRoomSignal = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  metric: string;
+  evidence: string;
+  owner: string;
+  next_action: string;
+};
+
+export type LaunchWarRoomPlay = {
+  play_id: string;
+  label: string;
+  status: OpsStatus;
+  trigger: string;
+  action: string;
+  expected_impact: string;
+  owner: string;
+};
+
+export type LaunchWarRoomDashboard = {
+  war_room_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  command_score: number;
+  decision: string;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  signals: LaunchWarRoomSignal[];
+  plays: LaunchWarRoomPlay[];
+  escalation_paths: string[];
+  next_actions: string[];
+};
+
 export type PublicAcquisitionSurface = {
   key: string;
   label: string;

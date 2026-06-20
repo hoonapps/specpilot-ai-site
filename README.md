@@ -130,11 +130,13 @@ curl http://127.0.0.1:3000/api/health
 
 ```bash
 npm run check
+LAUNCH_VISUAL_URL=http://127.0.0.1:3000/launch npm run check:launch-visual
 npm audit --audit-level=moderate
 docker build -t specpilot-ai-site:local .
 ```
 
 `check`는 TypeScript 타입 검사와 Next.js production build를 실행합니다.
+`check:launch-visual`은 실행 중인 `/launch`를 Chrome headless로 열어 데스크톱/모바일 hero 제목, CTA, proof pill, 가로 overflow를 검사하고 캡처를 저장합니다. `CHROME_PATH`와 `LAUNCH_VISUAL_OUT_DIR`로 Chrome 경로와 캡처 저장 위치를 지정할 수 있습니다.
 
 ## 연결되는 제품 API
 

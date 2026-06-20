@@ -71,14 +71,21 @@ export const metadata: Metadata = {
     description:
       "컴퓨터와 노트북 구매를 위한 AI 의사결정 에이전트 공개 데모룸",
     url: "/launch",
-    images: ["/product-workbench.png"],
+    images: [
+      {
+        url: "/launch/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "SpecPilot AI 공개 런칭룸 공유 카드",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "SpecPilot AI 런칭룸",
     description:
       "컴퓨터와 노트북 구매를 위한 AI 의사결정 에이전트 공개 데모룸",
-    images: ["/product-workbench.png"],
+    images: ["/launch/twitter-image"],
   },
 };
 

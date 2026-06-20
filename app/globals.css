@@ -2952,6 +2952,223 @@ ul {
   padding-left: 18px;
 }
 
+.launchProductEvidence {
+  background: #f8fafc;
+}
+
+.launchProductEvidenceGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchProductEvidenceForm,
+.launchProductEvidenceResult,
+.launchProductEvidenceMetrics article,
+.launchProductEvidenceSignals article,
+.launchProductEvidenceColumns > div {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+}
+
+.launchProductEvidenceForm,
+.launchProductEvidenceResult {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchProductEvidenceControls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchProductEvidenceControls.dense {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchProductEvidenceForm label {
+  display: grid;
+  gap: 7px;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.launchProductEvidenceForm input,
+.launchProductEvidenceForm select,
+.launchProductEvidenceForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  padding: 10px 11px;
+}
+
+.launchProductEvidenceForm textarea {
+  resize: vertical;
+}
+
+.launchProductEvidenceForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchProductEvidenceResultTop {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.launchProductEvidenceResultTop a {
+  align-items: center;
+  color: #2563eb;
+  display: inline-flex;
+  font-size: 0.86rem;
+  font-weight: 900;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.launchProductEvidenceResult h3 {
+  color: #0f172a;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.launchProductEvidenceResult p,
+.launchProductEvidenceResult li {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchProductEvidenceScore {
+  align-items: end;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  padding: 18px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+.launchProductEvidenceScore strong {
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 0.95;
+}
+
+.launchProductEvidenceScore span {
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  font-weight: 900;
+  padding-bottom: 5px;
+}
+
+.launchProductEvidenceMetrics,
+.launchProductEvidenceSignals,
+.launchProductEvidenceColumns,
+.launchProductEvidenceActions {
+  display: grid;
+  gap: 10px;
+}
+
+.launchProductEvidenceMetrics,
+.launchProductEvidenceColumns,
+.launchProductEvidenceActions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchProductEvidenceSignals {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchProductEvidenceMetrics article,
+.launchProductEvidenceSignals article,
+.launchProductEvidenceColumns > div {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px;
+}
+
+.launchProductEvidenceSignals article.ok {
+  border-color: rgba(22, 163, 74, 0.24);
+  background: #f0fdf4;
+}
+
+.launchProductEvidenceSignals article.warn {
+  border-color: rgba(217, 119, 6, 0.28);
+  background: #fffbeb;
+}
+
+.launchProductEvidenceSignals article.danger {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: #fef2f2;
+}
+
+.launchProductEvidenceMetrics span,
+.launchProductEvidenceSignals span {
+  align-items: center;
+  color: #64748b;
+  display: inline-flex;
+  font-size: 0.76rem;
+  font-weight: 900;
+  gap: 6px;
+  text-transform: uppercase;
+}
+
+.launchProductEvidenceMetrics strong,
+.launchProductEvidenceSignals strong,
+.launchProductEvidenceColumns strong {
+  color: #0f172a;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchProductEvidenceColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchProductEvidenceActions button {
+  align-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #e0f2fe;
+  color: #075985;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 900;
+  gap: 7px;
+  justify-content: center;
+  min-height: 42px;
+  padding: 11px 13px;
+}
+
+.launchProductEvidenceEmpty {
+  align-content: center;
+  display: grid;
+  gap: 10px;
+  min-height: 460px;
+  text-align: center;
+}
+
 .launchCartIntake {
   background: #ffffff;
 }
@@ -9908,6 +10125,13 @@ ul {
   .launchSetupControls.dense,
   .launchSetupMetricGrid,
   .launchSetupCheckGrid,
+  .launchProductEvidenceGrid,
+  .launchProductEvidenceControls,
+  .launchProductEvidenceControls.dense,
+  .launchProductEvidenceMetrics,
+  .launchProductEvidenceSignals,
+  .launchProductEvidenceColumns,
+  .launchProductEvidenceActions,
   .launchCartIntakeGrid,
   .launchCartIntakeControls,
   .launchCartIntakeMetrics,
@@ -10245,6 +10469,13 @@ ul {
   .launchSetupControls.dense,
   .launchSetupMetricGrid,
   .launchSetupCheckGrid,
+  .launchProductEvidenceGrid,
+  .launchProductEvidenceControls,
+  .launchProductEvidenceControls.dense,
+  .launchProductEvidenceMetrics,
+  .launchProductEvidenceSignals,
+  .launchProductEvidenceColumns,
+  .launchProductEvidenceActions,
   .launchCartIntakeGrid,
   .launchCartIntakeControls,
   .launchCartIntakeMetrics,

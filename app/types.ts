@@ -1210,6 +1210,66 @@ export type PublicListingDecoderKit = {
   next_actions: string[];
 };
 
+export type ProductPageEvidenceRequest = {
+  category: Category;
+  url: string;
+  product_title: string;
+  expected_model: string;
+  expected_cpu: string;
+  expected_gpu: string;
+  expected_ram_gb: number | null;
+  expected_storage_gb: number | null;
+  expected_os: string;
+  budget_krw: number;
+  seller_name: string;
+  page_text: string;
+  html_snapshot: string;
+  risk_terms: string[];
+  source: string;
+};
+
+export type ProductPageEvidenceSignal = {
+  signal_id: string;
+  label: string;
+  status: OpsStatus;
+  evidence: string;
+  recommendation: string;
+};
+
+export type PublicProductPageEvidenceKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  url: string;
+  host: string;
+  product_title: string;
+  seller_name: string;
+  priority: OpsStatus;
+  evidence_score: number;
+  extracted_price_krw: number | null;
+  shipping_fee_krw: number | null;
+  discount_krw: number | null;
+  effective_price_krw: number | null;
+  budget_delta_krw: number | null;
+  availability_status: string;
+  model_match_status: OpsStatus;
+  headline: string;
+  summary: string;
+  source_signals: ProductPageEvidenceSignal[];
+  risk_flags: string[];
+  extraction_notes: string[];
+  evidence_checklist: string[];
+  seller_questions: string[];
+  scanner_prefill: SpecRiskScannerRequest;
+  price_prefill: PriceBreakdownRequest;
+  seller_evidence_prefill: SellerEvidenceRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type SetupCompatibilityRequest = {
   category: Category;
   cpu: string;

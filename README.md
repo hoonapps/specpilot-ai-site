@@ -71,6 +71,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/purchase-approval-brief-kit`: 제품 API의 `/public/purchase-approval-brief-kit`로 장바구니 검수 결과를 가족/팀/커뮤니티용 승인 질문, 투표 옵션, 채널별 복사 문구로 변환
 - `/api/specpilot/seller-evidence-kit`: 제품 API의 `/public/seller-evidence-kit`로 판매자 확인 질문, 복사용 문의 문구, 답변 판정 기준, 캡처 체크리스트를 생성
 - `/api/specpilot/seller-negotiation-kit`: 제품 API의 `/public/seller-negotiation-kit`으로 현재가, 목표가, 경쟁가, 배송/조립/OS 비용, 재고, 위험 조건을 조건 안전 협상 메시지와 guardrail로 변환
+- `/api/specpilot/product-page-evidence-kit`: 제품 API의 `/public/product-page-evidence-kit`으로 상품 URL과 붙여 넣은 페이지 문구/HTML에서 가격, 배송비, 할인, 실구매가, 재고, 모델명 일치도, URL 안전성, 판매자 질문, 검수 prefill을 생성
 - `/api/specpilot/checkout-nudge-kit`: 제품 API의 `/public/checkout-nudge-kit`로 장바구니 검수 결과를 판매자 답변 요청, 가격 재확인, 구매 결과 회수 후속 알림과 분석/대기열 prefill로 변환
 - `/api/specpilot/purchase-aftercare-kit`: 제품 API의 `/public/purchase-aftercare-kit`로 구매일, 배송완료일, 최종 결제 금액, 초기 이슈를 반품/교환 마감, 보증 만료, 구매 결과 기록, 채널별 후속 문구로 변환
 - `/api/specpilot/first-boot-setup-kit`: 제품 API의 `/public/first-boot-setup-kit`로 첫 부팅 OS/포트/디스플레이/드라이버/벤치마크/보증 등록 상태를 세팅 점수와 점검표로 변환
@@ -118,6 +119,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`는 `/public/warranty-return-kit`을 총소유비용 다음에 렌더링해 반품 불가, 개봉 후 반품 제한, 해외/판매자 AS, 보증 승계 불명, 높은 반품 비용을 결제 전 보호 점수와 판매자 질문으로 변환한다.
 - `/launch`는 `/public/price-breakdown-kit`을 보증/반품 정책 검수 다음에 렌더링해 표시가, 배송비, 조립비, OS 비용, 쿠폰, 카드 할인, 포인트, 수량을 최종 실구매가와 예산/리포트 가격 차이로 변환한다.
 - `/launch`는 `/public/purchase-execution-kit`을 실구매가 분해 다음에 렌더링해 결제 전 실행 단계, 증거 게이트, 중단 조건, 가족/팀/커뮤니티 공유 문구를 만든다.
+- `/launch`는 `/public/product-page-evidence-kit`을 구매 실행 패키지 다음에 렌더링해 상품 URL과 페이지 문구에서 가격/재고/모델명/위험 조건을 추출하고 옵션 검수, 실구매가 분해, 판매자 증거 요청 prefill로 연결한다.
 - `/launch`는 `/public/shopping-cart-intake-kit`을 구매 실행 패키지 다음에 렌더링해 쇼핑몰 장바구니 텍스트를 총액, 필수 슬롯 누락, 옵션/사양 검수 prefill, 구매 승인 prefill로 변환한다.
 - `/launch`는 `/public/seller-evidence-kit`을 장바구니 인테이크 다음에 렌더링해 실제 출고 사양, 배송, 반품, AS, 리퍼/해외/FreeDOS 조건을 판매자에게 물을 문구와 답변 판정 기준을 보여준다.
 - `/launch`는 `/public/seller-negotiation-kit`을 판매자 증거 요청 다음에 렌더링해 가격 조정 요청이 사양, 배송, AS, 반품 조건을 흐리지 않도록 제안가, 절감 예상, 협상 lever, guardrail, 복사용 메시지를 보여준다.

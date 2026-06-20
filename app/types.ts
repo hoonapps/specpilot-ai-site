@@ -657,6 +657,76 @@ export type OpsLearningDashboard = {
   insights: OpsLearningInsight[];
 };
 
+export type OpsRegressionPeriod = {
+  label: string;
+  run_count: number;
+  average_quality_score: number;
+  average_cost_krw: number;
+  warning_count: number;
+  blocker_count: number;
+  started_at: string | null;
+  ended_at: string | null;
+};
+
+export type ProviderReliabilityMetric = {
+  provider_id: string | null;
+  provider_name: string;
+  host: string;
+  fetch_count: number;
+  allowed_count: number;
+  blocked_count: number;
+  blocked_rate: number;
+  status: OpsStatus;
+  recommendation: string;
+};
+
+export type OpsRegressionDashboard = {
+  workspace_id: string;
+  status: OpsStatus;
+  summary: string;
+  window_size: number;
+  recent: OpsRegressionPeriod;
+  previous: OpsRegressionPeriod;
+  quality_delta: number;
+  cost_delta_krw: number;
+  cost_delta_rate: number;
+  provider_reliability: ProviderReliabilityMetric[];
+  risk_flags: string[];
+  next_actions: string[];
+};
+
+export type ObservabilityExportRecord = {
+  export_id: string;
+  workspace_id: string;
+  trace_id: string;
+  destination: string;
+  status: string;
+  span_count: number;
+  quality_score: number;
+  payload: Record<string, unknown>;
+  provider_message: string;
+  retry_count: number;
+  dispatched_at: string | null;
+  next_retry_at: string | null;
+  created_at: string;
+};
+
+export type ObservabilityDispatchResponse = {
+  workspace_id: string;
+  selected_count: number;
+  sent_count: number;
+  failed_count: number;
+  dry_run: boolean;
+  exports: ObservabilityExportRecord[];
+};
+
+export type ObservabilityOpsBundle = {
+  regression: OpsRegressionDashboard;
+  exports: ObservabilityExportRecord[];
+  created_export?: ObservabilityExportRecord | null;
+  dispatch?: ObservabilityDispatchResponse | null;
+};
+
 export type IntegrationCategory =
   | "price_api"
   | "marketplace"

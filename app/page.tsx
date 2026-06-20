@@ -39,6 +39,7 @@ import type {
   IntegrationReadinessDashboard,
   IntegrationStatus,
   LaunchReadinessBundle,
+  ObservabilityOpsBundle,
   OpsLearningDashboard,
   OpsStatus,
   PurchaseLink,
@@ -251,6 +252,18 @@ export default function Home() {
   >("idle");
   const [latestLearningDashboard, setLatestLearningDashboard] =
     useState<OpsLearningDashboard | null>(null);
+  const [observability, setObservability] = useState({
+    destination: "opentelemetry",
+    includePayload: true,
+    dispatch: true,
+    dryRun: false,
+    windowSize: "5",
+  });
+  const [observabilityStatus, setObservabilityStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestObservabilityBundle, setLatestObservabilityBundle] =
+    useState<ObservabilityOpsBundle | null>(null);
   const [integrationProvider, setIntegrationProvider] = useState({
     providerName: "가격 비교 공식 API",
     category: "price_api" as IntegrationCategory,
@@ -390,6 +403,8 @@ export default function Home() {
     setLatestPurchaseOutcome(null);
     setLearningStatus("idle");
     setLatestLearningDashboard(null);
+    setObservabilityStatus("idle");
+    setLatestObservabilityBundle(null);
     setIntegrationStatus("idle");
     setLatestIntegrationDashboard(null);
     setLatestIntegrationProvider(null);
@@ -955,6 +970,65 @@ export default function Home() {
     }
   }
 
+  async function loadObservabilityOps() {
+    setObservabilityStatus("sending");
+
+    try {
+      const response = await fetch(
+        `/api/specpilot/observability?window_size=${encodeURIComponent(
+          observability.windowSize,
+        )}`,
+      );
+      if (!response.ok) {
+        throw new Error(`observability ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: ObservabilityOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("observability rejected");
+      }
+      setLatestObservabilityBundle(payload.bundle);
+      setObservabilityStatus("sent");
+    } catch {
+      setObservabilityStatus("error");
+    }
+  }
+
+  async function exportObservabilityTrace() {
+    setObservabilityStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/observability", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          trace_id: result.graph_trace_id,
+          destination: observability.destination,
+          include_payload: observability.includePayload,
+          dispatch: observability.dispatch,
+          dry_run: observability.dryRun,
+          window_size: observability.windowSize,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`observability export ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: ObservabilityOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("observability export rejected");
+      }
+      setLatestObservabilityBundle(payload.bundle);
+      setObservabilityStatus("sent");
+    } catch {
+      setObservabilityStatus("error");
+    }
+  }
+
   async function saveIntegrationProvider() {
     setIntegrationStatus("sending");
 
@@ -1177,6 +1251,7 @@ export default function Home() {
           <a href="#purchase-outcome">구매 결과</a>
           <a href="#learning-insights">학습 인사이트</a>
           <a href="#advisor">구매 상담</a>
+          <a href="#observability">품질 회귀</a>
           <a href="#integrations">외부 연동</a>
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#conversion">피드백</a>
@@ -2901,6 +2976,228 @@ export default function Home() {
                 </ul>
               </div>
             </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="observabilityPanel" id="observability">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Gauge size={16} />
+            품질 회귀와 Observability
+          </div>
+          <h2>출시 후 품질 하락과 trace export를 함께 봅니다</h2>
+          <p>
+            최근/이전 분석 품질, 비용 변화, provider 차단율을 비교하고 현재
+            trace를 OpenTelemetry 또는 LangSmith outbox로 적재합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestObservabilityBundle
+                  ? gateTone(latestObservabilityBundle.regression.status)
+                  : "warn"
+              }`}
+            >
+              {latestObservabilityBundle
+                ? `${latestObservabilityBundle.regression.status} · 품질 ${Math.round(
+                    latestObservabilityBundle.regression.recent.average_quality_score,
+                  )}점`
+                : "회귀 미조회"}
+            </span>
+            <span className="pill muted">
+              {isDemo ? "라이브 분석 필요" : `Trace ${result.graph_trace_id}`}
+            </span>
+          </div>
+        </div>
+
+        <div className="observabilityForm">
+          <div className="fieldGrid">
+            <label>
+              대상
+              <select
+                value={observability.destination}
+                onChange={(event) =>
+                  setObservability((current) => ({
+                    ...current,
+                    destination: event.target.value,
+                  }))
+                }
+              >
+                <option value="opentelemetry">OpenTelemetry</option>
+                <option value="langsmith">LangSmith</option>
+              </select>
+            </label>
+            <label>
+              회귀 윈도우
+              <input
+                inputMode="numeric"
+                value={observability.windowSize}
+                onChange={(event) =>
+                  setObservability((current) => ({
+                    ...current,
+                    windowSize: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <div className="fieldGrid">
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={observability.includePayload}
+                onChange={(event) =>
+                  setObservability((current) => ({
+                    ...current,
+                    includePayload: event.target.checked,
+                  }))
+                }
+              />
+              trace payload 포함
+            </label>
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={observability.dispatch}
+                onChange={(event) =>
+                  setObservability((current) => ({
+                    ...current,
+                    dispatch: event.target.checked,
+                  }))
+                }
+              />
+              export 후 dispatch
+            </label>
+          </div>
+          <label className="toggleLabel">
+            <input
+              type="checkbox"
+              checked={observability.dryRun}
+              onChange={(event) =>
+                setObservability((current) => ({
+                  ...current,
+                  dryRun: event.target.checked,
+                }))
+              }
+            />
+            dispatch dry-run
+          </label>
+          <div className="alertActionGrid">
+            <button
+              type="button"
+              disabled={observabilityStatus === "sending" || isDemo}
+              onClick={exportObservabilityTrace}
+            >
+              {observabilityStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Gauge size={18} />
+              )}
+              현재 trace export
+            </button>
+            <button
+              type="button"
+              className="secondaryButton"
+              disabled={observabilityStatus === "sending"}
+              onClick={loadObservabilityOps}
+            >
+              <Activity size={18} />
+              회귀만 조회
+            </button>
+          </div>
+          <p className="formStatus">
+            {isDemo
+              ? "제품 API 연결 후 분석을 실행하면 trace export를 만들 수 있습니다."
+              : statusMessage(
+                  observabilityStatus,
+                  "관측성 운영 상태를 갱신했습니다.",
+                  "관측성 운영 상태 처리에 실패했습니다.",
+                ) || "최근 분석 trace와 품질 회귀 지표를 운영 outbox로 연결합니다."}
+          </p>
+        </div>
+
+        {latestObservabilityBundle ? (
+          <div className="observabilityResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestObservabilityBundle.regression.status)}`}>
+                {latestObservabilityBundle.regression.status}
+              </span>
+              <span className="pill muted">
+                윈도우 {latestObservabilityBundle.regression.window_size}
+              </span>
+              {latestObservabilityBundle.created_export ? (
+                <span className="pill ok">
+                  export {latestObservabilityBundle.created_export.status}
+                </span>
+              ) : null}
+              {latestObservabilityBundle.dispatch ? (
+                <span className="pill muted">
+                  dispatch {latestObservabilityBundle.dispatch.sent_count}건
+                </span>
+              ) : null}
+            </div>
+            <h3>{latestObservabilityBundle.regression.summary}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>최근 품질</dt>
+                <dd>
+                  {Math.round(
+                    latestObservabilityBundle.regression.recent.average_quality_score,
+                  )}점
+                </dd>
+              </div>
+              <div>
+                <dt>품질 변화</dt>
+                <dd>{Math.round(latestObservabilityBundle.regression.quality_delta)}점</dd>
+              </div>
+              <div>
+                <dt>비용 변화</dt>
+                <dd>{won(Math.round(latestObservabilityBundle.regression.cost_delta_krw))}</dd>
+              </div>
+            </dl>
+            <div className="advisorLists">
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestObservabilityBundle.regression.next_actions
+                    .slice(0, 5)
+                    .map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                </ul>
+              </div>
+              <div>
+                <strong>Export outbox</strong>
+                <ul>
+                  {latestObservabilityBundle.exports.slice(0, 5).map((item) => (
+                    <li key={item.export_id}>
+                      {item.status} · {item.destination} · span {item.span_count} · retry{" "}
+                      {item.retry_count}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            {latestObservabilityBundle.regression.provider_reliability.length ? (
+              <div className="gateCheckGrid">
+                {latestObservabilityBundle.regression.provider_reliability
+                  .slice(0, 4)
+                  .map((provider) => (
+                    <article className="gateCheckCard" key={`${provider.provider_name}-${provider.host}`}>
+                      <div className="answerHeader">
+                        <span className={`pill ${gateTone(provider.status)}`}>
+                          {provider.status}
+                        </span>
+                        <span className="pill muted">{provider.host}</span>
+                      </div>
+                      <h4>{provider.provider_name}</h4>
+                      <p>차단율 {percent(provider.blocked_rate)}</p>
+                      <p>{provider.recommendation}</p>
+                    </article>
+                  ))}
+              </div>
+            ) : null}
           </div>
         ) : null}
       </section>

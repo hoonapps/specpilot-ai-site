@@ -616,6 +616,7 @@ ul {
 .checkoutPanel,
 .outcomePanel,
 .learningPanel,
+.observabilityPanel,
 .integrationPanel,
 .launchPanel {
   display: grid;
@@ -662,6 +663,7 @@ ul {
 .checkoutResult,
 .outcomeResult,
 .learningResult,
+.observabilityResult,
 .integrationResult,
 .launchResult {
   grid-column: 1 / -1;
@@ -679,6 +681,36 @@ ul {
   display: grid;
   align-content: start;
   gap: 12px;
+}
+
+.observabilityForm {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.observabilityForm button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: white;
+  font-weight: 950;
+}
+
+.observabilityForm button.secondaryButton {
+  border: 1px solid rgba(12, 116, 108, 0.28);
+  background: #f5fbf8;
+  color: var(--teal);
+}
+
+.observabilityForm button:disabled {
+  cursor: progress;
+  opacity: 0.68;
 }
 
 .completionForm textarea {
@@ -1119,6 +1151,7 @@ ul {
   .checkoutPanel,
   .outcomePanel,
   .learningPanel,
+  .observabilityPanel,
   .integrationPanel,
   .launchPanel,
   .conversionPanel {
@@ -1162,6 +1195,7 @@ ul {
   .checkoutPanel,
   .outcomePanel,
   .learningPanel,
+  .observabilityPanel,
   .integrationPanel,
   .launchPanel,
   .conversionPanel {

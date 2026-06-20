@@ -70,6 +70,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/spec-risk-scanner`: 제품 API의 `/public/spec-risk-scanner`, `/public/spec-risk-scanner/result`로 장바구니 옵션명, 최종가, 기대 사양, 배송/반품/AS 증거를 결제 전 blocker/warning으로 검수하고 구매 세이프티 브리프, 판매자 질문, 승인 요약, 캡처 체크리스트를 렌더링
 - `/api/specpilot/purchase-approval-brief-kit`: 제품 API의 `/public/purchase-approval-brief-kit`로 장바구니 검수 결과를 가족/팀/커뮤니티용 승인 질문, 투표 옵션, 채널별 복사 문구로 변환
 - `/api/specpilot/seller-evidence-kit`: 제품 API의 `/public/seller-evidence-kit`로 판매자 확인 질문, 복사용 문의 문구, 답변 판정 기준, 캡처 체크리스트를 생성
+- `/api/specpilot/seller-negotiation-kit`: 제품 API의 `/public/seller-negotiation-kit`으로 현재가, 목표가, 경쟁가, 배송/조립/OS 비용, 재고, 위험 조건을 조건 안전 협상 메시지와 guardrail로 변환
 - `/api/specpilot/checkout-nudge-kit`: 제품 API의 `/public/checkout-nudge-kit`로 장바구니 검수 결과를 판매자 답변 요청, 가격 재확인, 구매 결과 회수 후속 알림과 분석/대기열 prefill로 변환
 - `/api/specpilot/purchase-aftercare-kit`: 제품 API의 `/public/purchase-aftercare-kit`로 구매일, 배송완료일, 최종 결제 금액, 초기 이슈를 반품/교환 마감, 보증 만료, 구매 결과 기록, 채널별 후속 문구로 변환
 - `/api/specpilot/first-boot-setup-kit`: 제품 API의 `/public/first-boot-setup-kit`로 첫 부팅 OS/포트/디스플레이/드라이버/벤치마크/보증 등록 상태를 세팅 점수와 점검표로 변환
@@ -119,6 +120,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`는 `/public/purchase-execution-kit`을 실구매가 분해 다음에 렌더링해 결제 전 실행 단계, 증거 게이트, 중단 조건, 가족/팀/커뮤니티 공유 문구를 만든다.
 - `/launch`는 `/public/shopping-cart-intake-kit`을 구매 실행 패키지 다음에 렌더링해 쇼핑몰 장바구니 텍스트를 총액, 필수 슬롯 누락, 옵션/사양 검수 prefill, 구매 승인 prefill로 변환한다.
 - `/launch`는 `/public/seller-evidence-kit`을 장바구니 인테이크 다음에 렌더링해 실제 출고 사양, 배송, 반품, AS, 리퍼/해외/FreeDOS 조건을 판매자에게 물을 문구와 답변 판정 기준을 보여준다.
+- `/launch`는 `/public/seller-negotiation-kit`을 판매자 증거 요청 다음에 렌더링해 가격 조정 요청이 사양, 배송, AS, 반품 조건을 흐리지 않도록 제안가, 절감 예상, 협상 lever, guardrail, 복사용 메시지를 보여준다.
 - `/launch`의 옵션/사양 빠른 검수 폼은 `/public/listing-decoder-kit`을 먼저 호출해 쇼핑몰 상품명/옵션명에서 사양과 위험 조건을 구조화하고 검수 prefill을 자동 적용한다.
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/checkout-nudge-kit` 후속 넛지 키트도 호출해 판매자 답변 요청, 가격 재확인, 구매 결과 회수 단계와 복사용 후속 알림을 함께 보여준다.
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/spec-rescue-kit` 대체 후보 rescue도 호출해 보류 후보 대신 비교할 예산 내 대체안, 판매자 확인 메시지, 검색 문구를 함께 보여준다.

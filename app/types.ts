@@ -1418,6 +1418,68 @@ export type PublicSellerEvidenceKit = {
   next_actions: string[];
 };
 
+export type SellerNegotiationRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  current_price_krw: number;
+  target_price_krw: number | null;
+  budget_krw: number | null;
+  competing_price_krw: number | null;
+  shipping_fee_krw: number;
+  assembly_fee_krw: number;
+  os_fee_krw: number;
+  desired_ship_days: number | null;
+  stock_count: number | null;
+  urgency: string;
+  risk_terms: string[];
+  must_keep_conditions: string[];
+  source: string;
+};
+
+export type SellerNegotiationLever = {
+  lever_id: string;
+  label: string;
+  priority: OpsStatus;
+  ask: string;
+  expected_value_krw: number;
+  proof_to_attach: string;
+  fallback: string;
+};
+
+export type SellerNegotiationMessage = {
+  channel: string;
+  label: string;
+  tone: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicSellerNegotiationKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  priority: OpsStatus;
+  negotiation_score: number;
+  expected_saving_krw: number;
+  fair_offer_krw: number;
+  max_acceptable_price_krw: number;
+  headline: string;
+  summary: string;
+  levers: SellerNegotiationLever[];
+  message_variants: SellerNegotiationMessage[];
+  guardrails: string[];
+  evidence_checklist: string[];
+  seller_questions: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type PurchaseAftercareRequest = {
   category: Category;
   product_title: string;

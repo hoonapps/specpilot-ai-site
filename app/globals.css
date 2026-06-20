@@ -3263,6 +3263,197 @@ ul {
   font-weight: 900;
 }
 
+.launchSellerNegotiation {
+  background: #f7f7ff;
+}
+
+.launchSellerNegotiationGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchSellerNegotiationForm,
+.launchSellerNegotiationResult,
+.launchSellerNegotiationScore,
+.launchSellerNegotiationMetrics article,
+.launchSellerNegotiationLevers article,
+.launchSellerNegotiationColumns > div {
+  border: 1px solid rgba(67, 56, 202, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(67, 56, 202, 0.07);
+}
+
+.launchSellerNegotiationForm,
+.launchSellerNegotiationResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchSellerNegotiationControls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchSellerNegotiationControls.dense {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchSellerNegotiationForm label {
+  display: grid;
+  gap: 7px;
+  color: #4338ca;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchSellerNegotiationForm input,
+.launchSellerNegotiationForm select,
+.launchSellerNegotiationForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(67, 56, 202, 0.16);
+  border-radius: 8px;
+  background: #f7f7ff;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchSellerNegotiationForm textarea {
+  resize: vertical;
+}
+
+.launchSellerNegotiationForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchSellerNegotiationResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchSellerNegotiationResult p,
+.launchSellerNegotiationResult li,
+.launchSellerNegotiationResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchSellerNegotiationScore {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.launchSellerNegotiationScore strong {
+  color: #4338ca;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.launchSellerNegotiationScore span,
+.launchSellerNegotiationMetrics span {
+  color: #4338ca;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchSellerNegotiationMetrics,
+.launchSellerNegotiationLevers,
+.launchSellerNegotiationColumns,
+.launchSellerNegotiationShare,
+.launchSellerNegotiationActions {
+  display: grid;
+  gap: 10px;
+}
+
+.launchSellerNegotiationMetrics,
+.launchSellerNegotiationColumns,
+.launchSellerNegotiationActions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchSellerNegotiationLevers {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchSellerNegotiationMetrics article,
+.launchSellerNegotiationLevers article,
+.launchSellerNegotiationColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchSellerNegotiationLevers article.ok {
+  background: #eef2ff;
+}
+
+.launchSellerNegotiationLevers article.warn {
+  border-color: rgba(217, 119, 6, 0.24);
+  background: #fffbeb;
+}
+
+.launchSellerNegotiationLevers article.danger {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: #fef2f2;
+}
+
+.launchSellerNegotiationColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchSellerNegotiationShare {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchSellerNegotiationShare button,
+.launchSellerNegotiationActions button {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(67, 56, 202, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #4338ca;
+  padding: 10px 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.launchSellerNegotiationShare button span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchSellerNegotiationEmpty {
+  display: grid;
+  min-height: 260px;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
 .launchApprovalBrief {
   background: #f8fafc;
 }
@@ -9727,6 +9918,14 @@ ul {
   .launchSellerEvidenceControls.dense,
   .launchSellerQuestionGrid,
   .launchSellerRubricGrid,
+  .launchSellerNegotiationGrid,
+  .launchSellerNegotiationControls,
+  .launchSellerNegotiationControls.dense,
+  .launchSellerNegotiationMetrics,
+  .launchSellerNegotiationLevers,
+  .launchSellerNegotiationColumns,
+  .launchSellerNegotiationShare,
+  .launchSellerNegotiationActions,
   .launchApprovalGrid,
   .launchApprovalControls,
   .launchApprovalControls.dense,
@@ -10056,6 +10255,14 @@ ul {
   .launchSellerEvidenceControls.dense,
   .launchSellerQuestionGrid,
   .launchSellerRubricGrid,
+  .launchSellerNegotiationGrid,
+  .launchSellerNegotiationControls,
+  .launchSellerNegotiationControls.dense,
+  .launchSellerNegotiationMetrics,
+  .launchSellerNegotiationLevers,
+  .launchSellerNegotiationColumns,
+  .launchSellerNegotiationShare,
+  .launchSellerNegotiationActions,
   .launchApprovalGrid,
   .launchApprovalControls,
   .launchApprovalControls.dense,

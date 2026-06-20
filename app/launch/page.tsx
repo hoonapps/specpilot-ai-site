@@ -63,6 +63,7 @@ import { PurchaseApprovalBriefPanel } from "./PurchaseApprovalBriefPanel";
 import { PurchaseAftercarePanel } from "./PurchaseAftercarePanel";
 import { PurchaseExecutionPanel } from "./PurchaseExecutionPanel";
 import { SellerEvidencePanel } from "./SellerEvidencePanel";
+import { SellerNegotiationPanel } from "./SellerNegotiationPanel";
 import { ShoppingCartIntakePanel } from "./ShoppingCartIntakePanel";
 import { SetupCompatibilityPanel } from "./SetupCompatibilityPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
@@ -1420,6 +1421,8 @@ export default async function LaunchPage() {
       <ShoppingCartIntakePanel />
 
       <SellerEvidencePanel />
+
+      <SellerNegotiationPanel />
 
       <SpecRiskScannerPanel
         scanner={specScanner}

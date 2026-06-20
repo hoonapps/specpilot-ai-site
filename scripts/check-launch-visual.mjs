@@ -178,6 +178,8 @@ async function checkViewport(pageWsUrl, viewport) {
       const sharePack = document.querySelector(".launchSharePack");
       const shareButtons = [...document.querySelectorAll(".launchSharePackActions button")];
       const shareLinks = [...document.querySelectorAll(".launchSharePackActions a")];
+      const stickyBar = document.querySelector(".launchStickyConversionBar");
+      const stickyLinks = [...document.querySelectorAll(".launchStickyConversionBar a")];
       const inspect = (el) => {
         if (!el) return null;
         const rect = el.getBoundingClientRect();
@@ -208,6 +210,14 @@ async function checkViewport(pageWsUrl, viewport) {
           item.right > viewportWidth + 1 ||
           item.scrollWidth > item.clientWidth + 1
         );
+      const stickyOverflows = [stickyBar, ...stickyLinks]
+        .filter(Boolean)
+        .map((el) => ({ tag: el.tagName.toLowerCase(), className: el.className, ...inspect(el) }))
+        .filter((item) =>
+          item.left < -1 ||
+          item.right > viewportWidth + 1 ||
+          item.scrollWidth > item.clientWidth + 1
+        );
       const failures = [];
       if (document.documentElement.scrollWidth > viewportWidth + 1) {
         failures.push("document-horizontal-overflow");
@@ -221,6 +231,9 @@ async function checkViewport(pageWsUrl, viewport) {
       if (shareButtons.length < 4) failures.push("missing-share-pack-buttons");
       if (shareLinks.length < 2) failures.push("missing-share-pack-links");
       if (shareOverflows.length > 0) failures.push("share-pack-overflow");
+      if (!stickyBar || !inspect(stickyBar).visible) failures.push("missing-sticky-conversion");
+      if (stickyLinks.length < 3) failures.push("missing-sticky-conversion-links");
+      if (stickyOverflows.length > 0) failures.push("sticky-conversion-overflow");
       return {
         viewportWidth,
         documentScrollWidth: document.documentElement.scrollWidth,
@@ -232,6 +245,8 @@ async function checkViewport(pageWsUrl, viewport) {
         shareButtonCount: shareButtons.length,
         shareLinkCount: shareLinks.length,
         shareOverflows,
+        stickyLinkCount: stickyLinks.length,
+        stickyOverflows,
         failures,
       };
     })()`,

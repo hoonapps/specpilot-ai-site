@@ -49,6 +49,7 @@ import { LaunchResponseLoopPanel } from "./LaunchResponseLoopPanel";
 import { LaunchRetentionLoopPanel } from "./LaunchRetentionLoopPanel";
 import { LaunchSharePackPanel } from "./LaunchSharePackPanel";
 import { LaunchSmokePanel } from "./LaunchSmokePanel";
+import { LaunchStickyConversionBar } from "./LaunchStickyConversionBar";
 import { LaunchTeamConsultPreviewPanel } from "./LaunchTeamConsultPreviewPanel";
 import { LaunchWarRoomPanel } from "./LaunchWarRoomPanel";
 import { LaunchWeekRecapPanel } from "./LaunchWeekRecapPanel";
@@ -1009,6 +1010,8 @@ export default async function LaunchPage() {
           <Link href="/#proof-hub">검증 허브</Link>
         </nav>
       </header>
+
+      <LaunchStickyConversionBar handoff={heroAnalysisHandoff("상시 전환 바 분석 시작")} />
 
       <section className="launchPublicHero">
         <div className="launchPublicHeroContent">

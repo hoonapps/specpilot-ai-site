@@ -1255,6 +1255,60 @@ export type PublicSetupCompatibilityKit = {
   next_actions: string[];
 };
 
+export type PurchaseApprovalBriefRequest = {
+  category: Category;
+  product_title: string;
+  verdict: string;
+  budget_krw: number;
+  cart_total_krw: number | null;
+  blocker_count: number;
+  warning_count: number;
+  key_reasons: string[];
+  missing_evidence: string[];
+  audience: string;
+  decision_deadline: string;
+  source: string;
+};
+
+export type ApprovalVoteOption = {
+  option_id: string;
+  label: string;
+  status: OpsStatus;
+  description: string;
+  when_to_choose: string;
+};
+
+export type ApprovalCopyVariant = {
+  channel: string;
+  label: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicPurchaseApprovalBriefKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  verdict: "ready" | "verify" | "hold" | string;
+  priority: OpsStatus;
+  headline: string;
+  summary: string;
+  decision_rule: string;
+  approval_question: string;
+  buyer_brief: string;
+  reject_reasons: string[];
+  approve_conditions: string[];
+  evidence_checklist: string[];
+  vote_options: ApprovalVoteOption[];
+  copy_variants: ApprovalCopyVariant[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

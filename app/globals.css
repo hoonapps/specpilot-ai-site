@@ -2952,6 +2952,178 @@ ul {
   padding-left: 18px;
 }
 
+.launchApprovalBrief {
+  background: #f8fafc;
+}
+
+.launchApprovalGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchApprovalForm,
+.launchApprovalResult,
+.launchApprovalVoteGrid article,
+.launchApprovalQuestion,
+.launchApprovalEvidence > div {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+}
+
+.launchApprovalForm,
+.launchApprovalResult {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchApprovalControls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchApprovalControls.dense {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchApprovalForm label {
+  display: grid;
+  gap: 7px;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.launchApprovalForm input,
+.launchApprovalForm select,
+.launchApprovalForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  padding: 10px 11px;
+}
+
+.launchApprovalForm textarea {
+  resize: vertical;
+}
+
+.launchApprovalForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchApprovalResult h3 {
+  color: #0f172a;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.launchApprovalResult p,
+.launchApprovalResult li,
+.launchApprovalResult small,
+.launchApprovalQuestion small {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchApprovalQuestion {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.launchApprovalQuestion strong,
+.launchApprovalVoteGrid strong,
+.launchApprovalEvidence strong,
+.launchApprovalCopyGrid span {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.launchApprovalVoteGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchApprovalVoteGrid article {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchApprovalVoteGrid article.ok {
+  border-color: rgba(22, 163, 74, 0.26);
+  background: #f0fdf4;
+}
+
+.launchApprovalVoteGrid article.warning {
+  border-color: rgba(217, 119, 6, 0.28);
+  background: #fffbeb;
+}
+
+.launchApprovalVoteGrid article.blocker {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: #fef2f2;
+}
+
+.launchApprovalVoteGrid span {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  color: #0f172a;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.launchApprovalEvidence {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchApprovalEvidence > div {
+  padding: 12px;
+}
+
+.launchApprovalEvidence ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.launchApprovalCopyGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchApprovalCopyGrid button {
+  align-items: flex-start;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+  display: grid;
+  gap: 5px;
+  justify-items: start;
+  min-width: 0;
+  padding: 12px;
+  text-align: left;
+}
+
 .launchSpecScanner {
   gap: 18px;
   border: 1px solid rgba(15, 44, 44, 0.16);
@@ -7947,6 +8119,12 @@ ul {
   .launchSetupControls.dense,
   .launchSetupMetricGrid,
   .launchSetupCheckGrid,
+  .launchApprovalGrid,
+  .launchApprovalControls,
+  .launchApprovalControls.dense,
+  .launchApprovalVoteGrid,
+  .launchApprovalEvidence,
+  .launchApprovalCopyGrid,
   .launchSpecScannerGrid,
   .launchSpecScannerControls,
   .launchSpecScannerControls.dense,
@@ -8221,6 +8399,12 @@ ul {
   .launchSetupControls.dense,
   .launchSetupMetricGrid,
   .launchSetupCheckGrid,
+  .launchApprovalGrid,
+  .launchApprovalControls,
+  .launchApprovalControls.dense,
+  .launchApprovalVoteGrid,
+  .launchApprovalEvidence,
+  .launchApprovalCopyGrid,
   .launchSpecScannerGrid,
   .launchSpecScannerControls,
   .launchSpecScannerControls.dense,

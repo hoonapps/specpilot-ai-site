@@ -62,6 +62,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/setup-compatibility-kit`: 제품 API의 `/public/setup-compatibility-kit`로 CPU/GPU/RAM/SSD/모니터/파워/폼팩터 또는 노트북 휴대성 조합의 병목과 호환성 리스크 조회
 - `/api/specpilot/listing-decoder-kit`: 제품 API의 `/public/listing-decoder-kit`로 쇼핑몰 상품명/옵션명에서 CPU/GPU/RAM/SSD/OS와 리퍼·전시·해외 조건을 구조화하고 검수 prefill 조회
 - `/api/specpilot/spec-risk-scanner`: 제품 API의 `/public/spec-risk-scanner`, `/public/spec-risk-scanner/result`로 장바구니 옵션명, 최종가, 기대 사양, 배송/반품/AS 증거를 결제 전 blocker/warning으로 검수하고 구매 세이프티 브리프, 판매자 질문, 승인 요약, 캡처 체크리스트를 렌더링
+- `/api/specpilot/purchase-approval-brief-kit`: 제품 API의 `/public/purchase-approval-brief-kit`로 장바구니 검수 결과를 가족/팀/커뮤니티용 승인 질문, 투표 옵션, 채널별 복사 문구로 변환
 - `/api/specpilot/checkout-nudge-kit`: 제품 API의 `/public/checkout-nudge-kit`로 장바구니 검수 결과를 판매자 답변 요청, 가격 재확인, 구매 결과 회수 후속 알림과 분석/대기열 prefill로 변환
 - `/api/specpilot/spec-rescue-kit`: 제품 API의 `/public/spec-rescue-kit`로 장바구니 보류/확인 필요 결과를 예산 내 대체 후보, 판매자 확인 메시지, 검색 문구, 분석/공유 prefill로 변환
 - `/api/specpilot/candidate-compare`: 제품 API의 `/public/candidate-compare`로 카테고리/예산/목적별 공개 후보 5개, 비교 축별 승자, 예산/성능/안전 우선 대안 시나리오, 공유 문구 조회

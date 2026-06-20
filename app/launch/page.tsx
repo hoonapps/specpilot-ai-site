@@ -821,6 +821,39 @@ function hrefFor(path: string) {
   return path;
 }
 
+function publicMetricCards(
+  room: PublicLaunchRoom,
+  wall: PublicSocialProofWall,
+  checklist: PublicBuyerChecklist,
+) {
+  const checklistItemCount = checklist.sections.reduce(
+    (total, section) => total + section.items.length,
+    0,
+  );
+  return [
+    {
+      label: "구매 데모",
+      value: `${room.demo_cards.length}개`,
+      detail: "데스크톱·노트북·팀 구매",
+    },
+    {
+      label: "시장 리포트",
+      value: `${room.market_links.length}개`,
+      detail: "데스크톱 PC와 노트북",
+    },
+    {
+      label: "검증 근거",
+      value: `${Math.max(1, wall.proof_strip.length + wall.trust_notes.length)}개`,
+      detail: "추천 기준과 신뢰 고지",
+    },
+    {
+      label: "결제 전 체크",
+      value: `${Math.max(1, checklistItemCount)}개`,
+      detail: "옵션·가격·증거 확인",
+    },
+  ];
+}
+
 export default async function LaunchPage() {
   const [
     { room, isFallback },
@@ -840,6 +873,7 @@ export default async function LaunchPage() {
     loadDealTimingWindow(),
   ]);
   const heroPills = room.proof_strip.slice(0, 3);
+  const publicMetrics = publicMetricCards(room, wall, checklist);
   const proofMetricCards = [
     ["피드백", wall.metric_cards.feedback_count ?? 0],
     ["만족도", wall.metric_cards.average_satisfaction ?? 0],
@@ -935,26 +969,13 @@ export default async function LaunchPage() {
       </section>
 
       <section className="launchPublicMetrics" aria-label="런칭룸 지표">
-        <article>
-          <span>런칭 점수</span>
-          <strong>{Math.round(room.launch_score)}점</strong>
-          <p>{room.status}</p>
-        </article>
-        <article>
-          <span>공개 데모</span>
-          <strong>{room.demo_cards.length}개</strong>
-          <p>바로 적용할 구매 상황</p>
-        </article>
-        <article>
-          <span>시장 리포트</span>
-          <strong>{room.market_links.length}개</strong>
-          <p>데스크톱 PC와 노트북</p>
-        </article>
-        <article>
-          <span>공유 문구</span>
-          <strong>{room.channel_posts.length}개</strong>
-          <p>커뮤니티와 지인 공유용</p>
-        </article>
+        {publicMetrics.map((metric) => (
+          <article key={metric.label}>
+            <span>{metric.label}</span>
+            <strong>{metric.value}</strong>
+            <p>{metric.detail}</p>
+          </article>
+        ))}
       </section>
 
       <StartConciergePanel />
@@ -1233,9 +1254,7 @@ export default async function LaunchPage() {
             </div>
             <h2>구매 상황별로 바로 체험합니다</h2>
           </div>
-          <span className={`pill ${tone(room.status)}`}>
-            {room.room_version}
-          </span>
+          <span className="pill muted">공개 데모룸</span>
         </div>
         <div className="launchPublicGrid three">
           {room.demo_cards.map((card) => (

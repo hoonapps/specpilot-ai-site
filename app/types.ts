@@ -1055,6 +1055,41 @@ export type PublicAcquisitionHub = {
   recent_growth_events: GrowthEventRecord[];
 };
 
+export type PublicProofAsset = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  metric: string;
+  proof: string;
+  public_path: string;
+  cta_label: string;
+  next_action: string;
+};
+
+export type PublicObjectionAnswer = {
+  question: string;
+  answer: string;
+  evidence: string[];
+};
+
+export type PublicProofHub = {
+  proof_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  proof_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  trust_badges: string[];
+  proof_assets: PublicProofAsset[];
+  objection_answers: PublicObjectionAnswer[];
+  cta_cards: string[];
+  public_paths: string[];
+  recent_feedback: FeedbackRecord[];
+  next_actions: string[];
+};
+
 export type RetentionSignal = {
   key: string;
   label: string;

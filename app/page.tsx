@@ -67,6 +67,7 @@ import type {
   PurchaseOutcome,
   PurchaseOutcomeStatus,
   PublicAcquisitionHub,
+  PublicProofHub,
   ReportShareAssets,
   ReportAdvisorAnswer,
   RetentionHubDashboard,
@@ -388,6 +389,10 @@ export default function Home() {
   >("idle");
   const [latestTrustCenter, setLatestTrustCenter] =
     useState<TrustCenterDashboard | null>(null);
+  const [proofHubStatus, setProofHubStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestProofHub, setLatestProofHub] = useState<PublicProofHub | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -744,6 +749,8 @@ export default function Home() {
     setLatestDataGovernanceBundle(null);
     setTrustCenterStatus("idle");
     setLatestTrustCenter(null);
+    setProofHubStatus("idle");
+    setLatestProofHub(null);
     setLaunchStatus("idle");
     setLatestLaunchDashboard(null);
     setBetaOpsStatus("idle");
@@ -1849,6 +1856,27 @@ export default function Home() {
     }
   }
 
+  async function loadProofHub() {
+    setProofHubStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/proof-hub?limit=8");
+      if (!response.ok) {
+        throw new Error(`proof hub ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        hub?: PublicProofHub;
+      };
+      if (!payload.ok || !payload.hub) {
+        throw new Error("proof hub rejected");
+      }
+      setLatestProofHub(payload.hub);
+      setProofHubStatus("sent");
+    } catch {
+      setProofHubStatus("error");
+    }
+  }
+
   async function submitFeedback(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFeedbackStatus("sending");
@@ -2431,6 +2459,7 @@ export default function Home() {
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
           <a href="#trust-center">Trust Center</a>
+          <a href="#proof-hub">검증 허브</a>
         </nav>
       </header>
 
@@ -4264,6 +4293,164 @@ export default function Home() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="proofHubPanel" id="proof-hub">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <CheckCircle2 size={16} />
+            공개 검증 허브
+          </div>
+          <h2>방문자가 바로 믿을 수 있는 증거를 한 화면에 모읍니다</h2>
+          <p>
+            Trust Center, 공개 시장 리포트, 공유 검토, 구매자 피드백, CTA 실험
+            전환, 공개 유입 표면을 proof 카드로 묶어 랜딩과 공개 리포트에
+            재사용합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${latestProofHub ? gateTone(latestProofHub.status) : "warn"}`}
+            >
+              {latestProofHub
+                ? `${Math.round(latestProofHub.proof_score)}점 · ${latestProofHub.status}`
+                : "검증 허브 미조회"}
+            </span>
+            <span className="pill muted">public-proof</span>
+          </div>
+        </div>
+
+        <div className="learningControl">
+          <button
+            type="button"
+            disabled={proofHubStatus === "sending"}
+            onClick={loadProofHub}
+          >
+            {proofHubStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <CheckCircle2 size={18} />
+            )}
+            검증 허브 조회
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              proofHubStatus,
+              "공개 검증 허브를 업데이트했습니다.",
+              "공개 검증 허브 조회에 실패했습니다.",
+            ) || "공개 랜딩과 공유 리포트에 붙일 신뢰 proof를 확인합니다."}
+          </p>
+        </div>
+
+        {latestProofHub ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestProofHub.status)}`}>
+                {latestProofHub.status}
+              </span>
+              <span className="pill muted">{latestProofHub.proof_version}</span>
+              <span className="pill muted">Workspace {latestProofHub.workspace_id}</span>
+            </div>
+            <h3>{latestProofHub.headline}</h3>
+            <p>{latestProofHub.summary}</p>
+
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>검증 점수</dt>
+                <dd>{Math.round(latestProofHub.proof_score)}점</dd>
+              </div>
+              {Object.entries(latestProofHub.metric_cards)
+                .slice(0, 7)
+                .map(([key, value]) => (
+                  <div key={key}>
+                    <dt>{key.replaceAll("_", " ")}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+            </dl>
+
+            <div className="conceptList">
+              {latestProofHub.trust_badges.map((badge) => (
+                <span className="pill ok" key={badge}>
+                  {badge}
+                </span>
+              ))}
+            </div>
+
+            <div className="growthStepGrid">
+              {latestProofHub.proof_assets.map((asset) => (
+                <article className="growthStepCard" key={asset.key}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(asset.status)}`}>
+                      {asset.status}
+                    </span>
+                    <span className="pill muted">{asset.public_path}</span>
+                  </div>
+                  <h4>{asset.label}</h4>
+                  <p>{asset.metric}</p>
+                  <p>{asset.proof}</p>
+                  <p>
+                    {asset.cta_label} · {asset.next_action}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>구매자 반박 답변</strong>
+                <ul>
+                  {latestProofHub.objection_answers.map((item) => (
+                    <li key={item.question}>
+                      {item.question} · {item.answer}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>CTA 카드</strong>
+                <ul>
+                  {latestProofHub.cta_cards.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>공개 path</strong>
+                <ul>
+                  {latestProofHub.public_paths.map((path) => (
+                    <li key={path}>{path}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestProofHub.next_actions.slice(0, 6).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestProofHub.recent_feedback.slice(0, 4).map((item) => (
+                <article className="gateCheckCard" key={item.feedback_id}>
+                  <div className="answerHeader">
+                    <span className="pill ok">{item.rating}점</span>
+                    <span className="pill muted">
+                      {item.purchase_intent ? "구매 의향" : "검토 중"}
+                    </span>
+                  </div>
+                  <h4>{item.reason || item.feedback_id}</h4>
+                  <p>{item.improvement_requests.slice(0, 2).join(" / ")}</p>
+                </article>
+              ))}
             </div>
           </div>
         ) : null}

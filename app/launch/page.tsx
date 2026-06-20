@@ -16,6 +16,7 @@ import type {
   PublicBuyerChallengeKit,
   PublicBuyerChecklist,
   PublicCandidateCompare,
+  PublicDealTimingWindow,
   PublicLaunchRoom,
   PublicSocialProofWall,
   PublicSpecRiskScanner,
@@ -23,6 +24,7 @@ import type {
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
+import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
@@ -543,6 +545,124 @@ const fallbackCandidateCompare: PublicCandidateCompare = {
   ],
 };
 
+const fallbackDealTimingWindow: PublicDealTimingWindow = {
+  timing_version: "specpilot.public_deal_timing_window.fallback",
+  generated_at: new Date(0).toISOString(),
+  category: "desktop_pc",
+  budget_krw: 2_200_000,
+  purpose: "qhd_creator",
+  headline: "데스크톱 PC 후보별 지금 결제와 가격 대기를 분리합니다.",
+  summary:
+    "현재가, 목표가, 적정가 밴드, 재고/쿠폰 변동 리스크를 한 화면에 묶어 충동 결제와 의미 있는 대기를 구분합니다.",
+  lead_product_id: "build-creator-4070s",
+  lead_label: "현재 결제 가능",
+  buy_now_count: 2,
+  wait_count: 2,
+  hold_count: 1,
+  target_savings_krw: 372_000,
+  windows: [
+    {
+      product_id: "build-creator-4070s",
+      model_name: "Creator RTX 4070 SUPER Build",
+      status: "ok",
+      label: "현재 결제 가능",
+      current_price_krw: 2_185_000,
+      target_price_krw: 2_097_000,
+      fair_price_band_krw: "2,053,000원 ~ 2,251,000원",
+      urgency: "오늘 결제 가능",
+      volatility_risk: "쿠폰/카드 조건, 판매처 변동",
+      wait_reason: "예산 안에 들어와 있어 옵션명과 최종 결제 금액만 맞으면 구매 후보입니다.",
+      buy_trigger: "장바구니 옵션명, 배송비, 반품/AS 조건 캡처가 모두 맞으면 결제합니다.",
+      monitoring_plan: [
+        "목표가 알림을 설정하고 현재가를 3일 주기로 재확인합니다.",
+        "판매자, 배송비, 쿠폰/카드 할인 조건을 결제 직전에 다시 대조합니다.",
+        "결제 전 옵션/사양 빠른 검수기로 최종 화면을 확인합니다.",
+      ],
+    },
+    {
+      product_id: "build-value-4060ti",
+      model_name: "Value RTX 4060 Ti Build",
+      status: "ok",
+      label: "현재 결제 가능",
+      current_price_krw: 1_540_000,
+      target_price_krw: 1_478_000,
+      fair_price_band_krw: "1,447,000원 ~ 1,586,000원",
+      urgency: "오늘 결제 가능",
+      volatility_risk: "낮음",
+      wait_reason: "예산 여유가 커 장기 성능 여유만 동의되면 구매 후보입니다.",
+      buy_trigger: "최종 옵션명과 배송/반품 조건이 일치하면 결제합니다.",
+      monitoring_plan: [
+        "목표가 알림을 설정하고 현재가를 3일 주기로 재확인합니다.",
+        "결제 전 옵션/사양 빠른 검수기로 최종 화면을 확인합니다.",
+      ],
+    },
+    {
+      product_id: "build-official-safe",
+      model_name: "Official Store Creator PC",
+      status: "warning",
+      label: "목표가 근접 대기",
+      current_price_krw: 2_240_000,
+      target_price_krw: 2_105_000,
+      fair_price_band_krw: "2,105,000원 ~ 2,288,000원",
+      urgency: "24-48시간 재확인",
+      volatility_risk: "쿠폰/카드 조건",
+      wait_reason: "예산보다 40,000원 높아 공식 출처 안정성과 가격 차이를 같이 봐야 합니다.",
+      buy_trigger: "2,105,000원 이하 또는 공식 출처 조건이 안정되면 결제 검토합니다.",
+      monitoring_plan: [
+        "목표가 알림을 설정하고 현재가를 3일 주기로 재확인합니다.",
+        "판매자, 배송비, 쿠폰/카드 할인 조건을 결제 직전에 다시 대조합니다.",
+      ],
+    },
+    {
+      product_id: "build-limited-deal",
+      model_name: "Limited Deal RTX 4070 Build",
+      status: "warning",
+      label: "특가/재고 재확인",
+      current_price_krw: 2_150_000,
+      target_price_krw: 2_064_000,
+      fair_price_band_krw: "2,021,000원 ~ 2,264,000원",
+      urgency: "24-48시간 재확인",
+      volatility_risk: "한정 재고, 판매처 변동",
+      wait_reason: "예산 안이지만 재고와 판매자 조건이 흔들릴 수 있어 결제 직전 재확인이 필요합니다.",
+      buy_trigger: "2,064,000원 이하 또는 재고/판매자 조건이 안정되면 결제 검토합니다.",
+      monitoring_plan: [
+        "목표가 알림을 설정하고 현재가를 3일 주기로 재확인합니다.",
+        "재고 한정 문구가 사라지거나 가격이 바뀌면 장바구니를 다시 캡처합니다.",
+        "판매자, 배송비, 쿠폰/카드 할인 조건을 결제 직전에 다시 대조합니다.",
+      ],
+    },
+    {
+      product_id: "build-4080s-pro",
+      model_name: "Creator RTX 4080 SUPER Pro",
+      status: "blocker",
+      label: "가격 대기",
+      current_price_krw: 2_890_000,
+      target_price_krw: 2_200_000,
+      fair_price_band_krw: "2,716,000원 ~ 2,716,000원",
+      urgency: "목표가 알림 후 대기",
+      volatility_risk: "판매처 변동",
+      wait_reason: "성능 여유는 크지만 이번 예산 기준에서는 과투자 리스크가 큽니다.",
+      buy_trigger: "2,200,000원 이하로 내려오고 사용 목적이 고성능 작업으로 확정될 때만 검토합니다.",
+      monitoring_plan: [
+        "목표가 알림을 설정하고 현재가를 3일 주기로 재확인합니다.",
+        "판매자, 배송비, 쿠폰/카드 할인 조건을 결제 직전에 다시 대조합니다.",
+      ],
+    },
+  ],
+  analysis_prefill:
+    "데스크톱 PC를 2,200,000원 예산으로 살지 기다릴지 판단해줘. 목적은 QHD 게임과 영상 편집이고 비교 후보는 Creator RTX 4070 SUPER Build, Value RTX 4060 Ti Build, Official Store Creator PC야. 현재가, 목표가, 적정가 밴드, 재고/쿠폰 리스크, 결제 트리거를 같이 봐줘.",
+  share_copy:
+    "SpecPilot AI 공개 구매 타이밍\n- 카테고리: 데스크톱 PC\n- 예산: 2,200,000원\n- 우선 판단: Creator RTX 4070 SUPER Build / 현재 결제 가능\n- Creator RTX 4070 SUPER Build: 현재 2,185,000원, 목표 2,097,000원\n- Value RTX 4060 Ti Build: 현재 1,540,000원, 목표 1,478,000원\n지금 결제할지, 목표가 알림 후 기다릴지 의견 부탁드립니다.",
+  primary_cta_label: "타이밍 조건으로 분석 시작",
+  primary_cta_path: "#analysis",
+  next_actions: [
+    "현재 결제 가능 후보도 장바구니 옵션명과 최종 결제 금액을 다시 캡처하세요.",
+    "가격 대기 후보는 목표가 알림을 설정하고 판매자/쿠폰 조건 변동을 같이 보세요.",
+    "타이밍 판단이 갈리면 후보 비교 스냅샷과 함께 공유해 반대 의견을 먼저 받으세요.",
+    "blocker 후보는 예산 승인 또는 사용 목적 강화 없이는 제외 후보로 두세요.",
+  ],
+};
+
 async function loadLaunchRoom(): Promise<{
   room: PublicLaunchRoom;
   isFallback: boolean;
@@ -625,6 +745,20 @@ async function loadCandidateCompare(): Promise<{
   }
 }
 
+async function loadDealTimingWindow(): Promise<{
+  timing: PublicDealTimingWindow;
+  isFallback: boolean;
+}> {
+  try {
+    const timing = await getJson<PublicDealTimingWindow>(
+      "/public/deal-timing-window?category=desktop_pc&budget_krw=2200000&purpose=qhd_creator",
+    );
+    return { timing, isFallback: false };
+  } catch {
+    return { timing: fallbackDealTimingWindow, isFallback: true };
+  }
+}
+
 function tone(status: PublicLaunchRoom["status"] | PublicSocialProofWall["status"]) {
   if (status === "ok") {
     return "ok";
@@ -647,6 +781,7 @@ export default async function LaunchPage() {
     { kit: challengeKit, isFallback: challengeFallback },
     { scanner: specScanner, isFallback: scannerFallback },
     { compare: candidateCompare, isFallback: compareFallback },
+    { timing: dealTiming, isFallback: dealTimingFallback },
   ] = await Promise.all([
     loadLaunchRoom(),
     loadSocialProofWall(),
@@ -654,6 +789,7 @@ export default async function LaunchPage() {
     loadBuyerChallengeKit(),
     loadSpecRiskScanner(),
     loadCandidateCompare(),
+    loadDealTimingWindow(),
   ]);
   const heroPills = room.proof_strip.slice(0, 3);
   const proofMetricCards = [
@@ -814,6 +950,11 @@ export default async function LaunchPage() {
       <CandidateComparePanel
         compare={candidateCompare}
         isFallback={compareFallback}
+      />
+
+      <DealTimingWindowPanel
+        timing={dealTiming}
+        isFallback={dealTimingFallback}
       />
 
       <section className="launchPublicSection launchSocialProofWall">

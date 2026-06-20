@@ -1176,6 +1176,28 @@ export type PublicCandidateCompare = {
   next_actions: string[];
 };
 
+export type PublicDealTimingWindow = {
+  timing_version: string;
+  generated_at: string;
+  category: Category;
+  budget_krw: number;
+  purpose: string;
+  headline: string;
+  summary: string;
+  lead_product_id: string | null;
+  lead_label: string;
+  buy_now_count: number;
+  wait_count: number;
+  hold_count: number;
+  target_savings_krw: number;
+  windows: DealWindow[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type StartConciergeMilestone = {
   step: string;
   title: string;

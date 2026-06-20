@@ -2711,6 +2711,272 @@ ul {
   font-weight: 900;
 }
 
+.launchDealTiming {
+  gap: 18px;
+  border: 1px solid rgba(49, 95, 140, 0.2);
+  background: #f7fbff;
+}
+
+.launchDealTimingControls {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.8fr) minmax(0, 1.1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.launchDealTimingControls label {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchDealTimingControls input,
+.launchDealTimingControls select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 14px;
+}
+
+.launchDealTimingControls button,
+.launchDealCopy button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 8px;
+  background: #315f8c;
+  color: #fff;
+  padding: 0 14px;
+  font-weight: 950;
+}
+
+.launchDealTimingControls button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.launchDealError {
+  margin: 0;
+  border: 1px solid rgba(170, 45, 45, 0.18);
+  border-radius: 8px;
+  background: #fff5f3;
+  color: #9c2f24;
+  padding: 12px 14px;
+  font-weight: 850;
+}
+
+.launchDealTimingMetrics,
+.launchDealTimingGrid,
+.launchDealWindowGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.launchDealTimingMetrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchDealTimingMetrics article,
+.launchDealLead,
+.launchDealCopy,
+.launchDealWindowCard {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(49, 95, 140, 0.16);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: clamp(14px, 2.4vw, 18px);
+}
+
+.launchDealTimingMetrics article {
+  align-content: start;
+  background: #fff;
+}
+
+.launchDealTimingMetrics span,
+.launchDealWindowHeader small,
+.launchDealWindowCard > small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchDealTimingMetrics strong {
+  color: var(--ink);
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchDealTimingGrid {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+
+.launchDealLead {
+  align-content: start;
+  background: #192f43;
+  color: #fff;
+}
+
+.launchDealLead span,
+.launchDealLead p,
+.launchDealLead small {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.launchDealLead > strong {
+  display: block;
+  font-size: clamp(24px, 3.4vw, 38px);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.launchDealLead .miniCta {
+  width: fit-content;
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.launchDealLeadNumbers,
+.launchDealWindowNumbers {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.launchDealLeadNumbers {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchDealLeadNumbers div,
+.launchDealWindowNumbers div {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 10px;
+}
+
+.launchDealLeadNumbers strong {
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.launchDealCopy {
+  align-content: start;
+  background: #f9fcff;
+}
+
+.launchDealCopy strong,
+.launchDealWindowCard h3,
+.launchDealWindowCard strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchDealLead p,
+.launchDealCopy p,
+.launchDealWindowCard p,
+.launchDealWindowCard li {
+  margin: 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.launchDealCopy pre {
+  max-height: 180px;
+  overflow: auto;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  padding: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.launchDealWindowGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.launchDealWindowCard {
+  align-content: start;
+}
+
+.launchDealWindowHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.launchDealWindowCard h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.launchDealWindowNumbers {
+  grid-template-columns: 1fr;
+}
+
+.launchDealWindowNumbers div {
+  border-color: var(--line);
+  background: #fbfcff;
+}
+
+.launchDealWindowNumbers span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchDealWindowNumbers strong {
+  font-size: 15px;
+}
+
+.launchDealWindowCard ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchDealActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchDealActions span {
+  border: 1px solid rgba(49, 95, 140, 0.18);
+  border-radius: 999px;
+  background: #fff;
+  color: #315f8c;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -3804,6 +4070,7 @@ ul {
   .launchCandidateCompareGrid,
   .launchCandidateAxes,
   .launchCandidateScenarios,
+  .launchDealTimingGrid,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchPublicGrid.three,
@@ -3875,6 +4142,9 @@ ul {
   .launchCandidateControls,
   .launchCandidateItems,
   .launchCandidateLeadStats,
+  .launchDealTimingControls,
+  .launchDealTimingMetrics,
+  .launchDealWindowGrid,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
@@ -4056,6 +4326,11 @@ ul {
   .launchCandidateLeadStats,
   .launchCandidateAxes,
   .launchCandidateScenarios,
+  .launchDealTimingGrid,
+  .launchDealTimingControls,
+  .launchDealTimingMetrics,
+  .launchDealLeadNumbers,
+  .launchDealWindowGrid,
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,

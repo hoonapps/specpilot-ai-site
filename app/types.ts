@@ -1210,6 +1210,51 @@ export type PublicListingDecoderKit = {
   next_actions: string[];
 };
 
+export type SetupCompatibilityRequest = {
+  category: Category;
+  cpu: string;
+  gpu: string;
+  ram_gb: number | null;
+  storage_gb: number | null;
+  monitor_resolution: string;
+  psu_watt: number | null;
+  form_factor: string;
+  weight_kg: number | null;
+  battery_wh: number | null;
+  budget_krw: number;
+  purpose: string;
+  source: string;
+};
+
+export type SetupCompatibilityCheck = {
+  check_id: string;
+  label: string;
+  status: OpsStatus;
+  observed: string;
+  recommendation: string;
+  impact: string;
+};
+
+export type PublicSetupCompatibilityKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  compatibility_score: number;
+  verdict: "ready" | "verify" | "hold" | string;
+  headline: string;
+  summary: string;
+  blocker_count: number;
+  warning_count: number;
+  checks: SetupCompatibilityCheck[];
+  recommended_changes: string[];
+  scanner_prefill: SpecRiskScannerRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

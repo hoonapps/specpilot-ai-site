@@ -56,6 +56,7 @@ import { LaunchTeamConsultPreviewPanel } from "./LaunchTeamConsultPreviewPanel";
 import { LaunchWarRoomPanel } from "./LaunchWarRoomPanel";
 import { LaunchWeekRecapPanel } from "./LaunchWeekRecapPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
+import { SetupCompatibilityPanel } from "./SetupCompatibilityPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
 
@@ -1393,6 +1394,8 @@ export default async function LaunchPage() {
         kit={challengeKit}
         isFallback={challengeFallback}
       />
+
+      <SetupCompatibilityPanel />
 
       <SpecRiskScannerPanel
         scanner={specScanner}

@@ -63,6 +63,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/launch-experiments`: 제품 API의 `/growth/launch-experiments`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-experiment-dashboard`로 CTA 실험 생성, 노출/전환 기록, 승자 후보 조회
 - `/api/specpilot/launch-kit`: 제품 API의 `/growth/launch-kit`으로 커뮤니티/검색/추천 채널별 공개 베타 카피, CTA 실험, 출시 체크리스트, 측정 계획 조회
 - `/api/specpilot/proof-hub`: 제품 API의 `/public/proof-hub`로 Trust Center, 시장 리포트, 공유 조회, 피드백, CTA 실험, 공개 유입 표면 기반 proof 카드, 출시 proof strip, evidence kit 조회
+- `/api/specpilot/launch-room`: 제품 API의 `/public/launch-room`으로 공개 데모, 시장 리포트, proof strip, 유입/반응/추천/수익화 CTA, 채널 공유 문구를 외부 공유용 런칭룸으로 조회
 - `/api/specpilot/pricing-ops`: 제품 API의 `/pricing/plans`, `/billing/subscription-intents`, `/ops/pricing-dashboard`로 요금제별 수요, 예상 MRR, 연환산 매출, 최근 intent 관리
 
 공개 페이지:
@@ -117,6 +118,7 @@ docker build -t specpilot-ai-site:local .
 - `GET /growth/retention-hub`
 - `GET /growth/launch-pulse`
 - `GET /public/proof-hub`
+- `GET /public/launch-room`
 - `POST /growth/launch-experiments`
 - `POST /growth/launch-experiments/{experiment_id}/events`
 - `GET /growth/launch-experiment-dashboard`

@@ -1101,6 +1101,46 @@ export type PublicProofHub = {
   next_actions: string[];
 };
 
+export type PublicLaunchRoomCard = {
+  key: string;
+  title: string;
+  status: OpsStatus;
+  metric: string;
+  body: string;
+  cta_label: string;
+  cta_path: string;
+};
+
+export type PublicLaunchRoomMarketLink = {
+  category: Category;
+  title: string;
+  path: string;
+  share_text: string;
+  lead_pick: string;
+  risk_count: number;
+};
+
+export type PublicLaunchRoom = {
+  room_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  launch_score: number;
+  headline: string;
+  hero_message: string;
+  share_title: string;
+  share_text: string;
+  primary_cta: string;
+  primary_cta_path: string;
+  proof_strip: string[];
+  demo_cards: PublicLaunchRoomCard[];
+  launch_cards: PublicLaunchRoomCard[];
+  market_links: PublicLaunchRoomMarketLink[];
+  secondary_ctas: string[];
+  channel_posts: string[];
+  next_actions: string[];
+};
+
 export type RetentionSignal = {
   key: string;
   label: string;

@@ -18,6 +18,7 @@ import {
   Loader2,
   Monitor,
   MousePointerClick,
+  Rocket,
   Send,
   ShieldCheck,
   Sparkles,
@@ -67,6 +68,7 @@ import type {
   PurchaseOutcome,
   PurchaseOutcomeStatus,
   PublicAcquisitionHub,
+  PublicLaunchRoom,
   PublicProofHub,
   ReportShareAssets,
   ReportAdvisorAnswer,
@@ -393,6 +395,11 @@ export default function Home() {
     "idle" | "sending" | "sent" | "error"
   >("idle");
   const [latestProofHub, setLatestProofHub] = useState<PublicProofHub | null>(null);
+  const [launchRoomStatus, setLaunchRoomStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestLaunchRoom, setLatestLaunchRoom] =
+    useState<PublicLaunchRoom | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -751,6 +758,8 @@ export default function Home() {
     setLatestTrustCenter(null);
     setProofHubStatus("idle");
     setLatestProofHub(null);
+    setLaunchRoomStatus("idle");
+    setLatestLaunchRoom(null);
     setLaunchStatus("idle");
     setLatestLaunchDashboard(null);
     setBetaOpsStatus("idle");
@@ -1877,6 +1886,27 @@ export default function Home() {
     }
   }
 
+  async function loadLaunchRoom() {
+    setLaunchRoomStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/launch-room?limit=8");
+      if (!response.ok) {
+        throw new Error(`launch room ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        room?: PublicLaunchRoom;
+      };
+      if (!payload.ok || !payload.room) {
+        throw new Error("launch room rejected");
+      }
+      setLatestLaunchRoom(payload.room);
+      setLaunchRoomStatus("sent");
+    } catch {
+      setLaunchRoomStatus("error");
+    }
+  }
+
   async function submitFeedback(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFeedbackStatus("sending");
@@ -2459,6 +2489,7 @@ export default function Home() {
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
           <a href="#trust-center">Trust Center</a>
+          <a href="#launch-room">런칭룸</a>
           <a href="#proof-hub">검증 허브</a>
         </nav>
       </header>
@@ -4293,6 +4324,172 @@ export default function Home() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="launchRoomPanel" id="launch-room">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Rocket size={16} />
+            공개 런칭룸
+          </div>
+          <h2>외부에 바로 공유할 출시 페이지 패키지를 만듭니다</h2>
+          <p>
+            공개 데모, 시장 리포트, 검증 허브, 추천 대기열, 요금제 관심 CTA를
+            한 화면에 묶어 커뮤니티와 지인에게 바로 보낼 수 있는 런칭룸으로
+            정리합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${latestLaunchRoom ? gateTone(latestLaunchRoom.status) : "warn"}`}
+            >
+              {latestLaunchRoom
+                ? `${Math.round(latestLaunchRoom.launch_score)}점 · ${latestLaunchRoom.status}`
+                : "런칭룸 미조회"}
+            </span>
+            <span className="pill muted">public-launch-room</span>
+          </div>
+        </div>
+
+        <div className="learningControl">
+          <button
+            type="button"
+            disabled={launchRoomStatus === "sending"}
+            onClick={loadLaunchRoom}
+          >
+            {launchRoomStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <Rocket size={18} />
+            )}
+            런칭룸 조회
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              launchRoomStatus,
+              "공개 런칭룸을 업데이트했습니다.",
+              "공개 런칭룸 조회에 실패했습니다.",
+            ) || "외부 공유용 headline, proof, CTA, 시장 리포트 링크를 확인합니다."}
+          </p>
+        </div>
+
+        {latestLaunchRoom ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestLaunchRoom.status)}`}>
+                {latestLaunchRoom.status}
+              </span>
+              <span className="pill muted">{latestLaunchRoom.room_version}</span>
+              <span className="pill muted">
+                Workspace {latestLaunchRoom.workspace_id}
+              </span>
+            </div>
+            <h3>{latestLaunchRoom.headline}</h3>
+            <p>{latestLaunchRoom.hero_message}</p>
+            <p>{latestLaunchRoom.share_text}</p>
+
+            <div className="conceptList">
+              {latestLaunchRoom.proof_strip.map((item) => (
+                <span className="pill ok" key={item}>
+                  {item}
+                </span>
+              ))}
+            </div>
+
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>런칭 점수</dt>
+                <dd>{Math.round(latestLaunchRoom.launch_score)}점</dd>
+              </div>
+              <div>
+                <dt>대표 CTA</dt>
+                <dd>{latestLaunchRoom.primary_cta}</dd>
+              </div>
+              <div>
+                <dt>데모 카드</dt>
+                <dd>{latestLaunchRoom.demo_cards.length}개</dd>
+              </div>
+              <div>
+                <dt>시장 리포트</dt>
+                <dd>{latestLaunchRoom.market_links.length}개</dd>
+              </div>
+            </dl>
+
+            <div className="growthStepGrid">
+              {latestLaunchRoom.demo_cards.map((card) => (
+                <article className="growthStepCard" key={card.key}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(card.status)}`}>
+                      {card.status}
+                    </span>
+                    <span className="pill muted">{card.cta_path}</span>
+                  </div>
+                  <h4>{card.title}</h4>
+                  <p>{card.body}</p>
+                  <p>{card.metric}</p>
+                  <p>{card.cta_label}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="growthStepGrid">
+              {latestLaunchRoom.launch_cards.map((card) => (
+                <article className="growthStepCard" key={card.key}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(card.status)}`}>
+                      {card.status}
+                    </span>
+                    <span className="pill muted">{card.metric}</span>
+                  </div>
+                  <h4>{card.title}</h4>
+                  <p>{card.body}</p>
+                  <p>
+                    {card.cta_label} · {card.cta_path}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>공개 시장 리포트</strong>
+                <ul>
+                  {latestLaunchRoom.market_links.map((item) => (
+                    <li key={item.path}>
+                      {item.title} · {item.lead_pick} · 리스크 {item.risk_count}개
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>공유 문구</strong>
+                <ul>
+                  {latestLaunchRoom.channel_posts.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>보조 CTA</strong>
+                <ul>
+                  {latestLaunchRoom.secondary_ctas.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestLaunchRoom.next_actions.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         ) : null}

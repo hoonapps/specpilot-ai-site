@@ -21,6 +21,7 @@ import type {
   PublicSocialProofWall,
   PublicSpecRiskScanner,
 } from "../types";
+import { absoluteUrl, siteConfig } from "../site-config";
 import { LaunchActionRouterPanel } from "./LaunchActionRouterPanel";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
@@ -48,7 +49,24 @@ export const metadata: Metadata = {
   title: "SpecPilot AI 런칭룸 | 컴퓨터 구매 의사결정 에이전트",
   description:
     "데스크톱 PC와 노트북 구매 결정을 위한 공개 데모, 시장 리포트, proof strip, CTA를 한 화면에서 확인합니다.",
+  keywords: [
+    ...siteConfig.keywords,
+    "공개 런칭룸",
+    "AI 구매 리포트",
+    "컴퓨터 구매 실패 방지",
+  ],
+  alternates: {
+    canonical: "/launch",
+  },
   openGraph: {
+    title: "SpecPilot AI 런칭룸",
+    description:
+      "컴퓨터와 노트북 구매를 위한 AI 의사결정 에이전트 공개 데모룸",
+    url: "/launch",
+    images: ["/product-workbench.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
     title: "SpecPilot AI 런칭룸",
     description:
       "컴퓨터와 노트북 구매를 위한 AI 의사결정 에이전트 공개 데모룸",
@@ -811,9 +829,49 @@ export default async function LaunchPage() {
     ["구매 의향", wall.metric_cards.purchase_intent_rate ?? "0%"],
     ["추천 유입", wall.metric_cards.referred_signup_count ?? 0],
   ];
+  const launchStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: siteConfig.name,
+    applicationCategory: "ShoppingApplication",
+    operatingSystem: "Web",
+    url: absoluteUrl("/launch"),
+    image: absoluteUrl("/product-workbench.png"),
+    description: room.hero_message,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "KRW",
+      availability: "https://schema.org/InStock",
+    },
+    aggregateRating:
+      Number(wall.metric_cards.average_satisfaction || 0) > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: String(wall.metric_cards.average_satisfaction),
+            ratingCount: String(Math.max(1, Number(wall.metric_cards.feedback_count || 1))),
+          }
+        : undefined,
+    audience: {
+      "@type": "Audience",
+      audienceType: "컴퓨터와 노트북 구매자",
+    },
+    featureList: [
+      "컴퓨터와 노트북 구매 조건 분석",
+      "TOP 3 후보 추천과 제외 후보 설명",
+      "가격 타이밍과 결제 전 검수",
+      "공개 공유 리포트와 추천 대기열",
+    ],
+  };
 
   return (
     <main className="launchPublicPage">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(launchStructuredData),
+        }}
+      />
       <header className="topbar launchPublicTopbar">
         <Link className="brand" href="/">
           <span className="brandMark">SP</span>

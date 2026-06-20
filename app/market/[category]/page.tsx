@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   BarChart3,
   CheckCircle2,
@@ -7,6 +8,7 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getJson } from "../../api/specpilot/_client";
+import { siteConfig } from "../../site-config";
 import type { Category, PublicCategoryMarketReport } from "../../types";
 
 export const dynamic = "force-dynamic";
@@ -57,14 +59,14 @@ export async function generateStaticParams() {
   return [{ category: "desktop-pc" }, { category: "laptop" }];
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { category } = await params;
   const page = await loadMarketReport(category);
 
   return {
     title: `${page.title} | SpecPilot AI`,
     description: page.description,
-    keywords: page.seo_keywords,
+    keywords: [...siteConfig.keywords, ...page.seo_keywords],
     alternates: {
       canonical: page.canonical_path,
     },
@@ -72,6 +74,14 @@ export async function generateMetadata({ params }: PageProps) {
       title: page.title,
       description: page.share_text,
       type: "article",
+      url: page.canonical_path,
+      images: ["/product-workbench.png"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: page.title,
+      description: page.share_text,
+      images: ["/product-workbench.png"],
     },
   };
 }

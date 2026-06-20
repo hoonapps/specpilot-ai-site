@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Share2, Sparkles, Users } from "lucide-react";
 import { LaunchConversionPanel } from "../launch/LaunchConversionPanel";
+import { siteConfig } from "../site-config";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,19 @@ export const metadata: Metadata = {
   title: "SpecPilot AI 초대 | 컴퓨터 구매 의사결정 에이전트",
   description:
     "추천 코드로 들어온 사용자가 공개 베타 대기열에 등록하고 컴퓨터/노트북 구매 리포트를 바로 시작합니다.",
+  keywords: [...siteConfig.keywords, "추천 초대", "공개 베타", "구매 리포트"],
+  alternates: {
+    canonical: "/join",
+  },
   openGraph: {
+    title: "SpecPilot AI 추천 초대",
+    description:
+      "컴퓨터와 노트북 구매 실패를 줄이는 AI 구매 리포트 공개 베타 초대",
+    url: "/join",
+    images: ["/product-workbench.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
     title: "SpecPilot AI 추천 초대",
     description:
       "컴퓨터와 노트북 구매 실패를 줄이는 AI 구매 리포트 공개 베타 초대",

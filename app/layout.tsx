@@ -1,16 +1,30 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { absoluteUrl, siteConfig } from "./site-config";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://specpilot-ai-site.vercel.app"),
+  metadataBase: new URL(absoluteUrl("/")),
   title: "SpecPilot AI | 컴퓨터 구매 의사결정 에이전트",
-  description:
-    "데스크톱 PC와 노트북 구매 조건을 분석해 추천, 구매 판정, 가격 타이밍, 공유 브리프를 제공합니다.",
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  applicationName: siteConfig.name,
+  alternates: {
+    canonical: "/",
+  },
+  manifest: "/manifest.webmanifest",
   openGraph: {
-    title: "SpecPilot AI",
-    description:
-      "컴퓨터 견적과 노트북 구매를 위한 AI 의사결정 에이전트",
+    title: "SpecPilot AI | 컴퓨터 구매 의사결정 에이전트",
+    description: siteConfig.description,
+    url: "/",
+    siteName: siteConfig.name,
     type: "website",
+    images: ["/product-workbench.png"],
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SpecPilot AI | 컴퓨터 구매 의사결정 에이전트",
+    description: siteConfig.description,
     images: ["/product-workbench.png"],
   },
 };

@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import type {
   PricingOpsBundle,
+  ReferralShareKit,
+  ReferralShareKitVariant,
   SubscriptionIntent,
   WaitlistReferral,
   WaitlistReferralDashboard,
@@ -22,6 +24,7 @@ type ReferralPayload = {
   ok: boolean;
   referral?: WaitlistReferral;
   dashboard?: WaitlistReferralDashboard;
+  share_kit?: ReferralShareKit;
 };
 
 type PricingPayload = {
@@ -102,12 +105,15 @@ export function LaunchConversionPanel({
   const [referral, setReferral] = useState<WaitlistReferral | null>(null);
   const [referralDashboard, setReferralDashboard] =
     useState<WaitlistReferralDashboard | null>(null);
+  const [referralShareKit, setReferralShareKit] =
+    useState<ReferralShareKit | null>(null);
   const [intent, setIntent] = useState<SubscriptionIntent | null>(null);
   const [pricingBundle, setPricingBundle] = useState<PricingOpsBundle | null>(null);
   const [browserOrigin, setBrowserOrigin] = useState("");
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "shared" | "error">(
     "idle",
   );
+  const [kitCopyStatus, setKitCopyStatus] = useState("idle");
   const [referralForm, setReferralForm] = useState({
     email: "",
     persona: "first_pc_buyer",
@@ -139,6 +145,17 @@ export function LaunchConversionPanel({
   const referralShareUrl = referral
     ? absoluteReferralUrl(browserOrigin, referral.referral_url)
     : "";
+
+  function referralKitCopyText(variant: ReferralShareKitVariant) {
+    if (!referralShareKit) {
+      return variant.copy_text;
+    }
+    const absoluteKitUrl = absoluteReferralUrl(
+      browserOrigin,
+      referralShareKit.referral_url,
+    );
+    return variant.copy_text.replace(referralShareKit.referral_url, absoluteKitUrl);
+  }
 
   async function copyReferralUrl() {
     if (!referral || !referralShareUrl) {
@@ -192,6 +209,28 @@ export function LaunchConversionPanel({
     }
   }
 
+  async function copyKitVariant(variant: ReferralShareKitVariant) {
+    if (!referral) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(referralKitCopyText(variant));
+      setKitCopyStatus(variant.channel);
+      await recordLaunchEvent(
+        "share_cta",
+        "추천 초대 공유 문구 복사",
+        source,
+        surface,
+        {
+          referral_code: referral.referral_code,
+          channel: variant.channel,
+        },
+      );
+    } catch {
+      setKitCopyStatus("error");
+    }
+  }
+
   async function submitReferral(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setReferralStatus("sending");
@@ -218,7 +257,9 @@ export function LaunchConversionPanel({
       }
       setReferral(payload.referral);
       setReferralDashboard(payload.dashboard);
+      setReferralShareKit(payload.share_kit ?? null);
       setShareStatus("idle");
+      setKitCopyStatus("idle");
       setReferralForm((current) => ({
         ...current,
         referredByCode: payload.referral?.referral_code || current.referredByCode,
@@ -435,6 +476,33 @@ export function LaunchConversionPanel({
                       ? "공유에 실패했습니다. 링크를 직접 복사해 주세요."
                       : `추천 ${referral.referred_signup_count}명 · 우선순위 ${referral.priority_score}점`}
               </small>
+              {referralShareKit ? (
+                <div className="launchReferralShareKit">
+                  <span>채널별 공유 문구</span>
+                  <div className="launchReferralKitGrid">
+                    {referralShareKit.variants.map((variant) => (
+                      <button
+                        key={variant.channel}
+                        type="button"
+                        onClick={() => void copyKitVariant(variant)}
+                      >
+                        <ClipboardCheck size={15} />
+                        <strong>{variant.label}</strong>
+                        <small>
+                          {kitCopyStatus === variant.channel
+                            ? "복사 완료"
+                            : variant.cta}
+                        </small>
+                      </button>
+                    ))}
+                  </div>
+                  <small>
+                    {kitCopyStatus === "error"
+                      ? "문구 복사에 실패했습니다."
+                      : referralShareKit.headline}
+                  </small>
+                </div>
+              ) : null}
             </div>
           ) : null}
         </article>

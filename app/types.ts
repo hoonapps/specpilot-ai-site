@@ -548,6 +548,28 @@ export type WaitlistReferralDashboard = {
   next_actions: string[];
 };
 
+export type ReferralShareKitVariant = {
+  channel: string;
+  label: string;
+  headline: string;
+  body: string;
+  cta: string;
+  copy_text: string;
+};
+
+export type ReferralShareKit = {
+  kit_version: string;
+  workspace_id: string;
+  referral_code: string;
+  referral_url: string;
+  generated_at: string;
+  headline: string;
+  subheadline: string;
+  hashtags: string[];
+  variants: ReferralShareKitVariant[];
+  next_actions: string[];
+};
+
 export type SourceTrustAssessment = {
   source_type: string;
   source_name: string;

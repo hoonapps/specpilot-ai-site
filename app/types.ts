@@ -570,6 +570,30 @@ export type ReferralShareKit = {
   next_actions: string[];
 };
 
+export type ReferralRewardTier = {
+  tier_id: string;
+  label: string;
+  required_referrals: number;
+  benefit: string;
+  status: "achieved" | "next" | "locked" | string;
+};
+
+export type ReferralRewardProgress = {
+  reward_version: string;
+  workspace_id: string;
+  referral_code: string;
+  referral_url: string;
+  generated_at: string;
+  referred_signup_count: number;
+  headline: string;
+  summary: string;
+  progress_percent: number;
+  current_tier: ReferralRewardTier | null;
+  next_tier: ReferralRewardTier | null;
+  tiers: ReferralRewardTier[];
+  next_actions: string[];
+};
+
 export type SourceTrustAssessment = {
   source_type: string;
   source_name: string;

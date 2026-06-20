@@ -59,7 +59,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/acquisition-hub`: 제품 API의 `/growth/acquisition-hub`로 공개 데모, SEO 페이지, 공유 리포트, 추천 대기열, Trust Center, 요금제 관심 표면 준비도 조회
 - `/api/specpilot/public-conversion-board`: 제품 API의 `/growth/public-conversion-board`로 공개 유입, 활성화, 공유, 추천, 유료 수요, readiness 병목과 채널 액션 조회
 - `/api/specpilot/retention-hub`: 제품 API의 `/growth/retention-hub`로 저장 리포트, 알림, 공유 조회, 상담, 구매 결과, 완료 리포트 반응 기반 재참여 플레이 조회
-- `/api/specpilot/referrals`: 제품 API의 `/growth/waitlist-referrals`, `/growth/referral-dashboard`, `/growth/referral-share-kit/{referral_code}`로 추천 코드, 공유 URL, 카카오톡/커뮤니티/이메일 공유 문구, 추천 유입 리더보드 조회
+- `/api/specpilot/referrals`: 제품 API의 `/growth/waitlist-referrals`, `/growth/referral-dashboard`, `/growth/referral-share-kit/{referral_code}`, `/growth/referral-rewards/{referral_code}`로 추천 코드, 공유 URL, 카카오톡/커뮤니티/이메일 공유 문구, 추천 보상 사다리, 추천 유입 리더보드 조회
 - `/api/specpilot/launch-pulse`: 제품 API의 `/growth/launch-pulse`로 공개 반응 Pulse, 신호별 점수, 다음 액션, 최근 피드백/이벤트 조회
 - `/api/specpilot/launch-experiments`: 제품 API의 `/growth/launch-experiments`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-experiment-dashboard`로 CTA 실험 생성, 노출/전환 기록, 승자 후보 조회
 - `/api/specpilot/launch-kit`: 제품 API의 `/growth/launch-kit`으로 커뮤니티/검색/추천 채널별 공개 베타 카피, CTA 실험, 출시 체크리스트, 측정 계획 조회
@@ -125,6 +125,7 @@ docker build -t specpilot-ai-site:local .
 - `POST /growth/waitlist-referrals`
 - `GET /growth/referral-dashboard`
 - `GET /growth/referral-share-kit/{referral_code}`
+- `GET /growth/referral-rewards/{referral_code}`
 - `GET /growth/launch-distribution-plan`
 - `GET /public/proof-hub`
 - `GET /public/launch-room`

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type {
   PricingOpsBundle,
+  ReferralRewardProgress,
   ReferralShareKit,
   ReferralShareKitVariant,
   SubscriptionIntent,
@@ -25,6 +26,7 @@ type ReferralPayload = {
   referral?: WaitlistReferral;
   dashboard?: WaitlistReferralDashboard;
   share_kit?: ReferralShareKit;
+  rewards?: ReferralRewardProgress;
 };
 
 type PricingPayload = {
@@ -107,6 +109,8 @@ export function LaunchConversionPanel({
     useState<WaitlistReferralDashboard | null>(null);
   const [referralShareKit, setReferralShareKit] =
     useState<ReferralShareKit | null>(null);
+  const [referralRewards, setReferralRewards] =
+    useState<ReferralRewardProgress | null>(null);
   const [intent, setIntent] = useState<SubscriptionIntent | null>(null);
   const [pricingBundle, setPricingBundle] = useState<PricingOpsBundle | null>(null);
   const [browserOrigin, setBrowserOrigin] = useState("");
@@ -258,6 +262,7 @@ export function LaunchConversionPanel({
       setReferral(payload.referral);
       setReferralDashboard(payload.dashboard);
       setReferralShareKit(payload.share_kit ?? null);
+      setReferralRewards(payload.rewards ?? null);
       setShareStatus("idle");
       setKitCopyStatus("idle");
       setReferralForm((current) => ({
@@ -501,6 +506,29 @@ export function LaunchConversionPanel({
                       ? "문구 복사에 실패했습니다."
                       : referralShareKit.headline}
                   </small>
+                </div>
+              ) : null}
+              {referralRewards ? (
+                <div className="launchReferralRewards">
+                  <span>추천 보상 진행률</span>
+                  <div className="launchRewardProgress">
+                    <div
+                      style={{
+                        width: `${Math.min(100, Math.max(0, referralRewards.progress_percent))}%`,
+                      }}
+                    />
+                  </div>
+                  <strong>{referralRewards.headline}</strong>
+                  <p>{referralRewards.summary}</p>
+                  <div className="launchRewardTierGrid">
+                    {referralRewards.tiers.map((tier) => (
+                      <div className={tier.status} key={tier.tier_id}>
+                        <span>{tier.required_referrals}명</span>
+                        <strong>{tier.label}</strong>
+                        <small>{tier.benefit}</small>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ) : null}
             </div>

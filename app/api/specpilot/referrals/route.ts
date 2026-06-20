@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getJson, postJson } from "../_client";
 import type {
+  ReferralRewardProgress,
   ReferralShareKit,
   WaitlistReferral,
   WaitlistReferralDashboard,
@@ -47,11 +48,15 @@ export async function POST(request: Request) {
     const shareKit = await getJson<ReferralShareKit>(
       `/growth/referral-share-kit/${encodeURIComponent(referral.referral_code)}`,
     );
+    const rewards = await getJson<ReferralRewardProgress>(
+      `/growth/referral-rewards/${encodeURIComponent(referral.referral_code)}`,
+    );
     return NextResponse.json({
       ok: true,
       referral,
       dashboard,
       share_kit: shareKit,
+      rewards,
     });
   } catch (error) {
     return NextResponse.json(

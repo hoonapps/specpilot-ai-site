@@ -30,6 +30,8 @@ import type {
   Category,
   CheckoutReview,
   FeedbackRecord,
+  PurchaseOutcome,
+  PurchaseOutcomeStatus,
   ReportAdvisorAnswer,
   SourceCandidate,
   SubscriptionIntent,
@@ -72,6 +74,19 @@ function statusMessage(
     return error;
   }
   return "";
+}
+
+function purchaseOutcomeLabel(status: PurchaseOutcomeStatus) {
+  if (status === "purchased") {
+    return "실제 구매";
+  }
+  if (status === "delayed") {
+    return "구매 지연";
+  }
+  if (status === "abandoned") {
+    return "구매 이탈";
+  }
+  return "반품/취소";
 }
 
 export default function Home() {
@@ -148,6 +163,21 @@ export default function Home() {
   >("idle");
   const [latestCheckoutReview, setLatestCheckoutReview] =
     useState<CheckoutReview | null>(null);
+  const [purchaseOutcome, setPurchaseOutcome] = useState({
+    status: "purchased" as PurchaseOutcomeStatus,
+    finalPaidPrice: String(
+      demoResponse.report.top_recommendations[0]?.price.effective_price_krw || "",
+    ),
+    satisfaction: "5",
+    orderReference: "ORD-2026-000123",
+    reason: "추천 후보로 실제 구매를 진행했습니다.",
+    notes: "웹사이트 구매 결과 학습 신호",
+  });
+  const [outcomeStatus, setOutcomeStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestPurchaseOutcome, setLatestPurchaseOutcome] =
+    useState<PurchaseOutcome | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -213,6 +243,8 @@ export default function Home() {
     setLatestAlertEvaluation(null);
     setCheckoutStatus("idle");
     setLatestCheckoutReview(null);
+    setOutcomeStatus("idle");
+    setLatestPurchaseOutcome(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -242,6 +274,13 @@ export default function Home() {
         ),
         acknowledgeMissing: false,
       }));
+      setPurchaseOutcome((current) => ({
+        ...current,
+        finalPaidPrice: String(
+          data.analysis.report.top_recommendations[0]?.price.effective_price_krw ||
+            current.finalPaidPrice,
+        ),
+      }));
       const nextAlert =
         data.analysis.report.price_alerts[0] || data.analysis.report.deal_windows[0];
       if (nextAlert) {
@@ -266,6 +305,7 @@ export default function Home() {
       setLatestAlertSubscription(null);
       setLatestAlertEvaluation(null);
       setLatestCheckoutReview(null);
+      setLatestPurchaseOutcome(null);
       setConnectionWarning(
         error instanceof Error
           ? error.message
@@ -465,12 +505,65 @@ export default function Home() {
       }
       setLatestCheckoutReview(payload.review);
       setCheckoutStatus("sent");
+      setPurchaseOutcome((current) => ({
+        ...current,
+        finalPaidPrice: String(
+          payload.review?.confirmed_price_krw ||
+            Number(current.finalPaidPrice || 0) ||
+            top.price.effective_price_krw,
+        ),
+      }));
       setCheckoutReview((current) => ({
         ...current,
         acknowledgeMissing: false,
       }));
     } catch {
       setCheckoutStatus("error");
+    }
+  }
+
+  async function submitPurchaseOutcome(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setOutcomeStatus("sending");
+    setLatestPurchaseOutcome(null);
+
+    try {
+      if (!savedReportId) {
+        throw new Error("missing report");
+      }
+      const response = await fetch("/api/specpilot/purchase-outcomes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          report_id: savedReportId,
+          product_id: result.report.final_pick_id || top.product.id,
+          checkout_review_id: latestCheckoutReview?.review_id ?? null,
+          status: purchaseOutcome.status,
+          final_paid_price_krw:
+            purchaseOutcome.status === "purchased"
+              ? Number(purchaseOutcome.finalPaidPrice || 0) || null
+              : null,
+          source_channel: latestCheckoutReview ? "checkout_review" : "site_report",
+          reason: purchaseOutcome.reason,
+          satisfaction: Number(purchaseOutcome.satisfaction || 0) || null,
+          order_reference: purchaseOutcome.orderReference,
+          notes: purchaseOutcome.notes,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`outcome ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        outcome?: PurchaseOutcome;
+      };
+      if (!payload.ok || !payload.outcome) {
+        throw new Error("outcome rejected");
+      }
+      setLatestPurchaseOutcome(payload.outcome);
+      setOutcomeStatus("sent");
+    } catch {
+      setOutcomeStatus("error");
     }
   }
 
@@ -602,6 +695,7 @@ export default function Home() {
           <a href="#price-alert">가격 알림</a>
           <a href="#source-check">상품 검수</a>
           <a href="#checkout-review">결제 검수</a>
+          <a href="#purchase-outcome">구매 결과</a>
           <a href="#advisor">구매 상담</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -1346,6 +1440,191 @@ export default function Home() {
                 </ul>
               </div>
             </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="outcomePanel" id="purchase-outcome">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <CheckCircle2 size={16} />
+            구매 결과
+          </div>
+          <h2>추천이 실제 구매로 이어졌는지 기록합니다</h2>
+          <p>
+            결제 전 검수 이후 실제 구매, 지연, 이탈, 반품/취소 상태와 최종
+            결제 금액, 만족도, 주문번호 마스킹값을 저장해 추천 성과를 닫힌
+            루프로 학습합니다.
+          </p>
+          <div className="advisorMeta">
+            <span className={savedReportId ? "pill ok" : "pill warn"}>
+              {savedReportId ? `Report ${savedReportId}` : "라이브 분석 필요"}
+            </span>
+            <span className="pill muted">
+              {latestCheckoutReview
+                ? `검수 ${latestCheckoutReview.review_id}`
+                : "결제 검수 없이도 기록 가능"}
+            </span>
+          </div>
+        </div>
+
+        <form className="conversionForm advisorForm" onSubmit={submitPurchaseOutcome}>
+          <div className="fieldGrid">
+            <label>
+              구매 상태
+              <select
+                value={purchaseOutcome.status}
+                onChange={(event) =>
+                  setPurchaseOutcome((current) => ({
+                    ...current,
+                    status: event.target.value as PurchaseOutcomeStatus,
+                  }))
+                }
+              >
+                <option value="purchased">실제 구매</option>
+                <option value="delayed">구매 지연</option>
+                <option value="abandoned">구매 이탈</option>
+                <option value="returned">반품/취소</option>
+              </select>
+            </label>
+            <label>
+              최종 결제 금액
+              <input
+                inputMode="numeric"
+                value={purchaseOutcome.finalPaidPrice}
+                disabled={purchaseOutcome.status !== "purchased"}
+                onChange={(event) =>
+                  setPurchaseOutcome((current) => ({
+                    ...current,
+                    finalPaidPrice: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <div className="fieldGrid">
+            <label>
+              만족도
+              <select
+                value={purchaseOutcome.satisfaction}
+                onChange={(event) =>
+                  setPurchaseOutcome((current) => ({
+                    ...current,
+                    satisfaction: event.target.value,
+                  }))
+                }
+              >
+                <option value="5">5 - 매우 도움됨</option>
+                <option value="4">4 - 도움됨</option>
+                <option value="3">3 - 보통</option>
+                <option value="2">2 - 아쉬움</option>
+                <option value="1">1 - 실패</option>
+              </select>
+            </label>
+            <label>
+              주문번호
+              <input
+                value={purchaseOutcome.orderReference}
+                onChange={(event) =>
+                  setPurchaseOutcome((current) => ({
+                    ...current,
+                    orderReference: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label>
+            결과 사유
+            <input
+              value={purchaseOutcome.reason}
+              onChange={(event) =>
+                setPurchaseOutcome((current) => ({
+                  ...current,
+                  reason: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            운영 메모
+            <textarea
+              value={purchaseOutcome.notes}
+              onChange={(event) =>
+                setPurchaseOutcome((current) => ({
+                  ...current,
+                  notes: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <button type="submit" disabled={outcomeStatus === "sending" || !savedReportId}>
+            {outcomeStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <CheckCircle2 size={18} />
+            )}
+            구매 결과 저장
+          </button>
+          <p className="formStatus">
+            {!savedReportId
+              ? "제품 API 연결 후 분석을 실행하면 저장 리포트 기준으로 구매 결과를 기록할 수 있습니다."
+              : statusMessage(
+                  outcomeStatus,
+                  "구매 결과가 학습 신호로 저장됐습니다.",
+                  "구매 결과 저장에 실패했습니다.",
+                )}
+          </p>
+        </form>
+
+        {latestPurchaseOutcome ? (
+          <div className="outcomeResult">
+            <div className="answerHeader">
+              <span className="pill ok">
+                {purchaseOutcomeLabel(latestPurchaseOutcome.status)}
+              </span>
+              <span className="pill muted">
+                {latestPurchaseOutcome.model_name || "선택 후보"}
+              </span>
+              <span className="pill muted">
+                주문 {latestPurchaseOutcome.order_reference_masked || "미입력"}
+              </span>
+            </div>
+            <h3>{latestPurchaseOutcome.learning_signal}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>예상가</dt>
+                <dd>
+                  {latestPurchaseOutcome.expected_price_krw === null
+                    ? "확인 필요"
+                    : won(latestPurchaseOutcome.expected_price_krw)}
+                </dd>
+              </div>
+              <div>
+                <dt>최종 결제</dt>
+                <dd>
+                  {latestPurchaseOutcome.final_paid_price_krw === null
+                    ? "미구매"
+                    : won(latestPurchaseOutcome.final_paid_price_krw)}
+                </dd>
+              </div>
+              <div>
+                <dt>가격 차이</dt>
+                <dd>
+                  {latestPurchaseOutcome.price_delta_krw === null
+                    ? "없음"
+                    : won(latestPurchaseOutcome.price_delta_krw)}
+                </dd>
+              </div>
+              <div>
+                <dt>전환 금액</dt>
+                <dd>{won(latestPurchaseOutcome.conversion_value_krw)}</dd>
+              </div>
+            </dl>
+            <p>
+              만족도 {latestPurchaseOutcome.satisfaction ?? "미입력"}점 · 출처{" "}
+              {latestPurchaseOutcome.source_channel}
+            </p>
           </div>
         ) : null}
       </section>

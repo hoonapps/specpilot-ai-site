@@ -506,7 +506,8 @@ ul {
 .advisorPanel,
 .sourceCheckPanel,
 .alertPanel,
-.checkoutPanel {
+.checkoutPanel,
+.outcomePanel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
   gap: 18px;
@@ -546,7 +547,8 @@ ul {
 
 .sourceResult,
 .alertResult,
-.checkoutResult {
+.checkoutResult,
+.outcomeResult {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);
   padding-top: 18px;
@@ -701,6 +703,7 @@ ul {
   .sourceCheckPanel,
   .alertPanel,
   .checkoutPanel,
+  .outcomePanel,
   .conversionPanel {
     grid-template-columns: 1fr;
   }
@@ -736,6 +739,7 @@ ul {
   .sourceCheckPanel,
   .alertPanel,
   .checkoutPanel,
+  .outcomePanel,
   .conversionPanel {
     padding-right: 14px;
     padding-left: 14px;

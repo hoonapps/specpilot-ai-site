@@ -334,3 +334,44 @@ export type CheckoutReview = {
   notes: string;
   created_at: string;
 };
+
+export type PurchaseOutcomeStatus =
+  | "purchased"
+  | "abandoned"
+  | "delayed"
+  | "returned";
+
+export type PurchaseOutcomeRequest = {
+  report_id: string;
+  product_id: string | null;
+  checkout_review_id: string | null;
+  status: PurchaseOutcomeStatus;
+  final_paid_price_krw: number | null;
+  source_channel: string;
+  reason: string;
+  satisfaction: number | null;
+  order_reference: string;
+  notes: string;
+};
+
+export type PurchaseOutcome = {
+  outcome_id: string;
+  report_id: string;
+  trace_id: string;
+  workspace_id: string;
+  product_id: string | null;
+  model_name: string | null;
+  checkout_review_id: string | null;
+  status: PurchaseOutcomeStatus;
+  final_paid_price_krw: number | null;
+  expected_price_krw: number | null;
+  price_delta_krw: number | null;
+  source_channel: string;
+  reason: string;
+  satisfaction: number | null;
+  order_reference_masked: string;
+  conversion_value_krw: number;
+  learning_signal: string;
+  notes: string;
+  created_at: string;
+};

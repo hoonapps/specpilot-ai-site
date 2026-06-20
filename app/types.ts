@@ -1611,6 +1611,44 @@ export type LaunchCommunityKit = {
   next_actions: string[];
 };
 
+export type LaunchMediaAsset = {
+  key: string;
+  label: string;
+  kind: string;
+  path: string;
+  usage: string;
+  alt_text: string;
+  tracking_event: string;
+};
+
+export type LaunchMediaPitch = {
+  channel: string;
+  audience: string;
+  headline: string;
+  body: string;
+  cta_label: string;
+  cta_path: string;
+  copy_text: string;
+};
+
+export type LaunchMediaKit = {
+  kit_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  media_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  hero_statement: string;
+  proof_points: string[];
+  assets: LaunchMediaAsset[];
+  pitches: LaunchMediaPitch[];
+  usage_guidelines: string[];
+  tracking_events: string[];
+  next_actions: string[];
+};
+
 export type PublicAcquisitionSurface = {
   key: string;
   label: string;

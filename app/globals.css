@@ -4752,6 +4752,169 @@ ul {
   gap: 8px;
 }
 
+.launchMediaKit {
+  border: 1px solid rgba(42, 67, 88, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchMediaStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchMediaStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchMediaMetricGrid,
+.launchMediaGrid,
+.launchMediaFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchMediaMetricGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchMediaGrid,
+.launchMediaFooter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchMediaMetricGrid article,
+.launchMediaHeroStatement,
+.launchMediaColumn,
+.launchMediaFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(26, 72, 118, 0.14);
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 16px;
+}
+
+.launchMediaMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchMediaMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.launchMediaHeroStatement {
+  background: #ffffff;
+}
+
+.launchMediaHeroStatement p {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 850;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.launchMediaColumn > strong,
+.launchMediaFooter strong,
+.launchMediaAsset > div,
+.launchMediaPitch > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchMediaAsset,
+.launchMediaPitch {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.launchMediaPitch > div {
+  justify-content: space-between;
+}
+
+.launchMediaPitch button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(26, 72, 118, 0.24);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--blue);
+  font-weight: 900;
+}
+
+.launchMediaAsset h3,
+.launchMediaAsset p,
+.launchMediaAsset small,
+.launchMediaAsset a,
+.launchMediaPitch h3,
+.launchMediaPitch p,
+.launchMediaPitch small,
+.launchMediaFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchMediaAsset h3,
+.launchMediaPitch h3 {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.launchMediaAsset p,
+.launchMediaAsset small,
+.launchMediaAsset a,
+.launchMediaPitch p,
+.launchMediaPitch small,
+.launchMediaFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchMediaFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchMediaEvents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .launchRetentionLoop {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -6469,6 +6632,9 @@ ul {
   .launchCommunityMetricGrid,
   .launchCommunityGrid,
   .launchCommunityFooter,
+  .launchMediaMetricGrid,
+  .launchMediaGrid,
+  .launchMediaFooter,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -6812,6 +6978,9 @@ ul {
   .launchCommunityMetricGrid,
   .launchCommunityGrid,
   .launchCommunityFooter,
+  .launchMediaMetricGrid,
+  .launchMediaGrid,
+  .launchMediaFooter,
   .launchRetentionMetricGrid,
   .launchRetentionSignalGrid,
   .launchRetentionPlayGrid,

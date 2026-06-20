@@ -5531,6 +5531,12 @@ export default function Home() {
                 : "시장 리포트 미조회"}
             </span>
             <span className="pill muted">카테고리 리포트</span>
+            <a className="pill link" href="/market/desktop-pc">
+              데스크톱 공개 리포트 <ExternalLink size={13} />
+            </a>
+            <a className="pill link" href="/market/laptop">
+              노트북 공개 리포트 <ExternalLink size={13} />
+            </a>
           </div>
         </div>
 

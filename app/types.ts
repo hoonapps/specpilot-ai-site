@@ -565,6 +565,18 @@ export type CategoryMarketReport = {
   publishing_checklist: string[];
 };
 
+export type PublicCategoryMarketReport = {
+  category: Category;
+  slug: string;
+  canonical_path: string;
+  title: string;
+  description: string;
+  share_text: string;
+  seo_keywords: string[];
+  cta_cards: string[];
+  report: CategoryMarketReport;
+};
+
 export type GrowthEventType =
   | "analysis_view"
   | "recommendation_click"

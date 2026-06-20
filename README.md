@@ -65,12 +65,13 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/launch-kit`: 제품 API의 `/growth/launch-kit`으로 커뮤니티/검색/추천 채널별 공개 베타 카피, CTA 실험, 출시 체크리스트, 측정 계획 조회
 - `/api/specpilot/launch-distribution-plan`: 제품 API의 `/growth/launch-distribution-plan`으로 첫 주 채널 배포 슬롯, 복사 문구, 측정 이벤트, 위험 통제 조회
 - `/api/specpilot/proof-hub`: 제품 API의 `/public/proof-hub`로 Trust Center, 시장 리포트, 공유 조회, 피드백, CTA 실험, 공개 유입 표면 기반 proof 카드, 출시 proof strip, evidence kit 조회
+- `/api/specpilot/social-proof-wall`: 제품 API의 `/public/social-proof-wall`로 마스킹 피드백, 실구매 결과, 추천 유입 리더보드를 공개 랜딩용 반응 카드와 신뢰 고지로 조회
 - `/api/specpilot/launch-room`: 제품 API의 `/public/launch-room`으로 공개 데모, 시장 리포트, proof strip, 유입/반응/추천/수익화 CTA, 채널 공유 문구를 외부 공유용 런칭룸으로 조회
 - `/api/specpilot/pricing-ops`: 제품 API의 `/pricing/plans`, `/billing/subscription-intents`, `/ops/pricing-dashboard`로 요금제별 수요, 예상 MRR, 연환산 매출, 최근 intent 관리
 
 공개 페이지:
 
-- `/launch`: 제품 API의 `/public/launch-room`을 서버에서 읽어 공개 데모, proof strip, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
+- `/launch`: 제품 API의 `/public/launch-room`과 `/public/social-proof-wall`을 서버에서 읽어 공개 데모, 실제 반응 proof, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
 - 첫 화면 공개 데모 갤러리는 데스크톱/노트북/팀 구매 preset을 분석 폼에 즉시 적용해 빈 폼 이탈을 줄임
@@ -129,6 +130,7 @@ docker build -t specpilot-ai-site:local .
 - `GET /growth/referral-rewards/{referral_code}`
 - `GET /growth/launch-distribution-plan`
 - `GET /public/proof-hub`
+- `GET /public/social-proof-wall`
 - `GET /public/launch-room`
 - `POST /growth/launch-experiments`
 - `POST /growth/launch-experiments/{experiment_id}/events`

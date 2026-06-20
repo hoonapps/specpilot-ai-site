@@ -1252,6 +1252,35 @@ export type PublicProofHub = {
   next_actions: string[];
 };
 
+export type PublicSocialProofItem = {
+  proof_id: string;
+  kind: string;
+  title: string;
+  body: string;
+  metric: string;
+  persona: string;
+  source_label: string;
+  rating: number | null;
+  status: OpsStatus;
+  created_at: string | null;
+};
+
+export type PublicSocialProofWall = {
+  wall_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  proof_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  proof_strip: string[];
+  items: PublicSocialProofItem[];
+  trust_notes: string[];
+  cta_cards: string[];
+  next_actions: string[];
+};
+
 export type PublicLaunchRoomCard = {
   key: string;
   title: string;

@@ -5,12 +5,14 @@ import {
   BarChart3,
   CheckCircle2,
   ExternalLink,
+  MessageSquareQuote,
   Monitor,
   Rocket,
   ShieldCheck,
+  Star,
 } from "lucide-react";
 import { getJson } from "../api/specpilot/_client";
-import type { PublicLaunchRoom } from "../types";
+import type { PublicLaunchRoom, PublicSocialProofWall } from "../types";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 
 export const dynamic = "force-dynamic";
@@ -138,6 +140,70 @@ const fallbackRoom: PublicLaunchRoom = {
   ],
 };
 
+const fallbackSocialProofWall: PublicSocialProofWall = {
+  wall_version: "specpilot.public_social_proof_wall.fallback",
+  workspace_id: "demo",
+  generated_at: new Date(0).toISOString(),
+  status: "warning",
+  proof_score: 48,
+  headline: "첫 반응이 쌓이기 전에도 신뢰 기준부터 공개합니다.",
+  summary:
+    "추천 기준, 공개 리포트, 개인정보 마스킹 기준을 먼저 보여주고 첫 사용자 반응을 proof로 쌓습니다.",
+  metric_cards: {
+    feedback_count: 0,
+    average_satisfaction: 0,
+    purchase_intent_rate: "0%",
+    purchase_outcomes: 0,
+    completed_purchase_outcomes: 0,
+    public_share_views: 0,
+    referral_waitlist: 0,
+    referred_signup_count: 0,
+  },
+  proof_strip: [
+    "연락처 원문 없이 공개 proof를 만듭니다",
+    "만족도 4점 이상 또는 구매 결과만 선별합니다",
+    "제휴 링크 여부는 추천 순위와 분리합니다",
+  ],
+  items: [
+    {
+      proof_id: "fallback_trust_center",
+      kind: "trust",
+      title: "추천 기준을 먼저 공개합니다",
+      body: "제휴 여부와 추천 순위를 분리하고, 가격 출처와 캐시 기준을 공개합니다.",
+      metric: "Trust Center 공개",
+      persona: "첫 방문자",
+      source_label: "공개 신뢰 정책",
+      rating: null,
+      status: "warning",
+      created_at: null,
+    },
+    {
+      proof_id: "fallback_share_loop",
+      kind: "trust",
+      title: "공유 검토 루프를 준비했습니다",
+      body: "구매 리포트를 토큰 기반 공개 페이지로 전환해 같은 근거를 함께 검토할 수 있습니다.",
+      metric: "공개 리포트 준비",
+      persona: "가족·팀 검토자",
+      source_label: "제품 기본 proof",
+      rating: null,
+      status: "warning",
+      created_at: null,
+    },
+  ],
+  trust_notes: [
+    "사용자 연락처, 주문번호, 원문 이메일은 공개하지 않습니다.",
+    "가격과 제휴 조건은 추천 공정성 Trust Center 기준을 따릅니다.",
+  ],
+  cta_cards: [
+    "내 조건으로 구매 리포트 만들기",
+    "공개 베타 대기열 등록",
+    "추천 기준 Trust Center 보기",
+  ],
+  next_actions: [
+    "첫 공개 사용자에게 피드백과 구매 결과 회수 CTA를 강하게 노출하세요.",
+  ],
+};
+
 async function loadLaunchRoom(): Promise<{
   room: PublicLaunchRoom;
   isFallback: boolean;
@@ -150,7 +216,21 @@ async function loadLaunchRoom(): Promise<{
   }
 }
 
-function tone(status: PublicLaunchRoom["status"]) {
+async function loadSocialProofWall(): Promise<{
+  wall: PublicSocialProofWall;
+  isFallback: boolean;
+}> {
+  try {
+    const wall = await getJson<PublicSocialProofWall>(
+      "/public/social-proof-wall?limit=8",
+    );
+    return { wall, isFallback: false };
+  } catch {
+    return { wall: fallbackSocialProofWall, isFallback: true };
+  }
+}
+
+function tone(status: PublicLaunchRoom["status"] | PublicSocialProofWall["status"]) {
   if (status === "ok") {
     return "ok";
   }
@@ -165,8 +245,15 @@ function hrefFor(path: string) {
 }
 
 export default async function LaunchPage() {
-  const { room, isFallback } = await loadLaunchRoom();
+  const [{ room, isFallback }, { wall, isFallback: proofFallback }] =
+    await Promise.all([loadLaunchRoom(), loadSocialProofWall()]);
   const heroPills = room.proof_strip.slice(0, 3);
+  const proofMetricCards = [
+    ["피드백", wall.metric_cards.feedback_count ?? 0],
+    ["만족도", wall.metric_cards.average_satisfaction ?? 0],
+    ["구매 의향", wall.metric_cards.purchase_intent_rate ?? "0%"],
+    ["추천 유입", wall.metric_cards.referred_signup_count ?? 0],
+  ];
 
   return (
     <main className="launchPublicPage">
@@ -236,6 +323,64 @@ export default async function LaunchPage() {
           <strong>{room.channel_posts.length}개</strong>
           <p>커뮤니티와 지인 공유용</p>
         </article>
+      </section>
+
+      <section className="launchPublicSection launchSocialProofWall">
+        <div className="sectionHeader">
+          <div>
+            <div className="sectionLabel">
+              <MessageSquareQuote size={16} />
+              Social proof wall
+            </div>
+            <h2>{wall.headline}</h2>
+            <p>{wall.summary}</p>
+          </div>
+          <span className={`pill ${tone(wall.status)}`}>
+            {Math.round(wall.proof_score)}점
+          </span>
+        </div>
+        <div className="launchSocialProofMetrics">
+          {proofMetricCards.map(([label, value]) => (
+            <article key={label}>
+              <span>{label}</span>
+              <strong>{value}</strong>
+            </article>
+          ))}
+        </div>
+        <div className="launchSocialProofGrid">
+          {wall.items.slice(0, 6).map((item) => (
+            <article className="launchSocialProofCard" key={item.proof_id}>
+              <div>
+                <span className={`pill ${tone(item.status)}`}>{item.source_label}</span>
+                {item.rating ? (
+                  <span className="launchRating">
+                    <Star size={14} />
+                    {item.rating}/5
+                  </span>
+                ) : null}
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+              <small>{item.metric}</small>
+              <strong>{item.persona}</strong>
+            </article>
+          ))}
+        </div>
+        <div className="launchSocialProofFooter">
+          <div className="launchPublicPills">
+            {wall.proof_strip.slice(0, 4).map((item) => (
+              <span className="pill ok" key={item}>
+                {item}
+              </span>
+            ))}
+            {proofFallback ? <span className="pill warn">proof API 폴백</span> : null}
+          </div>
+          <ul>
+            {wall.trust_notes.slice(0, 3).map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <section className="launchPublicSection">

@@ -13,6 +13,7 @@ import {
 import type {
   Category,
   PublicCheckoutNudgeKit,
+  PublicSpecRescueKit,
   PublicSpecRiskScanner,
   SpecRiskScannerRequest,
   SpecRiskScannerResult,
@@ -107,9 +108,11 @@ export function SpecRiskScannerPanel({
   const [form, setForm] = useState<FormState>(demoForm);
   const [result, setResult] = useState<SpecRiskScannerResult | null>(null);
   const [nudgeKit, setNudgeKit] = useState<PublicCheckoutNudgeKit | null>(null);
+  const [rescueKit, setRescueKit] = useState<PublicSpecRescueKit | null>(null);
   const [status, setStatus] = useState<"idle" | "scanning" | "error">("idle");
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
   const [nudgeCopyStatus, setNudgeCopyStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [rescueCopyStatus, setRescueCopyStatus] = useState<"idle" | "copied" | "error">("idle");
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -119,7 +122,9 @@ export function SpecRiskScannerPanel({
     setStatus("scanning");
     setCopyStatus("idle");
     setNudgeCopyStatus("idle");
+    setRescueCopyStatus("idle");
     setNudgeKit(null);
+    setRescueKit(null);
     try {
       const response = await fetch("/api/specpilot/spec-risk-scanner", {
         method: "POST",
@@ -138,6 +143,7 @@ export function SpecRiskScannerPanel({
       }
       setResult(payload.result);
       void loadNudgeKit(payload.result);
+      void loadRescueKit(payload.result);
       setStatus("idle");
     } catch {
       setStatus("error");
@@ -176,6 +182,39 @@ export function SpecRiskScannerPanel({
     }
   }
 
+  async function loadRescueKit(scanResult: SpecRiskScannerResult) {
+    try {
+      const response = await fetch("/api/specpilot/spec-rescue-kit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: scanResult.category,
+          product_title: scanResult.product_title,
+          verdict: scanResult.verdict,
+          budget_krw: scanResult.budget_krw,
+          cart_total_krw: scanResult.cart_total_krw,
+          blocker_count: scanResult.blocker_count,
+          warning_count: scanResult.warning_count,
+          missing_evidence: scanResult.missing_evidence,
+          purpose: scanResult.category === "laptop" ? "portable_creator" : "qhd_creator",
+          source: "launch_spec_scanner",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`rescue ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        kit?: PublicSpecRescueKit;
+      };
+      if (payload.ok && payload.kit) {
+        setRescueKit(payload.kit);
+      }
+    } catch {
+      setRescueKit(null);
+    }
+  }
+
   async function copyShare() {
     if (!result) {
       return;
@@ -197,6 +236,18 @@ export function SpecRiskScannerPanel({
       setNudgeCopyStatus("copied");
     } catch {
       setNudgeCopyStatus("error");
+    }
+  }
+
+  async function copyRescue() {
+    if (!rescueKit) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(rescueKit.share_copy);
+      setRescueCopyStatus("copied");
+    } catch {
+      setRescueCopyStatus("error");
     }
   }
 
@@ -439,6 +490,60 @@ export function SpecRiskScannerPanel({
                   {nudgeCopyStatus === "error" ? (
                     <p className="launchPersonaError">
                       클립보드 권한이 없어 후속 알림을 복사하지 못했습니다.
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
+              {rescueKit ? (
+                <div className={`launchSpecRescue ${rescueKit.rescue_priority}`}>
+                  <div>
+                    <span className={`pill ${tone(rescueKit.rescue_priority)}`}>
+                      {rescueKit.rescue_priority === "blocker" ? "대체 우선" : "대체 비교"}
+                    </span>
+                    <h3>{rescueKit.headline}</h3>
+                    <p>{rescueKit.summary}</p>
+                    <strong>{rescueKit.decision_rule}</strong>
+                  </div>
+                  <div className="launchSpecRescueGrid">
+                    {rescueKit.alternatives.map((alternative) => (
+                      <article key={alternative.alternative_id}>
+                        <span className={`pill ${tone(alternative.status)}`}>
+                          {alternative.role_label}
+                        </span>
+                        <h4>{alternative.model_name}</h4>
+                        <strong>{won(alternative.effective_price_krw)}</strong>
+                        <p>{alternative.rescue_reason}</p>
+                        <small>{alternative.tradeoff}</small>
+                        <code>{alternative.search_query}</code>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="launchSpecScannerPrefill compact">
+                    <strong>판매자 확인 메시지</strong>
+                    <p>{rescueKit.seller_message}</p>
+                  </div>
+                  <div className="launchSpecScannerActions">
+                    <LaunchAnalysisLink
+                      className="miniCta"
+                      handoff={{
+                        source: "spec-rescue-kit",
+                        label: rescueKit.primary_cta_label,
+                        query: rescueKit.analysis_prefill,
+                        category: rescueKit.category,
+                        budget_krw: result.budget_krw,
+                        purpose: rescueKit.product_title,
+                      }}
+                    >
+                      {rescueKit.primary_cta_label}
+                    </LaunchAnalysisLink>
+                    <button type="button" onClick={() => void copyRescue()}>
+                      <Copy size={16} />
+                      {rescueCopyStatus === "copied" ? "복사됨" : "대체 후보 복사"}
+                    </button>
+                  </div>
+                  {rescueCopyStatus === "error" ? (
+                    <p className="launchPersonaError">
+                      클립보드 권한이 없어 대체 후보를 복사하지 못했습니다.
                     </p>
                   ) : null}
                 </div>

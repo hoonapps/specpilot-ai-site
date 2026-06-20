@@ -2739,6 +2739,8 @@ ul {
 .launchSpecBriefGrid div,
 .launchCheckoutNudge,
 .launchCheckoutNudgeSteps article,
+.launchSpecRescue,
+.launchSpecRescueGrid article,
 .launchSpecScannerPrefill {
   display: grid;
   min-width: 0;
@@ -2854,7 +2856,10 @@ ul {
 .launchSpecBriefGrid strong,
 .launchCheckoutNudge strong,
 .launchCheckoutNudge h3,
-.launchCheckoutNudge h4 {
+.launchCheckoutNudge h4,
+.launchSpecRescue strong,
+.launchSpecRescue h3,
+.launchSpecRescue h4 {
   color: var(--ink);
   line-height: 1.35;
   overflow-wrap: anywhere;
@@ -2941,6 +2946,71 @@ ul {
   color: var(--blue);
   font-size: 12px;
   font-weight: 950;
+}
+
+.launchSpecRescue {
+  border-color: rgba(8, 121, 105, 0.2);
+  background: #f3fbf7;
+}
+
+.launchSpecRescue.blocker {
+  border-color: rgba(170, 45, 45, 0.24);
+  background: #fff6f1;
+}
+
+.launchSpecRescue.warning {
+  border-color: rgba(176, 112, 0, 0.24);
+  background: #fffaf0;
+}
+
+.launchSpecRescue h3,
+.launchSpecRescue h4,
+.launchSpecRescue p,
+.launchSpecRescue small {
+  margin: 0;
+}
+
+.launchSpecRescue h3 {
+  font-size: 20px;
+}
+
+.launchSpecRescue p,
+.launchSpecRescue small {
+  color: var(--muted);
+  line-height: 1.58;
+  overflow-wrap: anywhere;
+}
+
+.launchSpecRescueGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchSpecRescueGrid article {
+  align-content: start;
+  background: #fff;
+  padding: 12px;
+}
+
+.launchSpecRescueGrid code {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(15, 44, 44, 0.12);
+  border-radius: 8px;
+  background: #f7f8f3;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  padding: 8px;
+}
+
+.launchSpecScannerPrefill.compact {
+  padding: 12px;
 }
 
 .launchSpecScannerNumbers div {
@@ -7509,6 +7579,7 @@ ul {
   .launchSpecScannerNumbers,
   .launchSpecBriefGrid,
   .launchCheckoutNudgeSteps,
+  .launchSpecRescueGrid,
   .launchStartConciergeControls,
   .launchStartConciergeMetrics,
   .launchStartConciergeMilestones,
@@ -7772,6 +7843,7 @@ ul {
   .launchSpecScannerNumbers,
   .launchSpecBriefGrid,
   .launchCheckoutNudgeSteps,
+  .launchSpecRescueGrid,
   .launchCandidateCompareGrid,
   .launchCandidateControls,
   .launchCandidateItems,

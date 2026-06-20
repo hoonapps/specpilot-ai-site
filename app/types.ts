@@ -1185,6 +1185,54 @@ export type PublicCheckoutNudgeKit = {
   primary_cta_path: string;
 };
 
+export type SpecRescueRequest = {
+  category: Category;
+  product_title: string;
+  verdict: string;
+  budget_krw: number;
+  cart_total_krw: number | null;
+  blocker_count: number;
+  warning_count: number;
+  missing_evidence: string[];
+  purpose: string;
+  source: string;
+};
+
+export type SpecRescueAlternative = {
+  alternative_id: string;
+  product_id: string;
+  model_name: string;
+  role_label: string;
+  effective_price_krw: number;
+  price_delta_krw: number;
+  status: OpsStatus;
+  option_summary: string;
+  rescue_reason: string;
+  tradeoff: string;
+  evidence: string[];
+  search_query: string;
+  cta_label: string;
+};
+
+export type PublicSpecRescueKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  verdict: string;
+  rescue_priority: OpsStatus;
+  headline: string;
+  summary: string;
+  decision_rule: string;
+  seller_message: string;
+  alternatives: SpecRescueAlternative[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CandidateCompareItem = {
   product_id: string;
   model_name: string;

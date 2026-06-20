@@ -3922,6 +3922,147 @@ ul {
   gap: 6px;
 }
 
+.launchReferralMomentum {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchReferralMomentumMetrics,
+.launchReferralMomentumGrid,
+.launchReferralSharePreview,
+.launchReferralMomentumFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchReferralMomentumMetrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchReferralMomentumGrid {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
+}
+
+.launchReferralSharePreview {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchReferralMomentumMetrics article,
+.launchReferralMomentumGrid article,
+.launchReferralSharePreview article,
+.launchReferralMomentumFooter {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchReferralMomentumMetrics span,
+.launchReferralMomentumGrid article > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.launchReferralMomentumMetrics strong {
+  color: var(--ink);
+  font-size: clamp(22px, 2.6vw, 34px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.launchReferralMomentum p,
+.launchReferralMomentum small,
+.launchReferralSharePreview h3,
+.launchReferralRewardPreview span,
+.launchReferralRankPreview span {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchReferralMomentum p,
+.launchReferralMomentum small {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.launchReferralRewardPreview,
+.launchReferralRankPreview {
+  display: grid;
+  gap: 8px;
+}
+
+.launchReferralRewardPreview div,
+.launchReferralRankPreview div {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 0.7fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 10px;
+}
+
+.launchReferralRewardPreview strong,
+.launchReferralRankPreview strong {
+  color: var(--teal);
+  font-size: 14px;
+}
+
+.launchReferralRewardPreview span,
+.launchReferralRankPreview span {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.launchReferralSharePreview article > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchReferralSharePreview h3 {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.launchReferralSharePreview button {
+  display: inline-flex;
+  min-height: 38px;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: #ffffff;
+  padding: 0 12px;
+  font-weight: 950;
+}
+
+.launchReferralMomentumFooter {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.launchReferralMomentumFooter small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .launchPublicSection {
   display: grid;
   gap: 16px;
@@ -5197,6 +5338,9 @@ ul {
   .launchTeamConsultPreviewHero,
   .launchTeamConsultPreviewGrid,
   .launchTeamConsultPreviewFooter,
+  .launchReferralMomentumMetrics,
+  .launchReferralMomentumGrid,
+  .launchReferralSharePreview,
   .conciergeResultGrid,
   .launchSocialProofGrid {
     grid-template-columns: 1fr 1fr;
@@ -5211,6 +5355,10 @@ ul {
   }
 
   .launchTeamConsultPreviewStats {
+    grid-template-columns: 1fr;
+  }
+
+  .launchReferralMomentumFooter {
     grid-template-columns: 1fr;
   }
 }
@@ -5422,6 +5570,10 @@ ul {
   .launchTeamConsultPreviewStats,
   .launchTeamConsultPreviewGrid,
   .launchTeamConsultPreviewFooter,
+  .launchReferralMomentumMetrics,
+  .launchReferralMomentumGrid,
+  .launchReferralSharePreview,
+  .launchReferralMomentumFooter,
   .launchDistributionSummary,
   .launchDistributionPublicGrid,
   .launchDistributionGuardrails,
@@ -5464,6 +5616,11 @@ ul {
 
   .launchRetentionScoreCard {
     grid-column: auto;
+  }
+
+  .launchReferralRewardPreview div,
+  .launchReferralRankPreview div {
+    grid-template-columns: 1fr;
   }
 
   .visualPanel {

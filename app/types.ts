@@ -619,6 +619,21 @@ export type ReferralRewardProgress = {
   next_actions: string[];
 };
 
+export type PublicReferralLaunchKit = {
+  kit_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  headline: string;
+  summary: string;
+  dashboard: WaitlistReferralDashboard;
+  leaderboard: PublicReferralLeaderboard;
+  reward_tiers: ReferralRewardTier[];
+  share_examples: ReferralShareKitVariant[];
+  cta_cards: string[];
+  next_actions: string[];
+};
+
 export type SourceTrustAssessment = {
   source_type: string;
   source_name: string;

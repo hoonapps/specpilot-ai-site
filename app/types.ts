@@ -1026,6 +1026,44 @@ export type MistakeCostCalculatorResult = {
   next_actions: string[];
 };
 
+export type BuyerChallengeStep = {
+  step_id: string;
+  title: string;
+  action: string;
+  proof: string;
+};
+
+export type BuyerChallengeShareVariant = {
+  channel: string;
+  label: string;
+  headline: string;
+  body: string;
+  cta: string;
+  copy_text: string;
+};
+
+export type PublicBuyerChallengeKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  budget_krw: number;
+  persona: string;
+  headline: string;
+  summary: string;
+  challenge_title: string;
+  challenge_steps: BuyerChallengeStep[];
+  analysis_prefill: string;
+  checklist_path: string;
+  mistake_cost_path: string;
+  persona_quiz_path: string;
+  hashtags: string[];
+  proof_points: string[];
+  share_variants: BuyerChallengeShareVariant[];
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type StartConciergeMilestone = {
   step: string;
   title: string;

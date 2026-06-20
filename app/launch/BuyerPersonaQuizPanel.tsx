@@ -164,7 +164,7 @@ export function BuyerPersonaQuizPanel() {
   }
 
   return (
-    <section className="launchPublicSection launchPersonaQuiz">
+    <section className="launchPublicSection launchPersonaQuiz" id="persona-quiz">
       <div className="sectionHeader">
         <div>
           <div className="sectionLabel">

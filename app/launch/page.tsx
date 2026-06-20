@@ -13,10 +13,12 @@ import {
 } from "lucide-react";
 import { getJson } from "../api/specpilot/_client";
 import type {
+  PublicBuyerChallengeKit,
   PublicBuyerChecklist,
   PublicLaunchRoom,
   PublicSocialProofWall,
 } from "../types";
+import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
@@ -275,6 +277,86 @@ const fallbackBuyerChecklist: PublicBuyerChecklist = {
   ],
 };
 
+const fallbackBuyerChallengeKit: PublicBuyerChallengeKit = {
+  kit_version: "specpilot.public_buyer_challenge_kit.fallback",
+  generated_at: new Date(0).toISOString(),
+  category: "desktop_pc",
+  budget_krw: 2_200_000,
+  persona: "creator_gamer",
+  headline: "데스크톱 PC 구매 실패 방지 챌린지를 공유하고 결제 전 검수를 받으세요.",
+  summary:
+    "성향 진단, 실패 비용 계산, 결제 전 체크리스트를 하나의 공유 문구로 묶어 지인과 커뮤니티에서 먼저 검토받습니다.",
+  challenge_title: "데스크톱 PC 2,200,000원 구매 실패 방지 챌린지",
+  challenge_steps: [
+    {
+      step_id: "persona",
+      title: "구매 성향 고정",
+      action: "성능, 예산, 구매 일정 중 무엇을 우선할지 먼저 정합니다.",
+      proof: "평가 기준이 고정되어야 특가와 추천 후보를 흔들리지 않고 비교합니다.",
+    },
+    {
+      step_id: "cost",
+      title: "실패 비용 계산",
+      action: "성능 부족, 옵션 불일치, 반품 지연 비용을 예산 기준으로 봅니다.",
+      proof: "예상 손실이 커지면 즉시 결제보다 검수 리포트가 우선입니다.",
+    },
+    {
+      step_id: "share",
+      title: "채널별 공유",
+      action: "가족, 커뮤니티, 팀 승인 채널에 맞는 문구로 의견을 받습니다.",
+      proof: "같은 조건을 공유하면 빠진 요구사항과 위험 신호가 빨리 보입니다.",
+    },
+  ],
+  analysis_prefill:
+    "데스크톱 PC를 2,200,000원 안에서 추천해줘. QHD 게임, 영상 편집, 32GB RAM, GPU/파워/케이스 호환성, 가격 타이밍, 결제 전 검수까지 같이 봐줘.",
+  checklist_path:
+    "/public/buyer-checklist?category=desktop_pc&budget_krw=2200000&persona=creator_gamer",
+  mistake_cost_path:
+    "/public/mistake-cost-calculator/result?category=desktop_pc&budget_krw=2200000&quantity=1&urgency=normal",
+  persona_quiz_path: "/public/buyer-persona-quiz",
+  hashtags: ["#SpecPilotAI", "#컴퓨터구매", "#구매실패방지", "#PC견적"],
+  proof_points: [
+    "예산, 목적, 제외 조건을 추천 전에 먼저 고정합니다.",
+    "실구매가와 옵션명을 결제 직전에 대조합니다.",
+    "추천 이유와 제외 이유를 공유 리포트로 함께 검토합니다.",
+  ],
+  share_variants: [
+    {
+      channel: "kakao",
+      label: "카카오톡·가족 채팅",
+      headline: "데스크톱 PC 사기 전에 이 조건 괜찮은지 봐줘",
+      body: "지인에게 예산과 걱정되는 리스크를 짧게 공유합니다.",
+      cta: "의견 받기",
+      copy_text:
+        "데스크톱 PC 구매 전에 조건 검토 좀 부탁해. 예산은 2,200,000원이고 SpecPilot AI 체크리스트로 먼저 확인해보려고 해.",
+    },
+    {
+      channel: "community",
+      label: "커뮤니티·카페",
+      headline: "2,200,000원 데스크톱 PC 구매 실패 방지 챌린지",
+      body: "커뮤니티에서 반대 의견과 빠진 조건을 받는 문구입니다.",
+      cta: "피드백 받기",
+      copy_text:
+        "SpecPilot AI로 데스크톱 PC 2,200,000원 구매 실패 방지 챌린지를 해보려고 합니다. 빠진 조건이나 위험 신호가 있으면 알려주세요.",
+    },
+    {
+      channel: "team",
+      label: "팀 슬랙·승인 채널",
+      headline: "데스크톱 PC 구매 승인 전 검토 요청",
+      body: "승인자와 실사용자에게 같은 근거를 공유합니다.",
+      cta: "승인 근거 공유",
+      copy_text:
+        "구매 승인 전 조건 검토 요청입니다. SpecPilot AI 체크리스트 기준으로 납기, AS, 옵션명, 총액, 대체 후보, 반품 조건을 확인하려고 합니다.",
+    },
+  ],
+  primary_cta_label: "챌린지 조건으로 분석 시작",
+  primary_cta_path: "#analysis",
+  next_actions: [
+    "가장 가까운 채널 문구를 복사해 주변 검토를 먼저 받으세요.",
+    "반응이 온 조건을 분석 요청에 합쳐 첫 리포트를 생성하세요.",
+  ],
+};
+
 async function loadLaunchRoom(): Promise<{
   room: PublicLaunchRoom;
   isFallback: boolean;
@@ -315,6 +397,20 @@ async function loadBuyerChecklist(): Promise<{
   }
 }
 
+async function loadBuyerChallengeKit(): Promise<{
+  kit: PublicBuyerChallengeKit;
+  isFallback: boolean;
+}> {
+  try {
+    const kit = await getJson<PublicBuyerChallengeKit>(
+      "/public/buyer-challenge-kit?category=desktop_pc&budget_krw=2200000&persona=creator_gamer",
+    );
+    return { kit, isFallback: false };
+  } catch {
+    return { kit: fallbackBuyerChallengeKit, isFallback: true };
+  }
+}
+
 function tone(status: PublicLaunchRoom["status"] | PublicSocialProofWall["status"]) {
   if (status === "ok") {
     return "ok";
@@ -334,10 +430,12 @@ export default async function LaunchPage() {
     { room, isFallback },
     { wall, isFallback: proofFallback },
     { checklist, isFallback: checklistFallback },
+    { kit: challengeKit, isFallback: challengeFallback },
   ] = await Promise.all([
     loadLaunchRoom(),
     loadSocialProofWall(),
     loadBuyerChecklist(),
+    loadBuyerChallengeKit(),
   ]);
   const heroPills = room.proof_strip.slice(0, 3);
   const proofMetricCards = [
@@ -484,6 +582,11 @@ export default async function LaunchPage() {
       <BuyerPersonaQuizPanel />
 
       <MistakeCostCalculatorPanel />
+
+      <BuyerChallengeKitPanel
+        kit={challengeKit}
+        isFallback={challengeFallback}
+      />
 
       <section className="launchPublicSection launchSocialProofWall">
         <div className="sectionHeader">

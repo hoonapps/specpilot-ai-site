@@ -2092,6 +2092,166 @@ ul {
   gap: 8px;
 }
 
+.launchBuyerChallenge {
+  gap: 18px;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  background: #f7fffb;
+}
+
+.launchBuyerChallengeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 14px;
+}
+
+.launchBuyerChallengeLead,
+.launchBuyerChallengeSteps article,
+.launchBuyerChallengeShareCard,
+.launchBuyerChallengeProof > div {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.16);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: clamp(15px, 3vw, 20px);
+}
+
+.launchBuyerChallengeLead {
+  align-content: start;
+  background: #0f2c2c;
+  color: #fff;
+}
+
+.launchBuyerChallengeLead > span,
+.launchBuyerChallengeSteps span {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 950;
+  opacity: 0.78;
+}
+
+.launchBuyerChallengeLead strong {
+  font-size: clamp(26px, 4vw, 42px);
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerChallengeLead p,
+.launchBuyerChallengeSteps p,
+.launchBuyerChallengeSteps small,
+.launchBuyerChallengeShareCard p,
+.launchBuyerChallengeProof li {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerChallengeLead p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.launchBuyerChallengeActions,
+.launchBuyerChallengeShareCard > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.launchBuyerChallengeActions {
+  justify-content: flex-start;
+}
+
+.launchBuyerChallengeActions .miniCta {
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.launchBuyerChallengeActions .miniCta.secondary {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.launchBuyerChallengeSteps,
+.launchBuyerChallengeShareGrid,
+.launchBuyerChallengeProof {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+}
+
+.launchBuyerChallengeSteps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchBuyerChallengeSteps article {
+  align-content: start;
+}
+
+.launchBuyerChallengeSteps small {
+  color: var(--teal);
+  font-weight: 850;
+}
+
+.launchBuyerChallengeShareGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchBuyerChallengeShareCard h3 {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerChallengeShareCard button {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 0 10px;
+  font-weight: 900;
+}
+
+.launchBuyerChallengeShareCard pre {
+  max-height: 210px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f2f8f5;
+  color: var(--ink);
+  padding: 12px;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.launchBuyerChallengeProof {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchBuyerChallengeProof strong {
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.launchBuyerChallengeProof ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -3242,6 +3402,10 @@ ul {
   .marketReportGrid,
   .growthStepGrid,
   .launchBuyerChecklistGrid,
+  .launchBuyerChallengeGrid,
+  .launchBuyerChallengeSteps,
+  .launchBuyerChallengeShareGrid,
+  .launchBuyerChallengeProof,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
@@ -3409,6 +3573,10 @@ ul {
   .launchPublicMetrics,
   .launchBuyerChecklistGrid,
   .launchBuyerChecklistFooter,
+  .launchBuyerChallengeGrid,
+  .launchBuyerChallengeSteps,
+  .launchBuyerChallengeShareGrid,
+  .launchBuyerChallengeProof,
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,

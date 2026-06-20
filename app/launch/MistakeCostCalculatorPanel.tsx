@@ -178,7 +178,7 @@ export function MistakeCostCalculatorPanel() {
   }
 
   return (
-    <section className="launchPublicSection launchMistakeCost">
+    <section className="launchPublicSection launchMistakeCost" id="mistake-cost">
       <div className="sectionHeader">
         <div>
           <div className="sectionLabel">

@@ -2952,6 +2952,154 @@ ul {
   padding-left: 18px;
 }
 
+.launchCartIntake {
+  background: #ffffff;
+}
+
+.launchCartIntakeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 18px;
+}
+
+.launchCartIntakeForm,
+.launchCartIntakeResult,
+.launchCartIntakeLines article,
+.launchCartIntakeSlots > div,
+.launchCartIntakeMetrics div {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+}
+
+.launchCartIntakeForm,
+.launchCartIntakeResult {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchCartIntakeControls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchCartIntakeForm label {
+  display: grid;
+  gap: 7px;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.launchCartIntakeForm input,
+.launchCartIntakeForm select,
+.launchCartIntakeForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  padding: 10px 11px;
+}
+
+.launchCartIntakeForm textarea {
+  resize: vertical;
+}
+
+.launchCartIntakeForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchCartIntakeResult h3 {
+  color: #0f172a;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.launchCartIntakeResult p,
+.launchCartIntakeResult li,
+.launchCartIntakeResult small,
+.launchCartIntakeLines p {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchCartIntakeMetrics,
+.launchCartIntakeSlots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchCartIntakeSlots {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchCartIntakeMetrics div,
+.launchCartIntakeSlots > div {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.launchCartIntakeMetrics span,
+.launchCartIntakeLines span {
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.launchCartIntakeMetrics strong,
+.launchCartIntakeSlots strong,
+.launchCartIntakeLines strong {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.launchCartIntakeLines {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchCartIntakeLines article {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.launchCartIntakeLines article.ok {
+  border-color: rgba(22, 163, 74, 0.24);
+  background: #f0fdf4;
+}
+
+.launchCartIntakeLines article.warning {
+  border-color: rgba(217, 119, 6, 0.28);
+  background: #fffbeb;
+}
+
+.launchCartIntakeLines article.blocker {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: #fef2f2;
+}
+
+.launchCartIntakeLines span {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
 .launchApprovalBrief {
   background: #f8fafc;
 }
@@ -8119,6 +8267,11 @@ ul {
   .launchSetupControls.dense,
   .launchSetupMetricGrid,
   .launchSetupCheckGrid,
+  .launchCartIntakeGrid,
+  .launchCartIntakeControls,
+  .launchCartIntakeMetrics,
+  .launchCartIntakeSlots,
+  .launchCartIntakeLines,
   .launchApprovalGrid,
   .launchApprovalControls,
   .launchApprovalControls.dense,
@@ -8399,6 +8552,11 @@ ul {
   .launchSetupControls.dense,
   .launchSetupMetricGrid,
   .launchSetupCheckGrid,
+  .launchCartIntakeGrid,
+  .launchCartIntakeControls,
+  .launchCartIntakeMetrics,
+  .launchCartIntakeSlots,
+  .launchCartIntakeLines,
   .launchApprovalGrid,
   .launchApprovalControls,
   .launchApprovalControls.dense,

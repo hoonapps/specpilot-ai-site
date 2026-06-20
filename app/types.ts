@@ -1255,6 +1255,62 @@ export type PublicSetupCompatibilityKit = {
   next_actions: string[];
 };
 
+export type ShoppingCartItemInput = {
+  title: string;
+  option_text: string;
+  price_krw: number | null;
+  quantity: number;
+  seller: string;
+  url: string;
+};
+
+export type ShoppingCartIntakeRequest = {
+  category: Category;
+  cart_text: string;
+  items: ShoppingCartItemInput[];
+  budget_krw: number;
+  purpose: string;
+  source: string;
+};
+
+export type ShoppingCartLine = {
+  line_id: string;
+  title: string;
+  normalized_role: string;
+  quantity: number;
+  price_krw: number | null;
+  status: OpsStatus;
+  evidence: string;
+  recommendation: string;
+};
+
+export type PublicShoppingCartIntakeKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  item_count: number;
+  cart_total_krw: number | null;
+  budget_delta_krw: number | null;
+  readiness_score: number;
+  verdict: "ready" | "verify" | "hold" | string;
+  headline: string;
+  summary: string;
+  blocker_count: number;
+  warning_count: number;
+  lines: ShoppingCartLine[];
+  detected_slots: string[];
+  missing_slots: string[];
+  duplicate_warnings: string[];
+  seller_questions: string[];
+  scanner_prefill: SpecRiskScannerRequest;
+  approval_prefill: PurchaseApprovalBriefRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type PurchaseApprovalBriefRequest = {
   category: Category;
   product_title: string;

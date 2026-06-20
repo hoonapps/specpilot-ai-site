@@ -57,6 +57,7 @@ import { LaunchWarRoomPanel } from "./LaunchWarRoomPanel";
 import { LaunchWeekRecapPanel } from "./LaunchWeekRecapPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { PurchaseApprovalBriefPanel } from "./PurchaseApprovalBriefPanel";
+import { ShoppingCartIntakePanel } from "./ShoppingCartIntakePanel";
 import { SetupCompatibilityPanel } from "./SetupCompatibilityPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
@@ -1397,6 +1398,8 @@ export default async function LaunchPage() {
       />
 
       <SetupCompatibilityPanel />
+
+      <ShoppingCartIntakePanel />
 
       <SpecRiskScannerPanel
         scanner={specScanner}

@@ -4356,6 +4356,32 @@ export default function Home() {
             <h3>{latestProofHub.headline}</h3>
             <p>{latestProofHub.summary}</p>
 
+            <div className="conceptList">
+              {latestProofHub.hero_proof_strip.map((item) => (
+                <span className="pill ok" key={item}>
+                  {item}
+                </span>
+              ))}
+            </div>
+
+            <div className="growthStepGrid">
+              {latestProofHub.evidence_kit.map((item) => (
+                <article className="growthStepCard" key={item.title}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(item.status)}`}>
+                      {item.status}
+                    </span>
+                    <span className="pill muted">{item.audience}</span>
+                  </div>
+                  <h4>{item.title}</h4>
+                  <p>{item.proof}</p>
+                  <p>
+                    {item.source_path} · {item.reuse_hint}
+                  </p>
+                </article>
+              ))}
+            </div>
+
             <dl className="sourceMetricGrid">
               <div>
                 <dt>검증 점수</dt>

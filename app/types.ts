@@ -1072,6 +1072,15 @@ export type PublicObjectionAnswer = {
   evidence: string[];
 };
 
+export type PublicProofEvidence = {
+  title: string;
+  status: OpsStatus;
+  audience: string;
+  proof: string;
+  source_path: string;
+  reuse_hint: string;
+};
+
 export type PublicProofHub = {
   proof_version: string;
   workspace_id: string;
@@ -1080,8 +1089,10 @@ export type PublicProofHub = {
   proof_score: number;
   headline: string;
   summary: string;
+  hero_proof_strip: string[];
   metric_cards: Record<string, number | string>;
   trust_badges: string[];
+  evidence_kit: PublicProofEvidence[];
   proof_assets: PublicProofAsset[];
   objection_answers: PublicObjectionAnswer[];
   cta_cards: string[];

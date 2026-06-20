@@ -16,6 +16,7 @@ import {
   Link2,
   Loader2,
   Monitor,
+  MousePointerClick,
   Send,
   ShieldCheck,
   Sparkles,
@@ -38,6 +39,9 @@ import type {
   CompletionReportWorkflowResponse,
   DataGovernanceBundle,
   FeedbackRecord,
+  GrowthEventRecord,
+  GrowthEventType,
+  GrowthFunnelDashboard,
   IntakeDiagnosisResponse,
   IntegrationCategory,
   IntegrationProvider,
@@ -369,6 +373,13 @@ export default function Home() {
   >("idle");
   const [latestMarketReport, setLatestMarketReport] =
     useState<CategoryMarketReport | null>(null);
+  const [growthStatus, setGrowthStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestGrowthDashboard, setLatestGrowthDashboard] =
+    useState<GrowthFunnelDashboard | null>(null);
+  const [latestGrowthEvent, setLatestGrowthEvent] =
+    useState<GrowthEventRecord | null>(null);
   const [launchStatus, setLaunchStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -499,6 +510,9 @@ export default function Home() {
     setLatestPricingBundle(null);
     setMarketReportStatus("idle");
     setLatestMarketReport(null);
+    setGrowthStatus("idle");
+    setLatestGrowthDashboard(null);
+    setLatestGrowthEvent(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -558,6 +572,11 @@ export default function Home() {
           ? `Trace ${data.analysis.graph_trace_id}`
           : "API 미연결 데모",
       );
+      await recordGrowthEvent("analysis_view", "분석 결과 조회", "analysis", {
+        traceId: data.analysis.graph_trace_id,
+        reportId: data.saved_report?.report_id ?? null,
+        productId: data.analysis.report.top_recommendations[0]?.product.id,
+      });
       await loadPurchaseDecisionBoard();
     } catch (error) {
       setResult(demoResponse);
@@ -580,6 +599,64 @@ export default function Home() {
       setStatusText("API 미연결 데모");
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function recordGrowthEvent(
+    eventType: GrowthEventType,
+    label: string,
+    surface: string,
+    options: {
+      traceId?: string | null;
+      reportId?: string | null;
+      productId?: string | null;
+      silent?: boolean;
+      metadata?: Record<string, number | string | boolean>;
+    } = {},
+  ) {
+    if (!options.silent) {
+      setGrowthStatus("sending");
+    }
+    try {
+      const response = await fetch("/api/specpilot/growth-funnel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event: {
+            event_type: eventType,
+            trace_id: options.traceId ?? result.graph_trace_id,
+            report_id: options.reportId ?? savedReportId,
+            product_id: options.productId ?? top?.product.id ?? null,
+            source: "specpilot-ai-site",
+            surface,
+            label,
+            metadata: {
+              category: payload.category,
+              is_demo: isDemo,
+              ...options.metadata,
+            },
+          },
+          limit: 20,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`growth ${response.status}`);
+      }
+      const responsePayload = (await response.json()) as {
+        ok: boolean;
+        event?: GrowthEventRecord;
+        dashboard?: GrowthFunnelDashboard;
+      };
+      if (!responsePayload.ok || !responsePayload.dashboard) {
+        throw new Error("growth rejected");
+      }
+      setLatestGrowthEvent(responsePayload.event ?? null);
+      setLatestGrowthDashboard(responsePayload.dashboard);
+      setGrowthStatus("sent");
+    } catch {
+      if (!options.silent) {
+        setGrowthStatus("error");
+      }
     }
   }
 
@@ -816,6 +893,10 @@ export default function Home() {
       }
       setLatestAlertSubscription(payload.subscription);
       setAlertStatus("sent");
+      await recordGrowthEvent("alert_cta", "목표가 알림 켜기", "price-alert", {
+        productId,
+        metadata: { channel: priceAlert.channel },
+      });
     } catch {
       setAlertStatus("error");
     }
@@ -1560,6 +1641,12 @@ export default function Home() {
       setLatestIntent(payload.bundle.created_intent);
       setLatestPricingBundle(payload.bundle);
       setPricingStatus("sent");
+      await recordGrowthEvent("subscription_cta", "요금제 관심 등록", "pricing", {
+        metadata: {
+          plan_id: pricingIntent.planId,
+          billing_cycle: pricingIntent.billingCycle,
+        },
+      });
       await loadLaunchReadiness();
     } catch {
       setPricingStatus("error");
@@ -1609,6 +1696,27 @@ export default function Home() {
       setMarketReportStatus("sent");
     } catch {
       setMarketReportStatus("error");
+    }
+  }
+
+  async function loadGrowthFunnel() {
+    setGrowthStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/growth-funnel?limit=20");
+      if (!response.ok) {
+        throw new Error(`growth funnel ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        dashboard?: GrowthFunnelDashboard;
+      };
+      if (!payload.ok || !payload.dashboard) {
+        throw new Error("growth funnel rejected");
+      }
+      setLatestGrowthDashboard(payload.dashboard);
+      setGrowthStatus("sent");
+    } catch {
+      setGrowthStatus("error");
     }
   }
 
@@ -1794,6 +1902,7 @@ export default function Home() {
           <a href="#beta-ops">베타 운영</a>
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#market-reports">시장 리포트</a>
+          <a href="#growth-funnel">성장 퍼널</a>
           <a href="#pricing-ops">수익화</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -1963,7 +2072,16 @@ export default function Home() {
             <span className={isDemo ? "pill warn" : "pill ok"}>{statusText}</span>
             <span className="pill muted">Next.js 서버 프록시</span>
             {publicUrl ? (
-              <a className="pill link" href={publicUrl} target="_blank">
+              <a
+                className="pill link"
+                href={publicUrl}
+                target="_blank"
+                onClick={() =>
+                  void recordGrowthEvent("share_cta", "공유 리포트 열기", "topbar", {
+                    silent: true,
+                  })
+                }
+              >
                 공유 리포트 열기 <ExternalLink size={13} />
               </a>
             ) : null}
@@ -2027,6 +2145,25 @@ export default function Home() {
                   <strong>{won(item.price.effective_price_krw)}</strong>
                   <span>{item.score.total_score}점</span>
                 </div>
+                <button
+                  type="button"
+                  className="secondaryButton"
+                  onClick={() =>
+                    void recordGrowthEvent(
+                      "recommendation_click",
+                      `TOP ${item.rank} 추천 카드`,
+                      "recommendation-card",
+                      {
+                        productId: item.product.id,
+                        silent: true,
+                        metadata: { rank: item.rank, score: item.score.total_score },
+                      },
+                    )
+                  }
+                >
+                  <MousePointerClick size={16} />
+                  이 후보 반응 기록
+                </button>
               </article>
             ))}
           </section>
@@ -2099,6 +2236,28 @@ export default function Home() {
                   </dl>
                   <p>{option.why}</p>
                   <small>{option.tradeoff}</small>
+                  <button
+                    type="button"
+                    className="secondaryButton"
+                    onClick={() =>
+                      void recordGrowthEvent(
+                        "alternative_click",
+                        option.label,
+                        "scenario-card",
+                        {
+                          productId: option.product_id,
+                          silent: true,
+                          metadata: {
+                            scenario: option.scenario,
+                            score: option.total_score,
+                          },
+                        },
+                      )
+                    }
+                  >
+                    <MousePointerClick size={16} />
+                    대안 반응 기록
+                  </button>
                 </article>
               ))}
             </div>
@@ -5527,6 +5686,171 @@ export default function Home() {
                   <h4>{trend.title}</h4>
                   <p>{trend.signal}</p>
                   <p>{trend.recommendation}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="growthFunnelPanel" id="growth-funnel">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <MousePointerClick size={16} />
+            성장 퍼널
+          </div>
+          <h2>추천 결과가 공유, 알림, 유료 관심으로 이어지는지 봅니다</h2>
+          <p>
+            분석 결과 조회, 추천 카드 클릭, 대안 시나리오 클릭, 공유 리포트,
+            가격 알림, 요금제 관심 등록 이벤트를 워크스페이스별 퍼널로 집계합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestGrowthDashboard ? gateTone(latestGrowthDashboard.status) : "warn"
+              }`}
+            >
+              {latestGrowthDashboard
+                ? `${latestGrowthDashboard.total_events}건 · 추천 ${percent(
+                    latestGrowthDashboard.activation_rate,
+                  )}`
+                : "성장 퍼널 미조회"}
+            </span>
+            <span className="pill muted">growth-funnel</span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={growthStatus === "sending"}
+            onClick={loadGrowthFunnel}
+          >
+            {growthStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <MousePointerClick size={18} />
+            )}
+            퍼널 새로고침
+          </button>
+          <button
+            type="button"
+            className="secondaryButton"
+            disabled={growthStatus === "sending"}
+            onClick={() =>
+              void recordGrowthEvent("feedback_cta", "퍼널 콘솔 확인", "growth-funnel")
+            }
+          >
+            <Activity size={18} />
+            콘솔 반응 기록
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              growthStatus,
+              "성장 퍼널을 업데이트했습니다.",
+              "성장 퍼널 조회에 실패했습니다.",
+            ) || "추천 반응과 CTA 전환이 출시 게이트의 성장 체크에 반영됩니다."}
+          </p>
+        </div>
+
+        {latestGrowthDashboard ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestGrowthDashboard.status)}`}>
+                {latestGrowthDashboard.status}
+              </span>
+              <span className="pill muted">
+                Workspace {latestGrowthDashboard.workspace_id}
+              </span>
+              {latestGrowthEvent ? (
+                <span className="pill muted">{latestGrowthEvent.event_type}</span>
+              ) : null}
+            </div>
+            <h3>{latestGrowthDashboard.summary}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>전체 이벤트</dt>
+                <dd>{latestGrowthDashboard.total_events}</dd>
+              </div>
+              <div>
+                <dt>고유 trace</dt>
+                <dd>{latestGrowthDashboard.unique_traces}</dd>
+              </div>
+              <div>
+                <dt>공유 CTA</dt>
+                <dd>{percent(latestGrowthDashboard.share_rate)}</dd>
+              </div>
+              <div>
+                <dt>알림 CTA</dt>
+                <dd>{percent(latestGrowthDashboard.alert_rate)}</dd>
+              </div>
+              <div>
+                <dt>유료 관심</dt>
+                <dd>{percent(latestGrowthDashboard.paid_intent_rate)}</dd>
+              </div>
+            </dl>
+
+            <div className="growthStepGrid">
+              {latestGrowthDashboard.steps.map((step) => (
+                <article className="growthStepCard" key={step.key}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(step.status)}`}>
+                      {step.status}
+                    </span>
+                    <span className="pill muted">{percent(step.conversion_rate)}</span>
+                  </div>
+                  <h4>{step.label}</h4>
+                  <dl className="sourceMetricGrid">
+                    <div>
+                      <dt>이벤트</dt>
+                      <dd>{step.event_count}</dd>
+                    </div>
+                    <div>
+                      <dt>trace</dt>
+                      <dd>{step.unique_traces}</dd>
+                    </div>
+                  </dl>
+                  <p>{step.recommendation}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>상위 표면</strong>
+                <ul>
+                  {(latestGrowthDashboard.top_surfaces.length
+                    ? latestGrowthDashboard.top_surfaces
+                    : ["아직 수집된 표면이 없습니다."]
+                  ).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {(latestGrowthDashboard.next_actions.length
+                    ? latestGrowthDashboard.next_actions
+                    : ["현재 퍼널 기준을 유지하세요."]
+                  )
+                    .slice(0, 5)
+                    .map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestGrowthDashboard.recent_events.slice(0, 6).map((event) => (
+                <article className="gateCheckCard" key={event.event_id}>
+                  <div className="answerHeader">
+                    <span className="pill ok">{event.event_type}</span>
+                    <span className="pill muted">{event.surface}</span>
+                  </div>
+                  <h4>{event.label || event.event_id}</h4>
+                  <p>{event.product_id || event.report_id || event.trace_id || "workspace"}</p>
                 </article>
               ))}
             </div>

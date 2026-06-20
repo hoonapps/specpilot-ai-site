@@ -565,6 +565,63 @@ export type CategoryMarketReport = {
   publishing_checklist: string[];
 };
 
+export type GrowthEventType =
+  | "analysis_view"
+  | "recommendation_click"
+  | "alternative_click"
+  | "share_cta"
+  | "alert_cta"
+  | "purchase_link_cta"
+  | "subscription_cta"
+  | "feedback_cta";
+
+export type GrowthEventRequest = {
+  event_type: GrowthEventType;
+  trace_id?: string | null;
+  report_id?: string | null;
+  product_id?: string | null;
+  source?: string;
+  surface?: string;
+  label?: string;
+  metadata?: Record<string, number | string | boolean>;
+};
+
+export type GrowthEventRecord = Required<
+  Omit<GrowthEventRequest, "metadata">
+> & {
+  event_id: string;
+  workspace_id: string;
+  metadata: Record<string, number | string | boolean>;
+  created_at: string;
+};
+
+export type GrowthFunnelStep = {
+  key: GrowthEventType;
+  label: string;
+  event_count: number;
+  unique_traces: number;
+  conversion_rate: number;
+  status: OpsStatus;
+  recommendation: string;
+};
+
+export type GrowthFunnelDashboard = {
+  workspace_id: string;
+  generated_at: string;
+  total_events: number;
+  unique_traces: number;
+  activation_rate: number;
+  share_rate: number;
+  alert_rate: number;
+  paid_intent_rate: number;
+  status: OpsStatus;
+  summary: string;
+  steps: GrowthFunnelStep[];
+  top_surfaces: string[];
+  next_actions: string[];
+  recent_events: GrowthEventRecord[];
+};
+
 export type ReportAdvisorQuestionRequest = {
   report_id: string;
   question: string;

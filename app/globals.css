@@ -735,6 +735,7 @@ ul {
 .dataGovernancePanel,
 .betaOpsPanel,
 .marketReportPanel,
+.growthFunnelPanel,
 .pricingOpsPanel,
 .launchPanel {
   display: grid;
@@ -787,6 +788,7 @@ ul {
 .integrationResult,
 .betaOpsResult,
 .marketReportResult,
+.growthFunnelResult,
 .pricingOpsResult,
 .launchResult {
   grid-column: 1 / -1;
@@ -1131,6 +1133,13 @@ ul {
   margin-top: 18px;
 }
 
+.growthStepGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
 .insightCard {
   min-width: 0;
   border: 1px solid var(--line);
@@ -1155,6 +1164,14 @@ ul {
   padding: 16px;
 }
 
+.growthStepCard {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 16px;
+}
+
 .insightCard h4 {
   margin: 12px 0 8px;
   font-size: 20px;
@@ -1166,6 +1183,11 @@ ul {
 }
 
 .marketReportCard h4 {
+  margin: 12px 0 8px;
+  font-size: 20px;
+}
+
+.growthStepCard h4 {
   margin: 12px 0 8px;
   font-size: 20px;
 }
@@ -1511,6 +1533,7 @@ ul {
   .dataGovernancePanel,
   .betaOpsPanel,
   .marketReportPanel,
+  .growthFunnelPanel,
   .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
@@ -1530,7 +1553,8 @@ ul {
   .signalStrip,
   .purchaseLinkGrid,
   .decisionBoardGrid,
-  .marketReportGrid {
+  .marketReportGrid,
+  .growthStepGrid {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -1580,6 +1604,7 @@ ul {
   .dataGovernancePanel,
   .betaOpsPanel,
   .marketReportPanel,
+  .growthFunnelPanel,
   .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
@@ -1607,6 +1632,7 @@ ul {
   .dataGovernancePanel,
   .betaOpsPanel,
   .marketReportPanel,
+  .growthFunnelPanel,
   .pricingOpsPanel,
   .launchPanel {
     margin-right: 0;
@@ -1655,6 +1681,7 @@ ul {
   .insightGrid,
   .decisionBoardGrid,
   .marketReportGrid,
+  .growthStepGrid,
   .gateCheckGrid,
   .sourceMetricGrid,
   .metricRow {

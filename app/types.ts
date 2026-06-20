@@ -486,10 +486,109 @@ export type SourceCandidate = {
   extraction_signals: string[];
 };
 
+export type ReviewStatus = "pending" | "approved" | "rejected";
+
+export type ReviewQueueItem = {
+  review_id: string;
+  source: SourceCandidate;
+  status: ReviewStatus;
+  reason: string;
+  created_at: string;
+  resolved_at: string | null;
+  reviewer: string | null;
+};
+
 export type SourceUrlIngestResponse = {
   candidate: SourceCandidate;
+  review_item?: ReviewQueueItem | null;
   fetched_live: boolean;
   extraction_notes: string[];
+};
+
+export type SourceMonitorRequest = {
+  url: string;
+  category: Category;
+  kind: "price";
+  expected_model: string;
+  source_name: string;
+  seller: string | null;
+  cadence_minutes: number;
+  active: boolean;
+  html_snapshot: string;
+};
+
+export type SourceMonitor = {
+  monitor_id: string;
+  workspace_id: string;
+  url: string;
+  category: Category;
+  kind: "price";
+  expected_model: string;
+  source_name: string;
+  seller: string | null;
+  cadence_minutes: number;
+  active: boolean;
+  last_run_at: string | null;
+  last_status: string;
+  last_source_id: string | null;
+  failure_count: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SourceRefreshRun = {
+  run_id: string;
+  monitor_id: string;
+  workspace_id: string;
+  status: string;
+  source_id: string | null;
+  review_id: string | null;
+  fetched_live: boolean;
+  message: string;
+  created_at: string;
+};
+
+export type SourceRefreshResponse = {
+  selected_count: number;
+  succeeded_count: number;
+  failed_count: number;
+  candidates: SourceCandidate[];
+  review_items: ReviewQueueItem[];
+  runs: SourceRefreshRun[];
+};
+
+export type SourceScheduleItem = {
+  monitor: SourceMonitor;
+  due: boolean;
+  next_due_at: string | null;
+  overdue_minutes: number;
+};
+
+export type SourceSchedulePreview = {
+  workspace_id: string;
+  due_count: number;
+  upcoming_count: number;
+  generated_at: string;
+  due: SourceScheduleItem[];
+  upcoming: SourceScheduleItem[];
+};
+
+export type ReviewDecision = {
+  review_id: string;
+  status: ReviewStatus;
+  reviewer: string;
+  note: string;
+  resolved_at: string;
+};
+
+export type SourceMonitorOpsBundle = {
+  monitors: SourceMonitor[];
+  schedule: SourceSchedulePreview;
+  runs: SourceRefreshRun[];
+  pending_reviews: ReviewQueueItem[];
+  created_monitor?: SourceMonitor | null;
+  refresh?: SourceRefreshResponse | null;
+  decision?: ReviewDecision | null;
 };
 
 export type AlertSubscriptionRequest = {

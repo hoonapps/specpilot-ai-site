@@ -610,6 +610,7 @@ ul {
 
 .advisorPanel,
 .sourceCheckPanel,
+.sourceMonitorPanel,
 .alertPanel,
 .purchaseLinkPanel,
 .completionPanel,
@@ -657,6 +658,7 @@ ul {
 }
 
 .sourceResult,
+.sourceMonitorResult,
 .alertResult,
 .purchaseLinkResult,
 .completionResult,
@@ -689,6 +691,12 @@ ul {
   gap: 12px;
 }
 
+.sourceMonitorForm {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
 .observabilityForm button {
   display: inline-flex;
   min-height: 44px;
@@ -711,6 +719,93 @@ ul {
 .observabilityForm button:disabled {
   cursor: progress;
   opacity: 0.68;
+}
+
+.sourceMonitorForm button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: white;
+  font-weight: 950;
+}
+
+.sourceMonitorForm button.secondaryButton {
+  border: 1px solid rgba(12, 116, 108, 0.28);
+  background: #f5fbf8;
+  color: var(--teal);
+}
+
+.sourceMonitorResult button.secondaryButton {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(12, 116, 108, 0.28);
+  border-radius: 8px;
+  background: #f5fbf8;
+  color: var(--teal);
+  font-weight: 950;
+}
+
+.sourceMonitorForm button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.sourceMonitorResult button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.sourceMonitorActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sourceMonitorActions.compact {
+  grid-template-columns: repeat(2, minmax(0, 96px));
+  margin-top: 10px;
+}
+
+.sourceMonitorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.sourceMonitorGrid article,
+.reviewQueueList > div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 14px;
+}
+
+.sourceMonitorGrid h3 {
+  margin-top: 0;
+}
+
+.sourceMonitorGrid p,
+.reviewQueueList span {
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.reviewQueueList {
+  display: grid;
+  gap: 10px;
+}
+
+.reviewQueueList strong,
+.reviewQueueList span {
+  display: block;
 }
 
 .completionForm textarea {
@@ -1145,6 +1240,7 @@ ul {
   .trustPanel,
   .advisorPanel,
   .sourceCheckPanel,
+  .sourceMonitorPanel,
   .alertPanel,
   .purchaseLinkPanel,
   .completionPanel,
@@ -1189,6 +1285,7 @@ ul {
   .trustPanel,
   .advisorPanel,
   .sourceCheckPanel,
+  .sourceMonitorPanel,
   .alertPanel,
   .purchaseLinkPanel,
   .completionPanel,
@@ -1215,6 +1312,8 @@ ul {
   .publicHero,
   .publicGrid,
   .purchaseLinkGrid,
+  .sourceMonitorGrid,
+  .sourceMonitorActions,
   .advisorLists,
   .alertActionGrid,
   .insightGrid,

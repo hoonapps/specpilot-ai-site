@@ -48,6 +48,7 @@ import type {
   PurchaseOutcomeStatus,
   ReportAdvisorAnswer,
   SourceCandidate,
+  SourceMonitorOpsBundle,
   SubscriptionIntent,
 } from "./types";
 
@@ -161,6 +162,16 @@ export default function Home() {
   >("idle");
   const [latestSourceCandidate, setLatestSourceCandidate] =
     useState<SourceCandidate | null>(null);
+  const [sourceMonitor, setSourceMonitor] = useState({
+    cadenceMinutes: "180",
+    active: true,
+    refreshLimit: "20",
+  });
+  const [sourceMonitorStatus, setSourceMonitorStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestSourceMonitorBundle, setLatestSourceMonitorBundle] =
+    useState<SourceMonitorOpsBundle | null>(null);
   const [priceAlert, setPriceAlert] = useState({
     contact: "buyer@example.com",
     targetPrice: String(
@@ -403,6 +414,8 @@ export default function Home() {
     setLatestPurchaseOutcome(null);
     setLearningStatus("idle");
     setLatestLearningDashboard(null);
+    setSourceMonitorStatus("idle");
+    setLatestSourceMonitorBundle(null);
     setObservabilityStatus("idle");
     setLatestObservabilityBundle(null);
     setIntegrationStatus("idle");
@@ -564,6 +577,134 @@ export default function Home() {
       setSourceStatus("sent");
     } catch {
       setSourceStatus("error");
+    }
+  }
+
+  async function loadSourceMonitorOps() {
+    setSourceMonitorStatus("sending");
+    try {
+      const response = await fetch(
+        `/api/specpilot/source-monitors?limit=${encodeURIComponent(
+          sourceMonitor.refreshLimit,
+        )}`,
+      );
+      if (!response.ok) {
+        throw new Error(`source monitors ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: SourceMonitorOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("source monitors rejected");
+      }
+      setLatestSourceMonitorBundle(payload.bundle);
+      setSourceMonitorStatus("sent");
+    } catch {
+      setSourceMonitorStatus("error");
+    }
+  }
+
+  async function createSourceMonitor(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSourceMonitorStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/source-monitors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "create",
+          limit: Number(sourceMonitor.refreshLimit) || 20,
+          monitor: {
+            url: sourceEvidence.url,
+            category: formPayload.category,
+            kind: "price",
+            expected_model: sourceEvidence.expectedModel,
+            source_name: "specpilot-ai-site-monitor",
+            seller: sourceEvidence.seller || null,
+            cadence_minutes: Number(sourceMonitor.cadenceMinutes) || 180,
+            active: sourceMonitor.active,
+            html_snapshot: sourceEvidence.html,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`source monitor create ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: SourceMonitorOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("source monitor create rejected");
+      }
+      setLatestSourceMonitorBundle(payload.bundle);
+      setSourceMonitorStatus("sent");
+    } catch {
+      setSourceMonitorStatus("error");
+    }
+  }
+
+  async function refreshSourceMonitors(action: "refresh" | "refresh_due") {
+    setSourceMonitorStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/source-monitors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action,
+          limit: Number(sourceMonitor.refreshLimit) || 20,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`source monitor refresh ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: SourceMonitorOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("source monitor refresh rejected");
+      }
+      setLatestSourceMonitorBundle(payload.bundle);
+      setSourceMonitorStatus("sent");
+    } catch {
+      setSourceMonitorStatus("error");
+    }
+  }
+
+  async function decideSourceReview(reviewId: string, reviewStatus: "approved" | "rejected") {
+    setSourceMonitorStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/source-monitors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "review_decision",
+          limit: Number(sourceMonitor.refreshLimit) || 20,
+          review_id: reviewId,
+          review_status: reviewStatus,
+          reviewer: "specpilot-site",
+          note:
+            reviewStatus === "approved"
+              ? "웹사이트 URL 모니터 콘솔에서 근거 승인"
+              : "웹사이트 URL 모니터 콘솔에서 근거 반려",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`source review ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: SourceMonitorOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("source review rejected");
+      }
+      setLatestSourceMonitorBundle(payload.bundle);
+      setSourceMonitorStatus("sent");
+    } catch {
+      setSourceMonitorStatus("error");
     }
   }
 
@@ -1247,6 +1388,7 @@ export default function Home() {
           <a href="#purchase-links">구매 링크</a>
           <a href="#completion-reports">완료 리포트</a>
           <a href="#source-check">상품 검수</a>
+          <a href="#source-monitors">URL 모니터</a>
           <a href="#checkout-review">결제 검수</a>
           <a href="#purchase-outcome">구매 결과</a>
           <a href="#learning-insights">학습 인사이트</a>
@@ -2388,6 +2530,228 @@ export default function Home() {
                 <li key={item}>{item}</li>
               ))}
             </ul>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="sourceMonitorPanel" id="source-monitors">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <TimerReset size={16} />
+            URL 모니터 운영
+          </div>
+          <h2>상품 근거 신선도를 schedule과 refresh 이력으로 관리합니다</h2>
+          <p>
+            반복 확인이 필요한 상품 URL을 모니터로 등록하고, due schedule, refresh
+            실행 결과, 검수 큐를 한 화면에서 확인합니다.
+          </p>
+          <div className="advisorMeta">
+            <span className="pill muted">
+              due {latestSourceMonitorBundle?.schedule.due_count ?? 0}건
+            </span>
+            <span className="pill muted">
+              pending review {latestSourceMonitorBundle?.pending_reviews.length ?? 0}건
+            </span>
+          </div>
+        </div>
+
+        <form className="sourceMonitorForm" onSubmit={createSourceMonitor}>
+          <div className="fieldGrid">
+            <label>
+              수집 주기(분)
+              <input
+                type="number"
+                min={15}
+                max={10080}
+                value={sourceMonitor.cadenceMinutes}
+                onChange={(event) =>
+                  setSourceMonitor((current) => ({
+                    ...current,
+                    cadenceMinutes: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              조회 한도
+              <input
+                type="number"
+                min={1}
+                max={100}
+                value={sourceMonitor.refreshLimit}
+                onChange={(event) =>
+                  setSourceMonitor((current) => ({
+                    ...current,
+                    refreshLimit: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label className="toggleLabel">
+            <input
+              type="checkbox"
+              checked={sourceMonitor.active}
+              onChange={(event) =>
+                setSourceMonitor((current) => ({
+                  ...current,
+                  active: event.target.checked,
+                }))
+              }
+            />
+            active monitor로 등록
+          </label>
+          <button
+            type="submit"
+            disabled={
+              sourceMonitorStatus === "sending" || sourceEvidence.url.length < 8
+            }
+          >
+            {sourceMonitorStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <TimerReset size={18} />
+            )}
+            현재 상품 URL 모니터 등록
+          </button>
+          <div className="sourceMonitorActions">
+            <button
+              className="secondaryButton"
+              type="button"
+              disabled={sourceMonitorStatus === "sending"}
+              onClick={loadSourceMonitorOps}
+            >
+              <Clock3 size={18} />
+              schedule 조회
+            </button>
+            <button
+              className="secondaryButton"
+              type="button"
+              disabled={sourceMonitorStatus === "sending"}
+              onClick={() => refreshSourceMonitors("refresh_due")}
+            >
+              <Activity size={18} />
+              due refresh
+            </button>
+          </div>
+          <p className="formStatus">
+            {statusMessage(
+              sourceMonitorStatus,
+              "URL 모니터 운영 상태를 갱신했습니다.",
+              "URL 모니터 작업에 실패했습니다.",
+            ) || "상품 검수 입력의 URL, 기대 모델명, HTML 스냅샷을 모니터 등록에 사용합니다."}
+          </p>
+        </form>
+
+        {latestSourceMonitorBundle ? (
+          <div className="sourceMonitorResult">
+            <div className="answerHeader">
+              <span
+                className={`pill ${
+                  latestSourceMonitorBundle.schedule.due_count > 0 ? "warn" : "ok"
+                }`}
+              >
+                due {latestSourceMonitorBundle.schedule.due_count}건
+              </span>
+              <span className="pill muted">
+                upcoming {latestSourceMonitorBundle.schedule.upcoming_count}건
+              </span>
+              <span className="pill muted">
+                monitor {latestSourceMonitorBundle.monitors.length}개
+              </span>
+              {latestSourceMonitorBundle.refresh ? (
+                <span className="pill muted">
+                  refresh 성공 {latestSourceMonitorBundle.refresh.succeeded_count}건
+                </span>
+              ) : null}
+            </div>
+
+            <div className="sourceMonitorGrid">
+              <article>
+                <h3>Due schedule</h3>
+                {latestSourceMonitorBundle.schedule.due.length ? (
+                  <ul>
+                    {latestSourceMonitorBundle.schedule.due.slice(0, 5).map((item) => (
+                      <li key={item.monitor.monitor_id}>
+                        {item.monitor.expected_model || item.monitor.url} ·{" "}
+                        {item.overdue_minutes}분 지연
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>지금 실행해야 할 due 모니터가 없습니다.</p>
+                )}
+              </article>
+
+              <article>
+                <h3>최근 refresh</h3>
+                {latestSourceMonitorBundle.runs.length ? (
+                  <ul>
+                    {latestSourceMonitorBundle.runs.slice(0, 5).map((run) => (
+                      <li key={run.run_id}>
+                        {run.status} · {run.fetched_live ? "live" : "snapshot"} ·{" "}
+                        {run.message || run.source_id || "메시지 없음"}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>아직 refresh 실행 이력이 없습니다.</p>
+                )}
+              </article>
+            </div>
+
+            <div className="sourceMonitorGrid">
+              <article>
+                <h3>등록 모니터</h3>
+                {latestSourceMonitorBundle.monitors.length ? (
+                  <ul>
+                    {latestSourceMonitorBundle.monitors.slice(0, 6).map((monitor) => (
+                      <li key={monitor.monitor_id}>
+                        {monitor.active ? "active" : "paused"} · {monitor.last_status} ·{" "}
+                        {monitor.cadence_minutes}분 ·{" "}
+                        {monitor.expected_model || monitor.seller || monitor.url}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>아직 등록된 URL 모니터가 없습니다.</p>
+                )}
+              </article>
+
+              <article>
+                <h3>검수 큐</h3>
+                {latestSourceMonitorBundle.pending_reviews.length ? (
+                  <div className="reviewQueueList">
+                    {latestSourceMonitorBundle.pending_reviews.slice(0, 4).map((item) => (
+                      <div key={item.review_id}>
+                        <strong>{item.source.title}</strong>
+                        <span>{item.reason}</span>
+                        <div className="sourceMonitorActions compact">
+                          <button
+                            className="secondaryButton"
+                            type="button"
+                            disabled={sourceMonitorStatus === "sending"}
+                            onClick={() => decideSourceReview(item.review_id, "approved")}
+                          >
+                            승인
+                          </button>
+                          <button
+                            className="secondaryButton"
+                            type="button"
+                            disabled={sourceMonitorStatus === "sending"}
+                            onClick={() => decideSourceReview(item.review_id, "rejected")}
+                          >
+                            반려
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>대기 중인 검수 항목이 없습니다.</p>
+                )}
+              </article>
+            </div>
           </div>
         ) : null}
       </section>

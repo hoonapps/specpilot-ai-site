@@ -2,7 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, LoaderCircle, MousePointer2, Route } from "lucide-react";
-import type { OpsStatus, PublicLaunchActionRouter } from "../types";
+import type {
+  GrowthEventRequest,
+  GrowthEventType,
+  OpsStatus,
+  PublicLaunchActionRoute,
+  PublicLaunchActionRouter,
+} from "../types";
 
 type Status = "loading" | "ready" | "error";
 
@@ -58,10 +64,43 @@ function tone(status: OpsStatus) {
   return status === "blocker" ? "danger" : "warn";
 }
 
+function growthEventTypeForRoute(route: PublicLaunchActionRoute): GrowthEventType {
+  if (route.key === "first_purchase_analysis") {
+    return "analysis_view";
+  }
+  if (route.key === "shared_review" || route.key === "waitlist_referral") {
+    return "share_cta";
+  }
+  if (route.key === "team_purchase" || route.key === "paid_intent") {
+    return "subscription_cta";
+  }
+  return "recommendation_click";
+}
+
+function buildRouteEvent(
+  route: PublicLaunchActionRoute,
+  interaction: "select" | "cta",
+): GrowthEventRequest {
+  return {
+    event_type: growthEventTypeForRoute(route),
+    source: "launch-action-router",
+    surface: "launch-action-router",
+    label: `${route.persona} ${interaction === "cta" ? "CTA 클릭" : "경로 선택"}`,
+    metadata: {
+      route_key: route.key,
+      tracking_event: route.tracking_event,
+      interaction,
+      cta_path: route.cta_path,
+      priority_score: Math.round(route.priority_score),
+    },
+  };
+}
+
 export function LaunchActionRouterPanel() {
   const [router, setRouter] = useState<PublicLaunchActionRouter>(fallbackRouter);
   const [status, setStatus] = useState<Status>("loading");
   const [activeKey, setActiveKey] = useState(fallbackRouter.default_route_key);
+  const [eventMessage, setEventMessage] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -105,6 +144,33 @@ export function LaunchActionRouterPanel() {
     [activeKey, router.routes],
   );
 
+  async function recordRouteEvent(
+    route: PublicLaunchActionRoute,
+    interaction: "select" | "cta",
+  ) {
+    try {
+      const response = await fetch("/api/specpilot/growth-funnel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          limit: 8,
+          event: buildRouteEvent(route, interaction),
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`growth funnel ${response.status}`);
+      }
+      setEventMessage(
+        interaction === "cta"
+          ? "CTA 클릭이 성장 퍼널에 기록되었습니다."
+          : "방문자 경로 선택이 성장 퍼널에 기록되었습니다.",
+      );
+    } catch {
+      setEventMessage("액션 이벤트 기록을 다시 시도하세요.");
+    }
+  }
+
   return (
     <section className="launchPublicSection launchActionRouter" id="launch-action-router">
       <div className="sectionHeader">
@@ -137,7 +203,10 @@ export function LaunchActionRouterPanel() {
               className={route.key === activeRoute?.key ? "active" : ""}
               key={route.key}
               type="button"
-              onClick={() => setActiveKey(route.key)}
+              onClick={() => {
+                setActiveKey(route.key);
+                void recordRouteEvent(route, "select");
+              }}
             >
               <span className={`pill ${tone(route.status)}`}>
                 {Math.round(route.priority_score)}점
@@ -164,7 +233,13 @@ export function LaunchActionRouterPanel() {
               ))}
             </ul>
             <div className="launchActionRouterCtaRow">
-              <a className="primaryButton" href={activeRoute.cta_path}>
+              <a
+                className="primaryButton"
+                href={activeRoute.cta_path}
+                onClick={() => {
+                  void recordRouteEvent(activeRoute, "cta");
+                }}
+              >
                 {activeRoute.cta_label}
                 <ArrowRight size={17} />
               </a>
@@ -173,6 +248,9 @@ export function LaunchActionRouterPanel() {
                 {activeRoute.fallback_action}
               </span>
             </div>
+            {eventMessage ? (
+              <small className="launchActionRouterEvent">{eventMessage}</small>
+            ) : null}
           </article>
         ) : null}
       </div>

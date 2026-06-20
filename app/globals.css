@@ -4080,6 +4080,13 @@ ul {
   gap: 6px;
 }
 
+.launchActionRouterEvent {
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
 .launchActionRouterFooter {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 0.7fr);

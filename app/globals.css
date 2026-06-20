@@ -4447,6 +4447,145 @@ ul {
   padding-left: 18px;
 }
 
+.launchWeekRecap {
+  border: 1px solid rgba(42, 67, 88, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchWeekRecapStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchWeekRecapStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchWeekRecapMetricGrid,
+.launchWeekRecapGrid,
+.launchWeekRecapFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchWeekRecapMetricGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchWeekRecapMetricGrid article,
+.launchWeekFounderUpdate,
+.launchWeekRecapColumn,
+.launchWeekRecapFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(26, 72, 118, 0.14);
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 16px;
+}
+
+.launchWeekRecapMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchWeekRecapMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.launchWeekFounderUpdate {
+  background: #ffffff;
+}
+
+.launchWeekFounderUpdate p {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 850;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.launchWeekRecapGrid,
+.launchWeekRecapFooter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchWeekRecapColumn > strong,
+.launchWeekRecapFooter strong,
+.launchWeekRisk > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchWeekWin,
+.launchWeekRisk {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.launchWeekWin h3,
+.launchWeekWin p,
+.launchWeekWin small,
+.launchWeekWin b,
+.launchWeekRisk h3,
+.launchWeekRisk p,
+.launchWeekRisk b,
+.launchWeekRecapFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchWeekWin h3,
+.launchWeekRisk h3 {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.launchWeekWin p,
+.launchWeekWin small,
+.launchWeekWin b,
+.launchWeekRisk p,
+.launchWeekRisk b,
+.launchWeekRecapFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchWeekRecapFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchRetentionLoop {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -6158,6 +6297,9 @@ ul {
   .launchWarRoomSignalGrid,
   .launchWarRoomPlayGrid,
   .launchWarRoomFooter,
+  .launchWeekRecapMetricGrid,
+  .launchWeekRecapGrid,
+  .launchWeekRecapFooter,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -6495,6 +6637,9 @@ ul {
   .launchWarRoomSignalGrid,
   .launchWarRoomPlayGrid,
   .launchWarRoomFooter,
+  .launchWeekRecapMetricGrid,
+  .launchWeekRecapGrid,
+  .launchWeekRecapFooter,
   .launchRetentionMetricGrid,
   .launchRetentionSignalGrid,
   .launchRetentionPlayGrid,

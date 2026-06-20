@@ -1543,6 +1543,39 @@ export type LaunchWarRoomDashboard = {
   next_actions: string[];
 };
 
+export type LaunchWeekRecapWin = {
+  key: string;
+  label: string;
+  metric: string;
+  evidence: string;
+  repeat_action: string;
+};
+
+export type LaunchWeekRecapRisk = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  evidence: string;
+  mitigation: string;
+  owner: string;
+};
+
+export type LaunchWeekRecapDashboard = {
+  recap_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  recap_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  wins: LaunchWeekRecapWin[];
+  risks: LaunchWeekRecapRisk[];
+  channel_moves: string[];
+  founder_update: string;
+  next_actions: string[];
+};
+
 export type PublicAcquisitionSurface = {
   key: string;
   label: string;

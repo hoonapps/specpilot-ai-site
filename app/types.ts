@@ -2503,6 +2503,33 @@ export type LaunchReadinessBundle = {
   data_governance: DataGovernanceDashboard;
 };
 
+export type PublicLaunchSmokeCheck = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  public_path: string;
+  expected_signal: string;
+  metric: string;
+  recommendation: string;
+};
+
+export type PublicLaunchSmokeDashboard = {
+  smoke_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  smoke_score: number;
+  headline: string;
+  summary: string;
+  ok_count: number;
+  warning_count: number;
+  blocker_count: number;
+  publish_ready_paths: string[];
+  checks: PublicLaunchSmokeCheck[];
+  measurement_events: string[];
+  next_actions: string[];
+};
+
 export type DataInventoryItem = {
   table_name: string;
   label: string;

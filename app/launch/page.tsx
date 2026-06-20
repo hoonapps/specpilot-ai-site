@@ -38,6 +38,7 @@ import { LaunchReadinessGatePanel } from "./LaunchReadinessGatePanel";
 import { LaunchReferralMomentumPanel } from "./LaunchReferralMomentumPanel";
 import { LaunchRetentionLoopPanel } from "./LaunchRetentionLoopPanel";
 import { LaunchSharePackPanel } from "./LaunchSharePackPanel";
+import { LaunchSmokePanel } from "./LaunchSmokePanel";
 import { LaunchTeamConsultPreviewPanel } from "./LaunchTeamConsultPreviewPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
@@ -1109,6 +1110,8 @@ export default async function LaunchPage() {
       <LaunchProofHubPanel />
 
       <LaunchReadinessGatePanel />
+
+      <LaunchSmokePanel />
 
       <LaunchRetentionLoopPanel />
 

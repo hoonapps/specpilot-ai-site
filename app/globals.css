@@ -4198,6 +4198,129 @@ ul {
   align-items: center;
 }
 
+.launchSmokePanel {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 247, 244, 0.9)),
+    #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchSmokeStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchSmokeStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchSmokeMetricGrid,
+.launchSmokeCheckGrid,
+.launchSmokeFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchSmokeMetricGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchSmokeCheckGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchSmokeFooter {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
+}
+
+.launchSmokeMetricGrid article,
+.launchSmokeCheck,
+.launchSmokeFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchSmokeMetricGrid span,
+.launchSmokeCheck small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchSmokeMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(22px, 2.6vw, 34px);
+  line-height: 1.05;
+}
+
+.launchSmokeCheck > div,
+.launchSmokeFooter strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchSmokeCheck a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.launchSmokeCheck h3,
+.launchSmokeCheck p,
+.launchSmokeCheck strong,
+.launchSmokeFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchSmokeCheck h3 {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.launchSmokeCheck p,
+.launchSmokeCheck strong,
+.launchSmokeFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchSmokeFooter strong {
+  color: var(--ink);
+}
+
+.launchSmokeFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchRetentionLoop {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -5902,6 +6025,9 @@ ul {
   .launchSharePackFooter,
   .launchActionRouterBody,
   .launchActionRouterFooter,
+  .launchSmokeMetricGrid,
+  .launchSmokeCheckGrid,
+  .launchSmokeFooter,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -6232,6 +6358,9 @@ ul {
   .launchReadinessMetricGrid,
   .launchReadinessCheckGrid,
   .launchReadinessFooter,
+  .launchSmokeMetricGrid,
+  .launchSmokeCheckGrid,
+  .launchSmokeFooter,
   .launchRetentionMetricGrid,
   .launchRetentionSignalGrid,
   .launchRetentionPlayGrid,

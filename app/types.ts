@@ -1143,6 +1143,48 @@ export type SpecRiskScannerResult = {
   next_actions: string[];
 };
 
+export type CheckoutNudgeRequest = {
+  category: Category;
+  product_title: string;
+  verdict: string;
+  budget_krw: number;
+  cart_total_krw: number | null;
+  blocker_count: number;
+  warning_count: number;
+  missing_evidence: string[];
+  source: string;
+};
+
+export type CheckoutNudgeStep = {
+  step_id: string;
+  label: string;
+  timing: string;
+  trigger: string;
+  message: string;
+  cta_label: string;
+  cta_path: string;
+  event_name: string;
+};
+
+export type PublicCheckoutNudgeKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  verdict: string;
+  priority: OpsStatus;
+  headline: string;
+  summary: string;
+  next_best_action: string;
+  reminder_copy: string;
+  analysis_prefill: string;
+  waitlist_prefill: string;
+  nudges: CheckoutNudgeStep[];
+  proof_points: string[];
+  primary_cta_label: string;
+  primary_cta_path: string;
+};
+
 export type CandidateCompareItem = {
   product_id: string;
   model_name: string;

@@ -59,6 +59,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/mistake-cost-calculator`: 제품 API의 `/public/mistake-cost-calculator`, `/public/mistake-cost-calculator/result`로 예산/수량/위험 유형별 예상 구매 실패 비용, 방지 플랜, 분석 prefill 조회
 - `/api/specpilot/buyer-challenge-kit`: 제품 API의 `/public/buyer-challenge-kit`로 성향 진단, 실패 비용 계산, 체크리스트를 3단계 구매 챌린지와 채널별 복사 문구로 패키징
 - `/api/specpilot/spec-risk-scanner`: 제품 API의 `/public/spec-risk-scanner`, `/public/spec-risk-scanner/result`로 장바구니 옵션명, 최종가, 기대 사양, 배송/반품/AS 증거를 결제 전 blocker/warning으로 검수하고 구매 세이프티 브리프, 판매자 질문, 승인 요약, 캡처 체크리스트를 렌더링
+- `/api/specpilot/checkout-nudge-kit`: 제품 API의 `/public/checkout-nudge-kit`로 장바구니 검수 결과를 판매자 답변 요청, 가격 재확인, 구매 결과 회수 후속 알림과 분석/대기열 prefill로 변환
 - `/api/specpilot/candidate-compare`: 제품 API의 `/public/candidate-compare`로 카테고리/예산/목적별 공개 후보 5개, 비교 축별 승자, 예산/성능/안전 우선 대안 시나리오, 공유 문구 조회
 - `/api/specpilot/deal-timing-window`: 제품 API의 `/public/deal-timing-window`로 후보별 현재가, 목표가, 적정가 밴드, 재고/쿠폰 변동 리스크, 결제 트리거, 목표가 공유 문구 조회
 - `/api/specpilot/start-concierge`: 제품 API의 `/public/start-concierge`로 현재 입력 진단, 맞춤 플레이북, 시작 마일스톤, 빠른 CTA 조회
@@ -94,6 +95,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 
 - `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest`: 공개 런칭룸, 추천 초대, 데스크톱/노트북 시장 리포트를 검색 엔진과 공유 미리보기에서 읽히게 하는 배포 메타 자산
 - `/launch`: 제품 API의 `/public/launch-room`, `/public/start-concierge`, `/growth/launch-experiment-dashboard`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-distribution-plan`, `/growth/retention-hub`, `/growth/referral-launch-kit`, `/growth/acquisition-hub`, `/growth/public-conversion-board`, `/growth/launch-pulse`, `/growth/launch-war-room`, `/growth/launch-incident-center`, `/growth/launch-week-recap`, `/growth/launch-community-kit`, `/growth/launch-media-kit`, `/growth/launch-activation-offer`, `/growth/launch-response-loop`, `/ops/public-launch-preflight`, `/ops/team-purchase-consult-kit`, `/beta/readiness`, `/beta/launch-gate`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/mistake-cost-calculator`, `/public/buyer-challenge-kit`, `/public/spec-risk-scanner`, `/public/candidate-compare`, `/public/deal-timing-window`, `/public/social-proof-wall`, `/public/launch-objection-kit`, `/public/launch-share-pack`, `/public/launch-action-router`, `/public/launch-smoke`, `/public/proof-hub`, `/pricing/plans`를 읽어 공개 데모, 첫 구매 진단 콘시어지, CTA 실험 스트립, 첫 주 채널 배포 플랜, 구매 후속 리텐션 루프, 가입 전 추천 확산 키트, 공개 반응 운영 패널, 첫 24시간 런칭 워룸, 런칭 인시던트 센터, D+7 런칭 리포트, 커뮤니티 댓글 대응 키트, 런칭 미디어 키트, 런칭 전환 오퍼, 런칭 반응 후속 루프, 공개 출시 최종 체크, 런칭 반박 FAQ, 공유 확산팩, 방문자 액션 라우터, 공개 런칭 스모크 체크, Team 구매 표준안 프리뷰, 공개 출시 게이트, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 구매 실패 비용 계산기, 구매 챌린지 공유 키트, 옵션/사양 빠른 검수기, 공개 후보 비교 스냅샷, 공개 구매 타이밍 윈도우, 공개 검증 허브 evidence kit, Free/Premium/Team 요금제 비교 카드, 실제 반응 proof, 첫 주 founder update, SEV/runbook/escalation, 반복 질문 답변 템플릿, 외부 소개 피치, 첫 CTA/전환 오퍼, proof 후보/founder reply/제품 수정 큐, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 상시 전환 바로 분석 시작/공유 문구/추천 대기열 CTA를 고정 노출하며 클릭을 성장 이벤트로 저장하고, 공유 확산팩은 절대 URL 복사와 네이티브 공유를 제공하며 모든 복사/공유/열기 액션을 `share_cta`로 저장하고, 첫 화면은 내부 운영 점수 대신 구매 데모, 시장 리포트, 검증 근거, 결제 전 체크 개수를 보여주며, 반응형 hero 배경과 CTA 줄바꿈 가드로 모바일 첫 화면의 잘림을 막고, 출시 게이트부터 요금제/배포 플랜까지 무거운 런칭 운영 패널 전체를 스크롤 기반 지연 마운트, 재검증 캐시, 타임아웃 fallback으로 분산해 첫 방문 체감을 유지하며, `/launch/opengraph-image`와 `/launch/twitter-image` 전용 공유 카드를 메타에 연결하고, hero와 데모 분석 CTA는 세션 handoff로 메인 분석 폼을 자동 채우면서 `analysis_view` 성장 이벤트를 남기며 방문자 액션 라우터 선택/CTA 클릭, 추천 대기열, 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
+- `/launch`의 옵션/사양 빠른 검수 결과는 `/public/checkout-nudge-kit` 후속 넛지 키트도 호출해 판매자 답변 요청, 가격 재확인, 구매 결과 회수 단계와 복사용 후속 알림을 함께 보여준다.
 - `/launch/opengraph-image`, `/launch/twitter-image`: 커뮤니티와 메신저 미리보기에서 제품명, 핵심 가치, 조건 진단/가격 타이밍/결제 전 검수 신호가 바로 보이도록 1200x630 PNG 공유 이미지를 동적으로 생성
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
@@ -154,6 +156,7 @@ GitHub Actions는 `npm run check`, production 서버 기반 `check:launch-visual
 - `GET /public/buyer-challenge-kit`
 - `GET /public/spec-risk-scanner`
 - `POST /public/spec-risk-scanner/result`
+- `POST /public/checkout-nudge-kit`
 - `GET /public/candidate-compare`
 - `GET /public/deal-timing-window`
 - `GET /demo/scenarios`

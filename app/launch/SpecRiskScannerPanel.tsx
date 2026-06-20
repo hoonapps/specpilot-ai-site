@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type {
   Category,
+  PublicCheckoutNudgeKit,
   PublicSpecRiskScanner,
   SpecRiskScannerRequest,
   SpecRiskScannerResult,
@@ -105,8 +106,10 @@ export function SpecRiskScannerPanel({
 }: SpecRiskScannerPanelProps) {
   const [form, setForm] = useState<FormState>(demoForm);
   const [result, setResult] = useState<SpecRiskScannerResult | null>(null);
+  const [nudgeKit, setNudgeKit] = useState<PublicCheckoutNudgeKit | null>(null);
   const [status, setStatus] = useState<"idle" | "scanning" | "error">("idle");
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [nudgeCopyStatus, setNudgeCopyStatus] = useState<"idle" | "copied" | "error">("idle");
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -115,6 +118,8 @@ export function SpecRiskScannerPanel({
   async function scan() {
     setStatus("scanning");
     setCopyStatus("idle");
+    setNudgeCopyStatus("idle");
+    setNudgeKit(null);
     try {
       const response = await fetch("/api/specpilot/spec-risk-scanner", {
         method: "POST",
@@ -132,9 +137,42 @@ export function SpecRiskScannerPanel({
         throw new Error("scanner rejected");
       }
       setResult(payload.result);
+      void loadNudgeKit(payload.result);
       setStatus("idle");
     } catch {
       setStatus("error");
+    }
+  }
+
+  async function loadNudgeKit(scanResult: SpecRiskScannerResult) {
+    try {
+      const response = await fetch("/api/specpilot/checkout-nudge-kit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: scanResult.category,
+          product_title: scanResult.product_title,
+          verdict: scanResult.verdict,
+          budget_krw: scanResult.budget_krw,
+          cart_total_krw: scanResult.cart_total_krw,
+          blocker_count: scanResult.blocker_count,
+          warning_count: scanResult.warning_count,
+          missing_evidence: scanResult.missing_evidence,
+          source: "launch_spec_scanner",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`nudge ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        kit?: PublicCheckoutNudgeKit;
+      };
+      if (payload.ok && payload.kit) {
+        setNudgeKit(payload.kit);
+      }
+    } catch {
+      setNudgeKit(null);
     }
   }
 
@@ -147,6 +185,18 @@ export function SpecRiskScannerPanel({
       setCopyStatus("copied");
     } catch {
       setCopyStatus("error");
+    }
+  }
+
+  async function copyNudge() {
+    if (!nudgeKit) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(nudgeKit.reminder_copy);
+      setNudgeCopyStatus("copied");
+    } catch {
+      setNudgeCopyStatus("error");
     }
   }
 
@@ -347,6 +397,52 @@ export function SpecRiskScannerPanel({
                 <strong>분석 요청 prefill</strong>
                 <p>{result.analysis_prefill}</p>
               </div>
+              {nudgeKit ? (
+                <div className={`launchCheckoutNudge ${nudgeKit.priority}`}>
+                  <div>
+                    <span className={`pill ${tone(nudgeKit.priority)}`}>
+                      {nudgeKit.priority === "ok" ? "후속 준비" : "후속 필요"}
+                    </span>
+                    <h3>{nudgeKit.headline}</h3>
+                    <p>{nudgeKit.summary}</p>
+                    <strong>{nudgeKit.next_best_action}</strong>
+                  </div>
+                  <div className="launchCheckoutNudgeSteps">
+                    {nudgeKit.nudges.map((step) => (
+                      <article key={step.step_id}>
+                        <span>{step.timing}</span>
+                        <h4>{step.label}</h4>
+                        <p>{step.message}</p>
+                        <small>{step.trigger}</small>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="launchSpecScannerActions">
+                    <LaunchAnalysisLink
+                      className="miniCta"
+                      handoff={{
+                        source: "checkout-nudge",
+                        label: nudgeKit.primary_cta_label,
+                        query: nudgeKit.analysis_prefill,
+                        category: nudgeKit.category,
+                        budget_krw: result.budget_krw,
+                        purpose: nudgeKit.product_title,
+                      }}
+                    >
+                      {nudgeKit.primary_cta_label}
+                    </LaunchAnalysisLink>
+                    <button type="button" onClick={() => void copyNudge()}>
+                      <Copy size={16} />
+                      {nudgeCopyStatus === "copied" ? "복사됨" : "후속 알림 복사"}
+                    </button>
+                  </div>
+                  {nudgeCopyStatus === "error" ? (
+                    <p className="launchPersonaError">
+                      클립보드 권한이 없어 후속 알림을 복사하지 못했습니다.
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
               <div className="launchSpecScannerActions">
                 <LaunchAnalysisLink
                   className="miniCta"

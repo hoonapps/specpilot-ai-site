@@ -2737,6 +2737,8 @@ ul {
 .launchSpecScannerChecks div,
 .launchSpecSafetyBrief,
 .launchSpecBriefGrid div,
+.launchCheckoutNudge,
+.launchCheckoutNudgeSteps article,
 .launchSpecScannerPrefill {
   display: grid;
   min-width: 0;
@@ -2849,7 +2851,10 @@ ul {
 }
 
 .launchSpecSafetyBrief strong,
-.launchSpecBriefGrid strong {
+.launchSpecBriefGrid strong,
+.launchCheckoutNudge strong,
+.launchCheckoutNudge h3,
+.launchCheckoutNudge h4 {
   color: var(--ink);
   line-height: 1.35;
   overflow-wrap: anywhere;
@@ -2885,6 +2890,57 @@ ul {
   gap: 6px;
   margin: 0;
   padding-left: 18px;
+}
+
+.launchCheckoutNudge {
+  border-color: rgba(49, 95, 140, 0.18);
+  background: #f7fbff;
+}
+
+.launchCheckoutNudge.blocker {
+  border-color: rgba(170, 45, 45, 0.24);
+  background: #fff5f3;
+}
+
+.launchCheckoutNudge.warning {
+  border-color: rgba(176, 112, 0, 0.24);
+  background: #fffaf0;
+}
+
+.launchCheckoutNudge h3,
+.launchCheckoutNudge h4,
+.launchCheckoutNudge p,
+.launchCheckoutNudge small {
+  margin: 0;
+}
+
+.launchCheckoutNudge h3 {
+  font-size: 20px;
+}
+
+.launchCheckoutNudge p,
+.launchCheckoutNudge small {
+  color: var(--muted);
+  line-height: 1.58;
+  overflow-wrap: anywhere;
+}
+
+.launchCheckoutNudgeSteps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchCheckoutNudgeSteps article {
+  align-content: start;
+  background: #fff;
+  padding: 12px;
+}
+
+.launchCheckoutNudgeSteps span {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 950;
 }
 
 .launchSpecScannerNumbers div {
@@ -7452,6 +7508,7 @@ ul {
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
   .launchSpecBriefGrid,
+  .launchCheckoutNudgeSteps,
   .launchStartConciergeControls,
   .launchStartConciergeMetrics,
   .launchStartConciergeMilestones,
@@ -7714,6 +7771,7 @@ ul {
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
   .launchSpecBriefGrid,
+  .launchCheckoutNudgeSteps,
   .launchCandidateCompareGrid,
   .launchCandidateControls,
   .launchCandidateItems,

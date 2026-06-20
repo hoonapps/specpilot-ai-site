@@ -548,6 +548,31 @@ export type WaitlistReferralDashboard = {
   next_actions: string[];
 };
 
+export type PublicReferralLeaderboardEntry = {
+  rank: number;
+  referral_code: string;
+  email_masked: string;
+  persona: string;
+  referred_signup_count: number;
+  priority_score: number;
+  reward_label: string;
+  status: "current" | "ranked" | string;
+};
+
+export type PublicReferralLeaderboard = {
+  leaderboard_version: string;
+  workspace_id: string;
+  generated_at: string;
+  headline: string;
+  summary: string;
+  total_referrals: number;
+  referred_signup_count: number;
+  current_rank: number | null;
+  current_entry: PublicReferralLeaderboardEntry | null;
+  entries: PublicReferralLeaderboardEntry[];
+  next_actions: string[];
+};
+
 export type ReferralShareKitVariant = {
   channel: string;
   label: string;

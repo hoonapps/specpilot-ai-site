@@ -1954,6 +1954,46 @@ ul {
   overflow-wrap: anywhere;
 }
 
+.launchReferralLeaderboard {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(12, 116, 108, 0.18);
+}
+
+.launchReferralRankList {
+  display: grid;
+  gap: 6px;
+}
+
+.launchReferralRankList div {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 2px 8px;
+  align-items: center;
+  border: 1px solid rgba(12, 116, 108, 0.16);
+  border-radius: 8px;
+  padding: 8px;
+  background: #fff;
+}
+
+.launchReferralRankList div.current {
+  border-color: rgba(12, 116, 108, 0.42);
+  background: #e9fbf5;
+}
+
+.launchReferralRankList div > strong {
+  grid-row: span 2;
+  color: var(--teal);
+}
+
+.launchReferralRankList span,
+.launchReferralRankList small {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .joinPublicHero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 0.4fr);

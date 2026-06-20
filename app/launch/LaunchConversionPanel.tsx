@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type {
   PricingOpsBundle,
+  PublicReferralLeaderboard,
   ReferralRewardProgress,
   ReferralShareKit,
   ReferralShareKitVariant,
@@ -25,6 +26,7 @@ type ReferralPayload = {
   ok: boolean;
   referral?: WaitlistReferral;
   dashboard?: WaitlistReferralDashboard;
+  leaderboard?: PublicReferralLeaderboard;
   share_kit?: ReferralShareKit;
   rewards?: ReferralRewardProgress;
 };
@@ -111,6 +113,8 @@ export function LaunchConversionPanel({
     useState<ReferralShareKit | null>(null);
   const [referralRewards, setReferralRewards] =
     useState<ReferralRewardProgress | null>(null);
+  const [referralLeaderboard, setReferralLeaderboard] =
+    useState<PublicReferralLeaderboard | null>(null);
   const [intent, setIntent] = useState<SubscriptionIntent | null>(null);
   const [pricingBundle, setPricingBundle] = useState<PricingOpsBundle | null>(null);
   const [browserOrigin, setBrowserOrigin] = useState("");
@@ -261,6 +265,7 @@ export function LaunchConversionPanel({
       }
       setReferral(payload.referral);
       setReferralDashboard(payload.dashboard);
+      setReferralLeaderboard(payload.leaderboard ?? null);
       setReferralShareKit(payload.share_kit ?? null);
       setReferralRewards(payload.rewards ?? null);
       setShareStatus("idle");
@@ -526,6 +531,24 @@ export function LaunchConversionPanel({
                         <span>{tier.required_referrals}명</span>
                         <strong>{tier.label}</strong>
                         <small>{tier.benefit}</small>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              {referralLeaderboard ? (
+                <div className="launchReferralLeaderboard">
+                  <span>추천 리더보드</span>
+                  <strong>{referralLeaderboard.headline}</strong>
+                  <p>{referralLeaderboard.summary}</p>
+                  <div className="launchReferralRankList">
+                    {referralLeaderboard.entries.slice(0, 5).map((entry) => (
+                      <div className={entry.status} key={entry.referral_code}>
+                        <strong>{entry.rank}위</strong>
+                        <span>{entry.referral_code}</span>
+                        <small>
+                          추천 {entry.referred_signup_count}명 · {entry.reward_label}
+                        </small>
                       </div>
                     ))}
                   </div>

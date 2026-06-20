@@ -969,6 +969,63 @@ export type BuyerPersonaQuizResult = {
   next_actions: string[];
 };
 
+export type MistakeCostRiskOption = {
+  risk_id: string;
+  label: string;
+  default_weight: number;
+  description: string;
+};
+
+export type PublicMistakeCostCalculator = {
+  calculator_version: string;
+  generated_at: string;
+  headline: string;
+  summary: string;
+  default_category: Category;
+  default_budget_krw: number;
+  default_quantity: number;
+  risk_options: MistakeCostRiskOption[];
+  result_endpoint: string;
+  next_actions: string[];
+};
+
+export type MistakeCostCalculatorRequest = {
+  category: Category;
+  budget_krw: number;
+  quantity: number;
+  urgency: string;
+  selected_risks: string[];
+  source: string;
+};
+
+export type MistakeCostLineItem = {
+  item_id: string;
+  label: string;
+  estimated_cost_krw: number;
+  prevention: string;
+};
+
+export type MistakeCostCalculatorResult = {
+  result_version: string;
+  generated_at: string;
+  category: Category;
+  budget_krw: number;
+  quantity: number;
+  urgency: string;
+  estimated_mistake_cost_krw: number;
+  protected_value_krw: number;
+  risk_score: number;
+  risk_level: "ok" | "warning" | "blocker" | string;
+  headline: string;
+  summary: string;
+  line_items: MistakeCostLineItem[];
+  analysis_prefill: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  share_copy: string;
+  next_actions: string[];
+};
+
 export type StartConciergeMilestone = {
   step: string;
   title: string;

@@ -1958,6 +1958,140 @@ ul {
   padding: 0 12px;
 }
 
+.launchMistakeCost {
+  gap: 18px;
+  border: 1px solid rgba(184, 119, 33, 0.22);
+  background: #fffaf2;
+}
+
+.launchMistakeCostGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 14px;
+}
+
+.launchMistakeCostForm,
+.launchMistakeCostResult {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 14px;
+  border: 1px solid rgba(184, 119, 33, 0.18);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: clamp(16px, 3vw, 22px);
+}
+
+.launchMistakeControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchMistakeControls label {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.launchMistakeControls input,
+.launchMistakeControls select {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 0 10px;
+}
+
+.launchMistakeRiskList {
+  display: grid;
+  gap: 8px;
+}
+
+.launchMistakeRiskList button {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 11px;
+  text-align: left;
+}
+
+.launchMistakeRiskList button.active,
+.launchMistakeRiskList button:hover,
+.launchMistakeRiskList button:focus-visible {
+  border-color: var(--amber);
+  background: #fff5df;
+}
+
+.launchMistakeRiskList small,
+.launchMistakeCostResult p,
+.launchMistakeLineItems p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.launchMistakeCostForm .primaryButton {
+  width: fit-content;
+  border: 0;
+}
+
+.launchMistakeCostResult h3 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchMistakeCostNumbers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchMistakeCostNumbers div,
+.launchMistakeLineItems div {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fffb;
+  padding: 12px;
+}
+
+.launchMistakeCostNumbers span,
+.launchMistakeLineItems span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.launchMistakeCostNumbers strong,
+.launchMistakeLineItems strong {
+  color: var(--ink);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.launchMistakeCostNumbers strong {
+  font-size: clamp(16px, 2vw, 22px);
+}
+
+.launchMistakeLineItems {
+  display: grid;
+  gap: 8px;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -3046,6 +3180,8 @@ ul {
   .launchBuyerChecklistFooter,
   .launchPersonaResultGrid,
   .launchPersonaColumns,
+  .launchMistakeCostGrid,
+  .launchMistakeCostNumbers,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchPublicGrid.three,
@@ -3107,6 +3243,7 @@ ul {
   .growthStepGrid,
   .launchBuyerChecklistGrid,
   .launchPersonaQuestionGrid,
+  .launchMistakeControls,
   .launchDistributionSlotGrid,
   .conciergeResultGrid,
   .launchSocialProofGrid {
@@ -3275,6 +3412,9 @@ ul {
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,
+  .launchMistakeCostGrid,
+  .launchMistakeControls,
+  .launchMistakeCostNumbers,
   .launchSocialProofMetrics,
   .launchSocialProofGrid,
   .launchSocialProofFooter,

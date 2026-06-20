@@ -19,6 +19,7 @@ import type {
 } from "../types";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
+import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -481,6 +482,8 @@ export default async function LaunchPage() {
       </section>
 
       <BuyerPersonaQuizPanel />
+
+      <MistakeCostCalculatorPanel />
 
       <section className="launchPublicSection launchSocialProofWall">
         <div className="sectionHeader">

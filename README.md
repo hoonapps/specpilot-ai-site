@@ -56,6 +56,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/onboarding-playbooks`: 제품 API의 `/public/onboarding/playbooks`로 공개 시작 질문, 예산 힌트, 필수 입력 슬롯, 신뢰 검수 게이트 조회
 - `/api/specpilot/buyer-checklist`: 제품 API의 `/public/buyer-checklist`로 카테고리/예산/구매자 상황별 구매 실패 방지 체크리스트와 분석 prefill 조회
 - `/api/specpilot/buyer-persona-quiz`: 제품 API의 `/public/buyer-persona-quiz`, `/public/buyer-persona-quiz/result`로 30초 구매 성향 진단 질문과 persona별 추천 카테고리/예산, 분석 prefill, 공유 문구 조회
+- `/api/specpilot/mistake-cost-calculator`: 제품 API의 `/public/mistake-cost-calculator`, `/public/mistake-cost-calculator/result`로 예산/수량/위험 유형별 예상 구매 실패 비용, 방지 플랜, 분석 prefill 조회
 - `/api/specpilot/start-concierge`: 제품 API의 `/public/start-concierge`로 현재 입력 진단, 맞춤 플레이북, 시작 마일스톤, 빠른 CTA 조회
 - `/api/specpilot/growth-funnel`: 제품 API의 `/growth/events`, `/growth/funnel`로 분석 결과 조회, 추천/대안 카드, 공유/알림/구독 CTA 반응 이벤트와 전환율 조회
 - `/api/specpilot/acquisition-hub`: 제품 API의 `/growth/acquisition-hub`로 공개 데모, SEO 페이지, 공유 리포트, 추천 대기열, Trust Center, 요금제 관심 표면 준비도 조회
@@ -74,7 +75,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 
 공개 페이지:
 
-- `/launch`: 제품 API의 `/public/launch-room`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/social-proof-wall`을 읽어 공개 데모, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 실제 반응 proof, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
+- `/launch`: 제품 API의 `/public/launch-room`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/mistake-cost-calculator`, `/public/social-proof-wall`을 읽어 공개 데모, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 구매 실패 비용 계산기, 실제 반응 proof, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
 - 첫 화면 공개 데모 갤러리는 데스크톱/노트북/팀 구매 preset을 분석 폼에 즉시 적용해 빈 폼 이탈을 줄임
@@ -124,6 +125,8 @@ docker build -t specpilot-ai-site:local .
 - `GET /public/buyer-checklist`
 - `GET /public/buyer-persona-quiz`
 - `POST /public/buyer-persona-quiz/result`
+- `GET /public/mistake-cost-calculator`
+- `POST /public/mistake-cost-calculator/result`
 - `GET /demo/scenarios`
 - `GET /growth/acquisition-hub`
 - `GET /growth/public-conversion-board`

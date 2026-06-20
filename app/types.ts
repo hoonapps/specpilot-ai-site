@@ -900,6 +900,36 @@ export type LaunchPulseDashboard = {
   recent_growth_events: GrowthEventRecord[];
 };
 
+export type PublicAcquisitionSurface = {
+  key: string;
+  label: string;
+  path: string;
+  channel: string;
+  status: OpsStatus;
+  readiness_score: number;
+  primary_cta: string;
+  proof: string;
+  metric: string;
+  next_action: string;
+};
+
+export type PublicAcquisitionHub = {
+  hub_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  launch_score: number;
+  headline: string;
+  summary: string;
+  primary_cta: string;
+  primary_cta_path: string;
+  surfaces: PublicAcquisitionSurface[];
+  seo_paths: string[];
+  channel_actions: string[];
+  next_actions: string[];
+  recent_growth_events: GrowthEventRecord[];
+};
+
 export type ReportAdvisorQuestionRequest = {
   report_id: string;
   question: string;

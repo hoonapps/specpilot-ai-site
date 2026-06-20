@@ -64,6 +64,7 @@ import type {
   PurchaseLinkGovernance,
   PurchaseOutcome,
   PurchaseOutcomeStatus,
+  PublicAcquisitionHub,
   ReportShareAssets,
   ReportAdvisorAnswer,
   SourceCandidate,
@@ -416,6 +417,11 @@ export default function Home() {
   >("idle");
   const [latestMarketReport, setLatestMarketReport] =
     useState<CategoryMarketReport | null>(null);
+  const [acquisitionHubStatus, setAcquisitionHubStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestAcquisitionHub, setLatestAcquisitionHub] =
+    useState<PublicAcquisitionHub | null>(null);
   const [growthStatus, setGrowthStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -651,6 +657,8 @@ export default function Home() {
     setLatestPricingBundle(null);
     setMarketReportStatus("idle");
     setLatestMarketReport(null);
+    setAcquisitionHubStatus("idle");
+    setLatestAcquisitionHub(null);
     setGrowthStatus("idle");
     setLatestGrowthDashboard(null);
     setLatestGrowthEvent(null);
@@ -1971,6 +1979,27 @@ export default function Home() {
     }
   }
 
+  async function loadAcquisitionHub() {
+    setAcquisitionHubStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/acquisition-hub?limit=12");
+      if (!response.ok) {
+        throw new Error(`acquisition hub ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        hub?: PublicAcquisitionHub;
+      };
+      if (!payload.ok || !payload.hub) {
+        throw new Error("acquisition hub rejected");
+      }
+      setLatestAcquisitionHub(payload.hub);
+      setAcquisitionHubStatus("sent");
+    } catch {
+      setAcquisitionHubStatus("error");
+    }
+  }
+
   async function loadGrowthFunnel() {
     setGrowthStatus("sending");
     try {
@@ -2221,6 +2250,7 @@ export default function Home() {
           <a href="#beta-ops">베타 운영</a>
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#market-reports">시장 리포트</a>
+          <a href="#acquisition-hub">유입 허브</a>
           <a href="#growth-funnel">성장 퍼널</a>
           <a href="#launch-pulse">런치 Pulse</a>
           <a href="#launch-kit">출시 키트</a>
@@ -6316,6 +6346,167 @@ export default function Home() {
                   <p>{trend.recommendation}</p>
                 </article>
               ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="acquisitionHubPanel" id="acquisition-hub">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Link2 size={16} />
+            공개 유입 허브
+          </div>
+          <h2>오픈했을 때 받을 유입 표면을 한 화면에서 봅니다</h2>
+          <p>
+            공개 데모, SEO 카테고리 리포트, 공유 리포트, 추천 대기열,
+            Trust Center, 요금제 관심을 묶어 어떤 표면을 먼저 밀어야 하는지
+            판단합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestAcquisitionHub ? gateTone(latestAcquisitionHub.status) : "warn"
+              }`}
+            >
+              {latestAcquisitionHub
+                ? `${Math.round(latestAcquisitionHub.launch_score)}점 · ${
+                    latestAcquisitionHub.status
+                  }`
+                : "유입 허브 미조회"}
+            </span>
+            <span className="pill muted">public acquisition</span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={acquisitionHubStatus === "sending"}
+            onClick={loadAcquisitionHub}
+          >
+            {acquisitionHubStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <Link2 size={18} />
+            )}
+            유입 허브 새로고침
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              acquisitionHubStatus,
+              "공개 유입 허브를 업데이트했습니다.",
+              "공개 유입 허브 조회에 실패했습니다.",
+            ) || "공개 표면별 준비도와 채널 액션을 출시 게이트 전에 확인합니다."}
+          </p>
+        </div>
+
+        {latestAcquisitionHub ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestAcquisitionHub.status)}`}>
+                {latestAcquisitionHub.status}
+              </span>
+              <span className="pill muted">{latestAcquisitionHub.hub_version}</span>
+              <span className="pill muted">
+                Workspace {latestAcquisitionHub.workspace_id}
+              </span>
+            </div>
+            <h3>{latestAcquisitionHub.headline}</h3>
+            <p>{latestAcquisitionHub.summary}</p>
+
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>허브 점수</dt>
+                <dd>{Math.round(latestAcquisitionHub.launch_score)}점</dd>
+              </div>
+              <div>
+                <dt>공개 표면</dt>
+                <dd>{latestAcquisitionHub.surfaces.length}개</dd>
+              </div>
+              <div>
+                <dt>SEO path</dt>
+                <dd>{latestAcquisitionHub.seo_paths.length}개</dd>
+              </div>
+              <div>
+                <dt>주 CTA</dt>
+                <dd>{latestAcquisitionHub.primary_cta}</dd>
+              </div>
+            </dl>
+
+            <div className="growthStepGrid">
+              {latestAcquisitionHub.surfaces.map((surface) => (
+                <article className="growthStepCard" key={surface.key}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(surface.status)}`}>
+                      {surface.status}
+                    </span>
+                    <span className="pill muted">{surface.channel}</span>
+                  </div>
+                  <h4>{surface.label}</h4>
+                  <dl className="sourceMetricGrid">
+                    <div>
+                      <dt>준비도</dt>
+                      <dd>{Math.round(surface.readiness_score)}점</dd>
+                    </div>
+                    <div>
+                      <dt>CTA</dt>
+                      <dd>{surface.primary_cta}</dd>
+                    </div>
+                  </dl>
+                  <p>{surface.proof}</p>
+                  <p>{surface.metric}</p>
+                  <p>{surface.next_action}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>SEO/공개 path</strong>
+                <ul>
+                  {latestAcquisitionHub.seo_paths.map((path) => (
+                    <li key={path}>{path}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>채널 액션</strong>
+                <ul>
+                  {latestAcquisitionHub.channel_actions.slice(0, 6).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestAcquisitionHub.next_actions.slice(0, 6).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>최근 유입 이벤트</strong>
+                <ul>
+                  {(latestAcquisitionHub.recent_growth_events.length
+                    ? latestAcquisitionHub.recent_growth_events
+                    : []
+                  )
+                    .slice(0, 5)
+                    .map((event) => (
+                      <li key={event.event_id}>
+                        {event.event_type} · {event.surface || "workspace"}
+                      </li>
+                    ))}
+                  {!latestAcquisitionHub.recent_growth_events.length ? (
+                    <li>아직 최근 성장 이벤트가 없습니다.</li>
+                  ) : null}
+                </ul>
+              </div>
             </div>
           </div>
         ) : null}

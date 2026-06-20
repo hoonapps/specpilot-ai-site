@@ -3467,6 +3467,126 @@ ul {
   line-height: 1.5;
 }
 
+.launchProofHub {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchProofHubStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchProofHubMetricGrid,
+.launchProofHubEvidenceGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchProofHubMetricGrid article,
+.launchProofHubEvidence,
+.launchProofHubFooter > div,
+.launchProofHubLoading {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchProofHubMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.launchProofHubMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(19px, 2.2vw, 28px);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.launchProofHubEvidenceGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchProofHubEvidence > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchProofHubEvidence h3,
+.launchProofHubEvidence p,
+.launchProofHubEvidence small,
+.launchProofHubFooter li,
+.launchProofHubFooter p {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchProofHubEvidence h3 {
+  font-size: 18px;
+}
+
+.launchProofHubEvidence p,
+.launchProofHubEvidence small,
+.launchProofHubFooter li,
+.launchProofHubFooter p,
+.launchProofHubLoading {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchProofHubEvidence a {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 6px;
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.launchProofHubFooter {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1fr);
+  gap: 12px;
+}
+
+.launchProofHubFooter strong {
+  display: block;
+  color: var(--ink);
+}
+
+.launchProofHubFooter ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchProofHubFooter span {
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.launchProofHubLoading {
+  display: flex;
+  align-items: center;
+}
+
 .launchPublicSection {
   display: grid;
   gap: 16px;
@@ -4935,6 +5055,9 @@ ul {
   .launchSocialProofMetrics,
   .launchSocialProofGrid,
   .launchSocialProofFooter,
+  .launchProofHubMetricGrid,
+  .launchProofHubEvidenceGrid,
+  .launchProofHubFooter,
   .launchDistributionSummary,
   .launchDistributionPublicGrid,
   .launchDistributionGuardrails,

@@ -29,6 +29,7 @@ import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
+import { LaunchProofHubPanel } from "./LaunchProofHubPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
@@ -1032,6 +1033,8 @@ export default async function LaunchPage() {
           </ul>
         </div>
       </section>
+
+      <LaunchProofHubPanel />
 
       <section className="launchPublicSection">
         <div className="sectionHeader">

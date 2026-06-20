@@ -66,6 +66,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/purchase-approval-brief-kit`: 제품 API의 `/public/purchase-approval-brief-kit`로 장바구니 검수 결과를 가족/팀/커뮤니티용 승인 질문, 투표 옵션, 채널별 복사 문구로 변환
 - `/api/specpilot/seller-evidence-kit`: 제품 API의 `/public/seller-evidence-kit`로 판매자 확인 질문, 복사용 문의 문구, 답변 판정 기준, 캡처 체크리스트를 생성
 - `/api/specpilot/checkout-nudge-kit`: 제품 API의 `/public/checkout-nudge-kit`로 장바구니 검수 결과를 판매자 답변 요청, 가격 재확인, 구매 결과 회수 후속 알림과 분석/대기열 prefill로 변환
+- `/api/specpilot/purchase-aftercare-kit`: 제품 API의 `/public/purchase-aftercare-kit`로 구매일, 배송완료일, 최종 결제 금액, 초기 이슈를 반품/교환 마감, 보증 만료, 구매 결과 기록, 채널별 후속 문구로 변환
 - `/api/specpilot/spec-rescue-kit`: 제품 API의 `/public/spec-rescue-kit`로 장바구니 보류/확인 필요 결과를 예산 내 대체 후보, 판매자 확인 메시지, 검색 문구, 분석/공유 prefill로 변환
 - `/api/specpilot/candidate-compare`: 제품 API의 `/public/candidate-compare`로 카테고리/예산/목적별 공개 후보 5개, 비교 축별 승자, 예산/성능/안전 우선 대안 시나리오, 공유 문구 조회
 - `/api/specpilot/deal-timing-window`: 제품 API의 `/public/deal-timing-window`로 후보별 현재가, 목표가, 적정가 밴드, 재고/쿠폰 변동 리스크, 결제 트리거, 목표가 공유 문구 조회
@@ -111,6 +112,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/checkout-nudge-kit` 후속 넛지 키트도 호출해 판매자 답변 요청, 가격 재확인, 구매 결과 회수 단계와 복사용 후속 알림을 함께 보여준다.
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/spec-rescue-kit` 대체 후보 rescue도 호출해 보류 후보 대신 비교할 예산 내 대체안, 판매자 확인 메시지, 검색 문구를 함께 보여준다.
 - `/launch`의 공개 구매 타이밍 섹션은 `/public/price-watch-kit`을 함께 호출해 목표가 알림 기준, 감시 주기, 알림 공유 문구, 결제 판단 규칙을 같은 화면에 보여준다.
+- `/launch`는 `/public/purchase-aftercare-kit`을 구매 타이밍 다음에 렌더링해 결제 이후 반품/교환 마감, 보증 만료, 초기 불량 대응, 구매 결과 기록까지 공개 흐름에서 이어준다.
 - `/launch/opengraph-image`, `/launch/twitter-image`: 커뮤니티와 메신저 미리보기에서 제품명, 핵심 가치, 조건 진단/가격 타이밍/결제 전 검수 신호가 바로 보이도록 1200x630 PNG 공유 이미지를 동적으로 생성
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링

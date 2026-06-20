@@ -1418,6 +1418,61 @@ export type PublicSellerEvidenceKit = {
   next_actions: string[];
 };
 
+export type PurchaseAftercareRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  purchase_date: string;
+  delivered_date: string;
+  final_paid_price_krw: number | null;
+  expected_price_krw: number | null;
+  return_window_days: number;
+  warranty_months: number;
+  order_reference: string;
+  issues: string[];
+  source: string;
+};
+
+export type AftercareDeadline = {
+  deadline_id: string;
+  label: string;
+  status: OpsStatus;
+  due_date: string;
+  action: string;
+  reminder_copy: string;
+};
+
+export type AftercareMessage = {
+  channel: string;
+  label: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicPurchaseAftercareKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  priority: OpsStatus;
+  headline: string;
+  summary: string;
+  return_deadline: string;
+  warranty_deadline: string;
+  price_delta_krw: number | null;
+  deadlines: AftercareDeadline[];
+  capture_checklist: string[];
+  issue_triage: string[];
+  outcome_prefill: string;
+  messages: AftercareMessage[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

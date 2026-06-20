@@ -57,6 +57,7 @@ import { LaunchWarRoomPanel } from "./LaunchWarRoomPanel";
 import { LaunchWeekRecapPanel } from "./LaunchWeekRecapPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { PurchaseApprovalBriefPanel } from "./PurchaseApprovalBriefPanel";
+import { PurchaseAftercarePanel } from "./PurchaseAftercarePanel";
 import { SellerEvidencePanel } from "./SellerEvidencePanel";
 import { ShoppingCartIntakePanel } from "./ShoppingCartIntakePanel";
 import { SetupCompatibilityPanel } from "./SetupCompatibilityPanel";
@@ -1421,6 +1422,8 @@ export default async function LaunchPage() {
         watchKit={priceWatchKit}
         isFallback={dealTimingFallback || priceWatchFallback}
       />
+
+      <PurchaseAftercarePanel />
 
       <section className="launchPublicSection launchSocialProofWall">
         <div className="sectionHeader">

@@ -3686,6 +3686,120 @@ ul {
   align-items: center;
 }
 
+.launchRetentionLoop {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchRetentionMetricGrid,
+.launchRetentionSignalGrid,
+.launchRetentionPlayGrid,
+.launchRetentionFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchRetentionMetricGrid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.launchRetentionSignalGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchRetentionPlayGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchRetentionFooter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchRetentionMetricGrid article,
+.launchRetentionSignal,
+.launchRetentionPlay,
+.launchRetentionFooter > div,
+.launchRetentionLoading {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchRetentionScoreCard {
+  grid-column: span 2;
+}
+
+.launchRetentionMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.launchRetentionMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(19px, 2.2vw, 28px);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.launchRetentionMetricGrid p,
+.launchRetentionSignal p,
+.launchRetentionSignal small,
+.launchRetentionPlay p,
+.launchRetentionPlay small,
+.launchRetentionFooter li,
+.launchRetentionLoading {
+  min-width: 0;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.launchRetentionSignal > div,
+.launchRetentionPlay > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchRetentionSignal h3,
+.launchRetentionPlay h3 {
+  min-width: 0;
+  margin: 0;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.launchRetentionPlay .miniCta {
+  width: fit-content;
+}
+
+.launchRetentionFooter strong {
+  color: var(--ink);
+}
+
+.launchRetentionFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchRetentionLoading {
+  display: flex;
+  align-items: center;
+}
+
 .launchPublicSection {
   display: grid;
   gap: 16px;
@@ -4955,9 +5069,20 @@ ul {
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
+  .launchRetentionMetricGrid,
+  .launchRetentionSignalGrid,
+  .launchRetentionPlayGrid,
   .conciergeResultGrid,
   .launchSocialProofGrid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .launchRetentionFooter {
+    grid-template-columns: 1fr;
+  }
+
+  .launchRetentionScoreCard {
+    grid-column: span 2;
   }
 }
 
@@ -5160,6 +5285,10 @@ ul {
   .launchReadinessMetricGrid,
   .launchReadinessCheckGrid,
   .launchReadinessFooter,
+  .launchRetentionMetricGrid,
+  .launchRetentionSignalGrid,
+  .launchRetentionPlayGrid,
+  .launchRetentionFooter,
   .launchDistributionSummary,
   .launchDistributionPublicGrid,
   .launchDistributionGuardrails,
@@ -5198,6 +5327,10 @@ ul {
 
   .launchRewardTierGrid {
     grid-template-columns: 1fr;
+  }
+
+  .launchRetentionScoreCard {
+    grid-column: auto;
   }
 
   .visualPanel {

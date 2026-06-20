@@ -21,5 +21,43 @@ jobs:
         run: npm ci
       - name: Typecheck and build
         run: npm run check
+      - name: Start production server
+        env:
+          SPECPILOT_API_URL: http://127.0.0.1:8000
+          SPECPILOT_API_KEY: specpilot-site-demo
+          HOSTNAME: 127.0.0.1
+          PORT: 3025
+        run: |
+          cp -R public .next/standalone/public
+          mkdir -p .next/standalone/.next
+          cp -R .next/static .next/standalone/.next/static
+          cd .next/standalone
+          node server.js > /tmp/specpilot-site.log 2>&1 &
+          echo $! > /tmp/specpilot-site.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3025/launch >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/specpilot-site.log
+          exit 1
+      - name: Launch visual smoke
+        env:
+          LAUNCH_VISUAL_URL: http://127.0.0.1:3025/launch
+          LAUNCH_VISUAL_OUT_DIR: ${{ runner.temp }}/launch-visual
+        run: npm run check:launch-visual
+      - name: Upload launch visual screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: launch-visual-smoke
+          path: ${{ runner.temp }}/launch-visual
+      - name: Stop production server
+        if: always()
+        run: |
+          if [ -f /tmp/specpilot-site.pid ]; then
+            kill "$(cat /tmp/specpilot-site.pid)" || true
+          fi
       - name: Docker build
         run: docker build -t specpilot-ai-site:ci .

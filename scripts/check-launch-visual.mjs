@@ -251,8 +251,21 @@ async function main() {
       process.exitCode = 1;
     }
   } finally {
-    child.kill("SIGTERM");
-    rmSync(userDataDir, { recursive: true, force: true });
+    if (!child.killed) {
+      child.kill("SIGTERM");
+    }
+    await new Promise((resolve) => {
+      child.once("exit", resolve);
+      setTimeout(resolve, 2_000);
+    });
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        rmSync(userDataDir, { recursive: true, force: true });
+        break;
+      } catch {
+        await new Promise((resolve) => setTimeout(resolve, 250));
+      }
+    }
   }
 }
 

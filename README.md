@@ -67,7 +67,8 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/proof-hub`: 제품 API의 `/public/proof-hub`로 Trust Center, 시장 리포트, 공유 조회, 피드백, CTA 실험, 공개 유입 표면 기반 proof 카드, 출시 proof strip, evidence kit 조회
 - `/api/specpilot/social-proof-wall`: 제품 API의 `/public/social-proof-wall`로 마스킹 피드백, 실구매 결과, 추천 유입 리더보드를 공개 랜딩용 반응 카드와 신뢰 고지로 조회
 - `/api/specpilot/launch-room`: 제품 API의 `/public/launch-room`으로 공개 데모, 시장 리포트, proof strip, 유입/반응/추천/수익화 CTA, 채널 공유 문구를 외부 공유용 런칭룸으로 조회
-- `/api/specpilot/pricing-ops`: 제품 API의 `/pricing/plans`, `/billing/subscription-intents`, `/ops/pricing-dashboard`로 요금제별 수요, 예상 MRR, 연환산 매출, 최근 intent 관리
+- `/api/specpilot/pricing-ops`: 제품 API의 `/pricing/plans`, `/billing/subscription-intents`, `/ops/pricing-dashboard`, `/ops/team-purchase-consult-kit`으로 요금제별 수요, 예상 MRR, Team 상담 키트, 최근 intent 관리
+- `/api/specpilot/team-consult-kit`: 제품 API의 `/ops/team-purchase-consult-kit`으로 Team 관심 리드의 상담 브리프, 안건, ROI 포인트, 제안 메일 조회
 
 공개 페이지:
 
@@ -185,6 +186,7 @@ docker build -t specpilot-ai-site:local .
 - `GET /pricing/plans`
 - `GET /billing/subscription-intents`
 - `GET /ops/pricing-dashboard`
+- `GET /ops/team-purchase-consult-kit`
 - `POST /feedback`
 - `POST /beta/leads`
 - `POST /billing/subscription-intents`

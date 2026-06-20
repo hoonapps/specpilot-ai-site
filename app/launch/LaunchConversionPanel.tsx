@@ -122,6 +122,7 @@ export function LaunchConversionPanel({
     "idle",
   );
   const [kitCopyStatus, setKitCopyStatus] = useState("idle");
+  const [teamConsultCopyStatus, setTeamConsultCopyStatus] = useState("idle");
   const [referralForm, setReferralForm] = useState({
     email: "",
     persona: "first_pc_buyer",
@@ -236,6 +237,18 @@ export function LaunchConversionPanel({
       );
     } catch {
       setKitCopyStatus("error");
+    }
+  }
+
+  async function copyTeamConsultEmail() {
+    if (!pricingBundle?.team_consult.email_copy) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(pricingBundle.team_consult.email_copy);
+      setTeamConsultCopyStatus("copied");
+    } catch {
+      setTeamConsultCopyStatus("error");
     }
   }
 
@@ -701,6 +714,61 @@ export function LaunchConversionPanel({
               <strong>{pricingBundle.dashboard.intent_count}건</strong>
               <p>{pricingBundle.dashboard.summary}</p>
               <small>예상 MRR {won(pricingBundle.dashboard.estimated_mrr_krw)}</small>
+              <div className="launchTeamConsultKit">
+                <div>
+                  <span>Team 구매 상담 키트</span>
+                  <strong>{pricingBundle.team_consult.headline}</strong>
+                  <p>{pricingBundle.team_consult.summary}</p>
+                </div>
+                <div className="launchTeamConsultStats">
+                  <div>
+                    <span>Team 리드</span>
+                    <strong>{pricingBundle.team_consult.team_intent_count}건</strong>
+                  </div>
+                  <div>
+                    <span>추천 규모</span>
+                    <strong>{pricingBundle.team_consult.recommended_team_size}명</strong>
+                  </div>
+                  <div>
+                    <span>Team MRR</span>
+                    <strong>
+                      {won(pricingBundle.team_consult.estimated_team_mrr_krw)}
+                    </strong>
+                  </div>
+                </div>
+                <div className="launchTeamConsultGrid">
+                  <div>
+                    <span>상담 안건</span>
+                    <ul>
+                      {pricingBundle.team_consult.consultation_agenda
+                        .slice(0, 3)
+                        .map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <span>ROI 포인트</span>
+                    <ul>
+                      {pricingBundle.team_consult.roi_points.slice(0, 3).map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="launchTeamEmailCopy">
+                  <span>상담 제안 메일</span>
+                  <p>{pricingBundle.team_consult.email_copy}</p>
+                  <button type="button" onClick={() => void copyTeamConsultEmail()}>
+                    <ClipboardCheck size={16} />
+                    {teamConsultCopyStatus === "copied"
+                      ? "메일 초안 복사 완료"
+                      : teamConsultCopyStatus === "error"
+                        ? "복사 실패"
+                        : "메일 초안 복사"}
+                  </button>
+                </div>
+              </div>
             </div>
           ) : null}
         </article>

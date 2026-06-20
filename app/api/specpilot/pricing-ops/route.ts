@@ -6,20 +6,25 @@ import type {
   PricingPlan,
   SubscriptionIntent,
   SubscriptionIntentRequest,
+  TeamPurchaseConsultKit,
 } from "../../../types";
 
 async function loadBundle(limit = "20"): Promise<PricingOpsBundle> {
   const safeLimit = encodeURIComponent(limit);
-  const [dashboard, plans, intents] = await Promise.all([
+  const [dashboard, plans, intents, teamConsult] = await Promise.all([
     getJson<PricingDashboard>("/ops/pricing-dashboard"),
     getJson<PricingPlan[]>("/pricing/plans"),
     getJson<SubscriptionIntent[]>(`/billing/subscription-intents?limit=${safeLimit}`),
+    getJson<TeamPurchaseConsultKit>(
+      `/ops/team-purchase-consult-kit?limit=${safeLimit}`,
+    ),
   ]);
 
   return {
     dashboard,
     plans,
     intents,
+    team_consult: teamConsult,
   };
 }
 

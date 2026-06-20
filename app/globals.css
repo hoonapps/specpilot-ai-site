@@ -1929,6 +1929,71 @@ ul {
   font-size: 13px;
 }
 
+.launchTeamConsultKit {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(12, 116, 108, 0.18);
+}
+
+.launchTeamConsultKit strong {
+  font-size: 17px;
+  line-height: 1.3;
+}
+
+.launchTeamConsultStats,
+.launchTeamConsultGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.launchTeamConsultGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchTeamConsultStats div,
+.launchTeamConsultGrid div,
+.launchTeamEmailCopy {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px;
+}
+
+.launchTeamConsultStats strong {
+  font-size: 18px;
+}
+
+.launchTeamConsultGrid ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchTeamConsultGrid li,
+.launchTeamEmailCopy p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.launchTeamEmailCopy p {
+  white-space: pre-line;
+}
+
+.launchConversionResult .launchTeamEmailCopy button {
+  min-height: 38px;
+  background: var(--teal);
+  font-size: 13px;
+}
+
 .launchDistributionResult {
   gap: 14px;
 }
@@ -2918,7 +2983,9 @@ ul {
     grid-template-columns: 1fr;
   }
 
-  .launchReferralKitGrid {
+  .launchReferralKitGrid,
+  .launchTeamConsultStats,
+  .launchTeamConsultGrid {
     grid-template-columns: 1fr;
   }
 

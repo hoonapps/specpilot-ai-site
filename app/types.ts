@@ -753,10 +753,33 @@ export type PricingDashboard = {
   recent_intents: SubscriptionIntent[];
 };
 
+export type TeamPurchaseConsultKit = {
+  kit_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  headline: string;
+  summary: string;
+  target_plan: PricingPlan;
+  team_intent_count: number;
+  estimated_team_mrr_krw: number;
+  recommended_team_size: number;
+  decision_maker_brief: string;
+  consultation_agenda: string[];
+  required_inputs: string[];
+  roi_points: string[];
+  rollout_steps: string[];
+  email_copy: string;
+  cta_cards: string[];
+  recent_team_intents: SubscriptionIntent[];
+  next_actions: string[];
+};
+
 export type PricingOpsBundle = {
   dashboard: PricingDashboard;
   plans: PricingPlan[];
   intents: SubscriptionIntent[];
+  team_consult: TeamPurchaseConsultKit;
   created_intent?: SubscriptionIntent | null;
 };
 

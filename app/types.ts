@@ -1123,6 +1123,59 @@ export type SpecRiskScannerResult = {
   next_actions: string[];
 };
 
+export type CandidateCompareItem = {
+  product_id: string;
+  model_name: string;
+  category: Category;
+  role_label: string;
+  effective_price_krw: number;
+  price_gap_krw: number;
+  score: number;
+  status: OpsStatus;
+  option_summary: string;
+  fit_summary: string;
+  reasons: string[];
+  watchouts: string[];
+  evidence: string[];
+  cta_label: string;
+};
+
+export type CandidateCompareAxis = {
+  axis_id: string;
+  label: string;
+  winner_product_id: string | null;
+  summary: string;
+};
+
+export type CandidateCompareScenario = {
+  scenario: string;
+  label: string;
+  product_id: string;
+  model_name: string;
+  why: string;
+  tradeoff: string;
+};
+
+export type PublicCandidateCompare = {
+  compare_version: string;
+  generated_at: string;
+  category: Category;
+  budget_krw: number;
+  purpose: string;
+  headline: string;
+  summary: string;
+  winner_product_id: string | null;
+  winner_reason: string;
+  items: CandidateCompareItem[];
+  axes: CandidateCompareAxis[];
+  scenarios: CandidateCompareScenario[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type StartConciergeMilestone = {
   step: string;
   title: string;

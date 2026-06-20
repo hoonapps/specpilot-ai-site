@@ -2427,6 +2427,290 @@ ul {
   font-weight: 900;
 }
 
+.launchCandidateCompare {
+  gap: 18px;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  background: #f8fcf8;
+}
+
+.launchCandidateControls {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.8fr) minmax(0, 1.1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.launchCandidateControls label {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchCandidateControls input,
+.launchCandidateControls select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 14px;
+}
+
+.launchCandidateControls button,
+.launchCandidateCopy button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: #fff;
+  padding: 0 14px;
+  font-weight: 950;
+}
+
+.launchCandidateControls button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.launchCandidateError {
+  margin: 0;
+  border: 1px solid rgba(170, 45, 45, 0.18);
+  border-radius: 8px;
+  background: #fff5f3;
+  color: #9c2f24;
+  padding: 12px 14px;
+  font-weight: 850;
+}
+
+.launchCandidateCompareGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 14px;
+}
+
+.launchCandidateLead,
+.launchCandidateCopy,
+.launchCandidateCard,
+.launchCandidateAxes article,
+.launchCandidateScenarios article {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.16);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: clamp(14px, 2.4vw, 18px);
+}
+
+.launchCandidateLead {
+  align-content: start;
+  background: #102b2d;
+  color: #fff;
+}
+
+.launchCandidateLead span,
+.launchCandidateLead p {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.launchCandidateLead strong {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(24px, 3.6vw, 40px);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.launchCandidateLead p,
+.launchCandidateCopy p,
+.launchCandidateCard p,
+.launchCandidateCard li,
+.launchCandidateAxes p,
+.launchCandidateScenarios p,
+.launchCandidateScenarios small {
+  margin: 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.launchCandidateLead .miniCta {
+  width: fit-content;
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.launchCandidateLeadStats,
+.launchCandidateMetrics {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.launchCandidateLeadStats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchCandidateLeadStats div,
+.launchCandidateMetrics div {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 10px;
+}
+
+.launchCandidateLeadStats div strong {
+  margin: 0;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.launchCandidateCopy {
+  align-content: start;
+  background: #f7fffb;
+}
+
+.launchCandidateCopy strong,
+.launchCandidateCard h3,
+.launchCandidateCard strong,
+.launchCandidateAxes strong,
+.launchCandidateScenarios strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchCandidateCopy pre {
+  max-height: 180px;
+  overflow: auto;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  padding: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.launchCandidateItems {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchCandidateCard {
+  align-content: start;
+}
+
+.launchCandidateCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.launchCandidateCardHeader > span:first-child,
+.launchCandidateAxes span,
+.launchCandidateScenarios span,
+.launchCandidateCard > small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.launchCandidateCard h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.launchCandidateMetrics {
+  grid-template-columns: 1fr;
+}
+
+.launchCandidateMetrics div {
+  border-color: var(--line);
+  background: #fbfcf9;
+}
+
+.launchCandidateMetrics span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchCandidateMetrics strong {
+  font-size: 15px;
+}
+
+.launchCandidateListPair {
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.launchCandidateListPair ul {
+  display: grid;
+  gap: 6px;
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.launchCandidateAxes,
+.launchCandidateScenarios {
+  display: grid;
+  gap: 12px;
+}
+
+.launchCandidateAxes {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchCandidateScenarios {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchCandidateScenarios article {
+  background: #fbfcf9;
+}
+
+.launchCandidateScenarios small {
+  color: var(--muted);
+}
+
+.launchCandidateActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchCandidateActions span {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--teal);
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -3517,6 +3801,9 @@ ul {
   .launchPersonaColumns,
   .launchMistakeCostGrid,
   .launchMistakeCostNumbers,
+  .launchCandidateCompareGrid,
+  .launchCandidateAxes,
+  .launchCandidateScenarios,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchPublicGrid.three,
@@ -3585,6 +3872,9 @@ ul {
   .launchSpecScannerControls,
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
+  .launchCandidateControls,
+  .launchCandidateItems,
+  .launchCandidateLeadStats,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
@@ -3760,6 +4050,12 @@ ul {
   .launchSpecScannerControls,
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
+  .launchCandidateCompareGrid,
+  .launchCandidateControls,
+  .launchCandidateItems,
+  .launchCandidateLeadStats,
+  .launchCandidateAxes,
+  .launchCandidateScenarios,
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,

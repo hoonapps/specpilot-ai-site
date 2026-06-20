@@ -15,12 +15,14 @@ import { getJson } from "../api/specpilot/_client";
 import type {
   PublicBuyerChallengeKit,
   PublicBuyerChecklist,
+  PublicCandidateCompare,
   PublicLaunchRoom,
   PublicSocialProofWall,
   PublicSpecRiskScanner,
 } from "../types";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
+import { CandidateComparePanel } from "./CandidateComparePanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
@@ -390,6 +392,157 @@ const fallbackSpecRiskScanner: PublicSpecRiskScanner = {
   ],
 };
 
+const fallbackCandidateCompare: PublicCandidateCompare = {
+  compare_version: "specpilot.public_candidate_compare.fallback",
+  generated_at: new Date(0).toISOString(),
+  category: "desktop_pc",
+  budget_krw: 2_200_000,
+  purpose: "qhd_creator",
+  headline: "데스크톱 PC 후보 5개를 가격, 리스크, 목적 적합도로 바로 비교합니다.",
+  summary:
+    "첫 방문자가 긴 분석을 시작하기 전에도 TOP 후보, 예산 방어 후보, 성능 우선 후보, 안전 우선 후보의 차이를 한 화면에서 볼 수 있게 구성했습니다.",
+  winner_product_id: "build-creator-4070s",
+  winner_reason:
+    "Creator RTX 4070 SUPER Build는 현재 승자 후보로, 점수 91점과 ok 상태를 기준으로 첫 비교의 기준 후보입니다.",
+  items: [
+    {
+      product_id: "build-creator-4070s",
+      model_name: "Creator RTX 4070 SUPER Build",
+      category: "desktop_pc",
+      role_label: "현재 승자 후보",
+      effective_price_krw: 2_185_000,
+      price_gap_krw: -15_000,
+      score: 91,
+      status: "ok",
+      option_summary: "Ryzen 7 7800X3D / RTX 4070 SUPER / RAM 32GB / SSD 1TB",
+      fit_summary: "QHD 게임과 영상 편집 기준으로 성능, 가격, 리스크 균형이 가장 안정적입니다.",
+      reasons: ["QHD 144Hz와 영상 편집 균형이 좋습니다.", "리뷰 근거와 가격 출처가 안정적입니다."],
+      watchouts: ["케이스 GPU 길이와 파워 커넥터를 결제 전 확인하세요."],
+      evidence: ["공개 가격 비교 실구매가 2,185,000원", "리뷰 신뢰도 90점, 근거 18개"],
+      cta_label: "이 후보 조건으로 분석",
+    },
+    {
+      product_id: "build-value-4060ti",
+      model_name: "Value RTX 4060 Ti Build",
+      category: "desktop_pc",
+      role_label: "예산 방어 후보",
+      effective_price_krw: 1_540_000,
+      price_gap_krw: -660_000,
+      score: 82,
+      status: "ok",
+      option_summary: "Ryzen 5 7500F / RTX 4060 Ti / RAM 32GB / SSD 1TB",
+      fit_summary: "예산 여유를 크게 남기지만 장기 성능 여유는 승자 후보보다 작습니다.",
+      reasons: ["예산 방어력이 높습니다.", "핵심 부품 구성이 명확합니다."],
+      watchouts: ["고해상도 영상 편집 성능 여유가 줄어듭니다."],
+      evidence: ["공개 가격 비교 실구매가 1,540,000원", "벤치마크 QHD 기준선 충족"],
+      cta_label: "이 후보 조건으로 분석",
+    },
+    {
+      product_id: "build-4080s-pro",
+      model_name: "Creator RTX 4080 SUPER Pro",
+      category: "desktop_pc",
+      role_label: "성능 우선 후보",
+      effective_price_krw: 2_890_000,
+      price_gap_krw: 690_000,
+      score: 79,
+      status: "blocker",
+      option_summary: "Ryzen 9 / RTX 4080 SUPER / RAM 64GB / SSD 2TB",
+      fit_summary: "성능은 매력적이지만 예산 승인 없이는 결제 전 보류가 필요합니다.",
+      reasons: ["무거운 편집과 장기 사용 여유가 큽니다.", "GPU 성능 여유가 가장 큽니다."],
+      watchouts: ["예산 초과", "파워와 발열 여유 확인 필요"],
+      evidence: ["공개 가격 비교 실구매가 2,890,000원", "4K/렌더링 벤치마크 상위"],
+      cta_label: "이 후보 조건으로 분석",
+    },
+    {
+      product_id: "build-official-safe",
+      model_name: "Official Store Creator PC",
+      category: "desktop_pc",
+      role_label: "안전 우선 후보",
+      effective_price_krw: 2_240_000,
+      price_gap_krw: 40_000,
+      score: 78,
+      status: "warning",
+      option_summary: "공식 스토어 완본체 / RTX 4070급 / RAM 32GB / SSD 1TB",
+      fit_summary: "A/S와 출처 안정성은 좋지만 최종가와 옵션명을 다시 확인해야 합니다.",
+      reasons: ["공식 스토어 출처가 명확합니다.", "반품/AS 조건 확인이 쉽습니다."],
+      watchouts: ["예산 소폭 초과", "옵션명 변경 여부 확인 필요"],
+      evidence: ["공식 스토어 실구매가 2,240,000원", "AS 조건 공개"],
+      cta_label: "이 후보 조건으로 분석",
+    },
+  ],
+  axes: [
+    {
+      axis_id: "winner",
+      label: "종합 승자",
+      winner_product_id: "build-creator-4070s",
+      summary: "Creator RTX 4070 SUPER Build가 목적 적합도와 리스크 균형이 가장 좋습니다.",
+    },
+    {
+      axis_id: "budget",
+      label: "예산 방어",
+      winner_product_id: "build-value-4060ti",
+      summary: "Value RTX 4060 Ti Build는 최저 비용으로 비교 기준선을 만듭니다.",
+    },
+    {
+      axis_id: "performance",
+      label: "성능 우선",
+      winner_product_id: "build-4080s-pro",
+      summary: "Creator RTX 4080 SUPER Pro는 성능 여유가 가장 큰 선택지입니다.",
+    },
+    {
+      axis_id: "risk",
+      label: "안전 우선",
+      winner_product_id: "build-official-safe",
+      summary: "Official Store Creator PC는 결제 전 출처 리스크가 낮습니다.",
+    },
+  ],
+  scenarios: [
+    {
+      scenario: "balanced",
+      label: "균형 우선",
+      product_id: "build-creator-4070s",
+      model_name: "Creator RTX 4070 SUPER Build",
+      why: "목적 적합도, 가격, 리뷰 신뢰도, 구매 안정성의 합산 점수가 가장 높습니다.",
+      tradeoff: "최저가는 아닐 수 있어 목표가 알림과 최종가 캡처가 필요합니다.",
+    },
+    {
+      scenario: "budget",
+      label: "예산 절감",
+      product_id: "build-value-4060ti",
+      model_name: "Value RTX 4060 Ti Build",
+      why: "비용을 가장 낮추면서 같은 카테고리의 비교 기준선을 제공합니다.",
+      tradeoff: "성능, 업그레이드, 장기 사용 여유를 일부 포기할 수 있습니다.",
+    },
+    {
+      scenario: "performance",
+      label: "성능 우선",
+      product_id: "build-4080s-pro",
+      model_name: "Creator RTX 4080 SUPER Pro",
+      why: "무거운 작업이나 장기 사용을 위해 성능 여유를 가장 크게 확보합니다.",
+      tradeoff: "예산 초과나 과투자 리스크를 별도로 승인해야 합니다.",
+    },
+    {
+      scenario: "safe",
+      label: "안전 우선",
+      product_id: "build-official-safe",
+      model_name: "Official Store Creator PC",
+      why: "리스크 상태와 리뷰 신뢰도를 우선해 결제 전 불확실성을 낮춥니다.",
+      tradeoff: "특가나 최고 성능보다 출처와 안정성을 우선합니다.",
+    },
+  ],
+  analysis_prefill:
+    "데스크톱 PC를 2,200,000원 예산으로 비교해줘. 목적은 QHD 게임과 영상 편집이고 TOP 3, 제외 후보, 대안 시나리오, 결제 전 옵션/가격 검수까지 같이 봐줘.",
+  share_copy:
+    "SpecPilot AI 공개 후보 비교\n- 카테고리: 데스크톱 PC\n- 예산: 2,200,000원\n- 현재 승자: Creator RTX 4070 SUPER Build\n- 예산 절감: Value RTX 4060 Ti Build\n- 성능 우선: Creator RTX 4080 SUPER Pro\n가격, 리스크, 목적 적합도 기준으로 결제 전 의견 부탁드립니다.",
+  primary_cta_label: "이 비교표로 분석 시작",
+  primary_cta_path: "#analysis",
+  next_actions: [
+    "승자 후보와 예산 방어 후보를 함께 공유해 반대 의견을 먼저 받으세요.",
+    "결제 직전에는 옵션/사양 빠른 검수기로 장바구니 문구와 최종가를 대조하세요.",
+    "점수 차이가 작으면 분석 리포트에서 제외 후보와 스트레스 테스트를 확인하세요.",
+  ],
+};
+
 async function loadLaunchRoom(): Promise<{
   room: PublicLaunchRoom;
   isFallback: boolean;
@@ -458,6 +611,20 @@ async function loadSpecRiskScanner(): Promise<{
   }
 }
 
+async function loadCandidateCompare(): Promise<{
+  compare: PublicCandidateCompare;
+  isFallback: boolean;
+}> {
+  try {
+    const compare = await getJson<PublicCandidateCompare>(
+      "/public/candidate-compare?category=desktop_pc&budget_krw=2200000&purpose=qhd_creator",
+    );
+    return { compare, isFallback: false };
+  } catch {
+    return { compare: fallbackCandidateCompare, isFallback: true };
+  }
+}
+
 function tone(status: PublicLaunchRoom["status"] | PublicSocialProofWall["status"]) {
   if (status === "ok") {
     return "ok";
@@ -479,12 +646,14 @@ export default async function LaunchPage() {
     { checklist, isFallback: checklistFallback },
     { kit: challengeKit, isFallback: challengeFallback },
     { scanner: specScanner, isFallback: scannerFallback },
+    { compare: candidateCompare, isFallback: compareFallback },
   ] = await Promise.all([
     loadLaunchRoom(),
     loadSocialProofWall(),
     loadBuyerChecklist(),
     loadBuyerChallengeKit(),
     loadSpecRiskScanner(),
+    loadCandidateCompare(),
   ]);
   const heroPills = room.proof_strip.slice(0, 3);
   const proofMetricCards = [
@@ -640,6 +809,11 @@ export default async function LaunchPage() {
       <SpecRiskScannerPanel
         scanner={specScanner}
         isFallback={scannerFallback}
+      />
+
+      <CandidateComparePanel
+        compare={candidateCompare}
+        isFallback={compareFallback}
       />
 
       <section className="launchPublicSection launchSocialProofWall">

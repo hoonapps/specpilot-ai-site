@@ -15,6 +15,7 @@ import type {
   Category,
   PublicCandidateCompare,
 } from "../types";
+import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 
 type CandidateComparePanelProps = {
   compare: PublicCandidateCompare;
@@ -257,9 +258,19 @@ export function CandidateComparePanel({
               </div>
             </div>
             <p>{winner.option_summary}</p>
-            <a className="miniCta" href={data.primary_cta_path}>
+            <LaunchAnalysisLink
+              className="miniCta"
+              handoff={{
+                source: "candidate-compare",
+                label: data.primary_cta_label,
+                query: data.analysis_prefill,
+                category: data.category,
+                budget_krw: data.budget_krw,
+                purpose: data.purpose,
+              }}
+            >
               {data.primary_cta_label}
-            </a>
+            </LaunchAnalysisLink>
           </article>
         ) : null}
 

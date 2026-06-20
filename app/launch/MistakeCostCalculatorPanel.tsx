@@ -13,6 +13,7 @@ import type {
   MistakeCostCalculatorResult,
   PublicMistakeCostCalculator,
 } from "../types";
+import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 
 type CalculatorEnvelope = {
   ok: boolean;
@@ -40,13 +41,6 @@ const urgencyOptions = [
 
 function formatWon(value: number) {
   return `${value.toLocaleString("ko-KR")}원`;
-}
-
-function hrefFor(path: string) {
-  if (path.startsWith("#")) {
-    return `/${path}`;
-  }
-  return path;
 }
 
 export function MistakeCostCalculatorPanel() {
@@ -311,10 +305,20 @@ export function MistakeCostCalculatorPanel() {
                 <p>{result.analysis_prefill}</p>
               </div>
               <div className="launchPersonaActions">
-                <a className="miniCta" href={hrefFor(result.primary_cta_path)}>
+                <LaunchAnalysisLink
+                  className="miniCta"
+                  handoff={{
+                    source: "mistake-cost-calculator",
+                    label: result.primary_cta_label,
+                    query: result.analysis_prefill,
+                    category: result.category,
+                    budget_krw: result.budget_krw,
+                    purpose: result.urgency,
+                  }}
+                >
                   {result.primary_cta_label}
                   <ArrowRight size={16} />
-                </a>
+                </LaunchAnalysisLink>
                 <button type="button" onClick={copyShareText}>
                   <Share2 size={16} />
                   {copyStatus === "copied"

@@ -25,6 +25,7 @@ import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
+import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
@@ -895,9 +896,19 @@ export default async function LaunchPage() {
             <span>{checklist.category === "desktop_pc" ? "Desktop PC" : "Laptop"}</span>
             <strong>{checklist.budget_krw.toLocaleString("ko-KR")}원</strong>
             <p>{checklist.budget_fit}</p>
-            <a className="miniCta" href={hrefFor(checklist.primary_cta_anchor)}>
+            <LaunchAnalysisLink
+              className="miniCta"
+              handoff={{
+                source: "buyer-checklist",
+                label: checklist.primary_cta_label,
+                query: checklist.analysis_prefill,
+                category: checklist.category,
+                budget_krw: checklist.budget_krw,
+                purpose: checklist.persona,
+              }}
+            >
               {checklist.primary_cta_label}
-            </a>
+            </LaunchAnalysisLink>
             {checklistFallback ? (
               <small>체크리스트 API 폴백</small>
             ) : (

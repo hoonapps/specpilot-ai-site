@@ -13,6 +13,7 @@ import type {
   BuyerPersonaQuizResult,
   PublicBuyerPersonaQuiz,
 } from "../types";
+import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 
 type QuizEnvelope = {
   ok: boolean;
@@ -290,10 +291,20 @@ export function BuyerPersonaQuizPanel() {
               </div>
 
               <div className="launchPersonaActions">
-                <a className="miniCta" href={hrefFor(result.primary_cta_path)}>
+                <LaunchAnalysisLink
+                  className="miniCta"
+                  handoff={{
+                    source: "buyer-persona-quiz",
+                    label: result.primary_cta_label,
+                    query: result.analysis_prefill,
+                    category: result.category,
+                    budget_krw: result.recommended_budget_krw,
+                    purpose: result.persona_label,
+                  }}
+                >
                   {result.primary_cta_label}
                   <ArrowRight size={16} />
-                </a>
+                </LaunchAnalysisLink>
                 <a className="miniCta secondary" href={checklistHref(result.checklist_path)}>
                   체크리스트 보기
                 </a>

@@ -25,6 +25,10 @@ import {
   TimerReset,
 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  launchAnalysisHandoffKey,
+  type LaunchAnalysisHandoff,
+} from "./analysis-handoff";
 import { demoResponse } from "./demo-data";
 import type {
   AlertEvaluationResponse,
@@ -106,6 +110,44 @@ function splitList(value: string) {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function isCategory(value: unknown): value is Category {
+  return value === "desktop_pc" || value === "laptop";
+}
+
+function parseLaunchAnalysisHandoff(raw: string | null): LaunchAnalysisHandoff | null {
+  if (!raw) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(raw) as Partial<LaunchAnalysisHandoff>;
+    if (parsed.version !== 1 || typeof parsed.query !== "string" || !parsed.query.trim()) {
+      return null;
+    }
+    return {
+      version: 1,
+      created_at:
+        typeof parsed.created_at === "string" ? parsed.created_at : new Date(0).toISOString(),
+      source: typeof parsed.source === "string" ? parsed.source : "launch",
+      label: typeof parsed.label === "string" ? parsed.label : "런칭 페이지 분석 요청",
+      query: parsed.query,
+      category: isCategory(parsed.category) ? parsed.category : undefined,
+      budget_krw:
+        typeof parsed.budget_krw === "number" && Number.isFinite(parsed.budget_krw)
+          ? parsed.budget_krw
+          : undefined,
+      purpose: typeof parsed.purpose === "string" ? parsed.purpose : undefined,
+      must_haves: Array.isArray(parsed.must_haves)
+        ? parsed.must_haves.filter((item): item is string => typeof item === "string")
+        : undefined,
+      exclusions: Array.isArray(parsed.exclusions)
+        ? parsed.exclusions.filter((item): item is string => typeof item === "string")
+        : undefined,
+    };
+  } catch {
+    return null;
+  }
 }
 
 function statusMessage(
@@ -559,6 +601,36 @@ export default function Home() {
   useEffect(() => {
     void loadOnboardingPlaybooks();
     void loadDemoGallery();
+  }, []);
+
+  useEffect(() => {
+    const handoff = parseLaunchAnalysisHandoff(
+      window.sessionStorage.getItem(launchAnalysisHandoffKey),
+    );
+    window.sessionStorage.removeItem(launchAnalysisHandoffKey);
+    if (!handoff) {
+      return;
+    }
+    const category = handoff.category ?? starterPayload.category;
+    setPayload({
+      query: handoff.query,
+      category,
+      budget: handoff.budget_krw ? String(handoff.budget_krw) : "",
+      purpose: handoff.purpose ?? handoff.label,
+      mustHaves: handoff.must_haves?.join(", ") ?? "",
+      exclusions: handoff.exclusions?.join(", ") ?? "",
+    });
+    setMarketReportCategory(category);
+    setStatusText(`${handoff.label} 적용`);
+    window.location.hash = "analysis";
+    void recordGrowthEvent("analysis_view", handoff.label, "launch-analysis-handoff", {
+      silent: true,
+      metadata: {
+        handoff_source: handoff.source,
+        handoff_created_at: handoff.created_at,
+        category,
+      },
+    });
   }, []);
 
   async function loadDemoGallery() {

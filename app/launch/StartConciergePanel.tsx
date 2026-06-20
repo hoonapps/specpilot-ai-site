@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Gauge, LoaderCircle, Sparkles } from "lucide-react";
 import type { AnalyzePayload, Category, PurchaseStartConcierge } from "../types";
+import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 
 type FormState = {
   query: string;
@@ -218,13 +219,37 @@ export function StartConciergePanel() {
                 ))}
               </div>
               <div className="launchStartConciergeActions">
-                {result.quick_actions.slice(0, 3).map((action) => (
-                  <a href={action.target} key={action.action_type}>
-                    <span>{action.label}</span>
-                    <small>{action.reason}</small>
-                    <ArrowRight size={15} />
-                  </a>
-                ))}
+                {result.quick_actions.slice(0, 3).map((action) => {
+                  const diagnosed = result.diagnosis.normalized_request;
+                  if (action.action_type === "run_analysis") {
+                    return (
+                      <LaunchAnalysisLink
+                        handoff={{
+                          source: "start-concierge",
+                          label: action.label,
+                          query: diagnosed.query,
+                          category: diagnosed.category,
+                          budget_krw: diagnosed.budget_krw ?? undefined,
+                          purpose: diagnosed.purpose,
+                          must_haves: diagnosed.must_haves,
+                          exclusions: diagnosed.exclusions,
+                        }}
+                        key={action.action_type}
+                      >
+                        <span>{action.label}</span>
+                        <small>{action.reason}</small>
+                        <ArrowRight size={15} />
+                      </LaunchAnalysisLink>
+                    );
+                  }
+                  return (
+                    <a href={action.target} key={action.action_type}>
+                      <span>{action.label}</span>
+                      <small>{action.reason}</small>
+                      <ArrowRight size={15} />
+                    </a>
+                  );
+                })}
               </div>
             </>
           ) : (

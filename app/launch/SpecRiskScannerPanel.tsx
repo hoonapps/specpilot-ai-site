@@ -16,6 +16,7 @@ import type {
   SpecRiskScannerRequest,
   SpecRiskScannerResult,
 } from "../types";
+import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 
 type SpecRiskScannerPanelProps = {
   scanner: PublicSpecRiskScanner;
@@ -322,9 +323,19 @@ export function SpecRiskScannerPanel({
                 <p>{result.analysis_prefill}</p>
               </div>
               <div className="launchSpecScannerActions">
-                <a className="miniCta" href="/#analysis">
+                <LaunchAnalysisLink
+                  className="miniCta"
+                  handoff={{
+                    source: "spec-risk-scanner",
+                    label: result.primary_cta_label,
+                    query: result.analysis_prefill,
+                    category: result.category,
+                    budget_krw: result.budget_krw,
+                    purpose: result.product_title,
+                  }}
+                >
                   {result.primary_cta_label}
-                </a>
+                </LaunchAnalysisLink>
                 <button type="button" onClick={() => void copyShare()}>
                   <Copy size={16} />
                   {copyStatus === "copied" ? "복사됨" : "공유 문구 복사"}

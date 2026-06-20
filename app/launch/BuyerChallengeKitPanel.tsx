@@ -9,6 +9,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { PublicBuyerChallengeKit } from "../types";
+import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 
 type BuyerChallengeKitPanelProps = {
   kit: PublicBuyerChallengeKit;
@@ -88,9 +89,19 @@ export function BuyerChallengeKitPanel({
           <strong>{kit.category === "desktop_pc" ? "Desktop PC" : "Laptop"}</strong>
           <p>{kit.analysis_prefill}</p>
           <div className="launchBuyerChallengeActions">
-            <a className="miniCta" href={hrefFor(kit.primary_cta_path)}>
+            <LaunchAnalysisLink
+              className="miniCta"
+              handoff={{
+                source: "buyer-challenge-kit",
+                label: kit.primary_cta_label,
+                query: kit.analysis_prefill,
+                category: kit.category,
+                budget_krw: kit.budget_krw,
+                purpose: kit.persona,
+              }}
+            >
               {kit.primary_cta_label}
-            </a>
+            </LaunchAnalysisLink>
             <a className="miniCta secondary" href={hrefFor(kit.checklist_path)}>
               체크리스트 보기
             </a>

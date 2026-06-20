@@ -11,6 +11,7 @@ import {
   Wallet,
 } from "lucide-react";
 import type { Category, DealWindow, PublicDealTimingWindow } from "../types";
+import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 
 type DealTimingWindowPanelProps = {
   timing: PublicDealTimingWindow;
@@ -245,9 +246,19 @@ export function DealTimingWindowPanel({
             </div>
             <p>{lead.buy_trigger}</p>
             <small>{lead.urgency} · {lead.volatility_risk}</small>
-            <a className="miniCta" href={data.primary_cta_path}>
+            <LaunchAnalysisLink
+              className="miniCta"
+              handoff={{
+                source: "deal-timing-window",
+                label: data.primary_cta_label,
+                query: data.analysis_prefill,
+                category: data.category,
+                budget_krw: data.budget_krw,
+                purpose: data.purpose,
+              }}
+            >
               {data.primary_cta_label}
-            </a>
+            </LaunchAnalysisLink>
           </article>
         ) : null}
 

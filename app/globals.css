@@ -2229,6 +2229,78 @@ ul {
   font-weight: 950;
 }
 
+.launchBuyerTrustKit {
+  gap: 18px;
+  background: #f8fbf7;
+}
+
+.launchBuyerTrustHero,
+.launchBuyerTrustGrid article,
+.launchBuyerTrustFooter > div {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchBuyerTrustHero strong,
+.launchBuyerTrustGrid h3,
+.launchBuyerTrustFooter strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerTrustGrid,
+.launchBuyerTrustFooter {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+}
+
+.launchBuyerTrustGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchBuyerTrustFooter {
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+}
+
+.launchBuyerTrustGrid article {
+  align-content: start;
+  background: #fff;
+}
+
+.launchBuyerTrustGrid h3,
+.launchBuyerTrustGrid p,
+.launchBuyerTrustFooter li {
+  margin: 0;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.launchBuyerTrustGrid p,
+.launchBuyerTrustFooter li {
+  color: var(--muted);
+}
+
+.launchBuyerTrustGrid ul,
+.launchBuyerTrustFooter ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchBuyerTrustFooter .miniCta {
+  align-self: start;
+  white-space: nowrap;
+}
+
 .launchPersonaQuiz {
   gap: 18px;
   border: 1px solid rgba(49, 95, 140, 0.16);
@@ -7569,6 +7641,8 @@ ul {
   .marketReportGrid,
   .growthStepGrid,
   .launchBuyerChecklistGrid,
+  .launchBuyerTrustGrid,
+  .launchBuyerTrustFooter,
   .launchBuyerChallengeGrid,
   .launchBuyerChallengeSteps,
   .launchBuyerChallengeShareGrid,
@@ -7833,6 +7907,8 @@ ul {
   .launchExperimentWinnerStats,
   .launchBuyerChecklistGrid,
   .launchBuyerChecklistFooter,
+  .launchBuyerTrustGrid,
+  .launchBuyerTrustFooter,
   .launchBuyerChallengeGrid,
   .launchBuyerChallengeSteps,
   .launchBuyerChallengeShareGrid,

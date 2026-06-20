@@ -703,6 +703,31 @@ export type TrustCenterDashboard = {
   next_actions: string[];
 };
 
+export type BuyerTrustBadge = {
+  badge_id: string;
+  label: string;
+  status: OpsStatus;
+  summary: string;
+  evidence: string[];
+  buyer_impact: string;
+};
+
+export type PublicBuyerTrustKit = {
+  kit_version: string;
+  generated_at: string;
+  status: OpsStatus;
+  headline: string;
+  summary: string;
+  trust_badges: BuyerTrustBadge[];
+  buyer_rights: string[];
+  risk_disclosures: string[];
+  plain_language_guarantee: string;
+  proof_strip: string[];
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type SubscriptionIntentRequest = {
   email: string;
   plan_id: "premium" | "team";

@@ -16,6 +16,7 @@ import type {
   Category,
   PublicBuyerChallengeKit,
   PublicBuyerChecklist,
+  PublicBuyerTrustKit,
   PublicCandidateCompare,
   PublicDealTimingWindow,
   PublicLaunchRoom,
@@ -267,6 +268,69 @@ const fallbackSocialProofWall: PublicSocialProofWall = {
   ],
   next_actions: [
     "첫 공개 사용자에게 피드백과 구매 결과 회수 CTA를 강하게 노출하세요.",
+  ],
+};
+
+const fallbackBuyerTrustKit: PublicBuyerTrustKit = {
+  kit_version: "specpilot.public_buyer_trust_kit.fallback",
+  generated_at: new Date(0).toISOString(),
+  status: "warning",
+  headline: "구매 추천보다 먼저 신뢰 기준을 확인하세요.",
+  summary:
+    "가격 출처, 제휴 고지, 개인정보 최소화, 사람 검수 기준을 구매자 언어로 먼저 공개합니다.",
+  trust_badges: [
+    {
+      badge_id: "recommendation_fairness",
+      label: "추천 공정성",
+      status: "ok",
+      summary: "가격, 목적, 호환성, 리뷰 신뢰도를 분리해 추천합니다.",
+      evidence: ["제휴 링크와 추천 점수 기준을 분리", "비제휴 대안 노출"],
+      buyer_impact: "제휴 여부 때문에 후보 순위가 흐려지는 문제를 줄입니다.",
+    },
+    {
+      badge_id: "source_verification",
+      label: "출처 검수",
+      status: "warning",
+      summary: "가격 캐시 만료와 출처 신뢰도를 결제 전에 다시 확인합니다.",
+      evidence: ["가격 캐시 TTL 표시", "신뢰도 낮은 소스는 검수 큐로 이동"],
+      buyer_impact: "장바구니 최종가와 리포트 가격 차이를 줄입니다.",
+    },
+    {
+      badge_id: "privacy",
+      label: "개인정보 최소화",
+      status: "ok",
+      summary: "공개 표면에는 연락처와 주문번호 원문을 노출하지 않습니다.",
+      evidence: ["공개 리포트는 share token 단위 접근", "연락처 마스킹"],
+      buyer_impact: "공유 리포트를 열어도 내부 데이터가 노출되지 않습니다.",
+    },
+    {
+      badge_id: "human_review",
+      label: "사람 검수",
+      status: "warning",
+      summary: "불확실한 추천은 즉시 결제가 아니라 확인 필요로 표시합니다.",
+      evidence: ["결제 전 검수", "판매자 답변과 리스크 승인 기록"],
+      buyer_impact: "조건이 불확실한 후보를 바로 결제하지 않게 막습니다.",
+    },
+  ],
+  buyer_rights: [
+    "제휴 여부와 비제휴 대안 여부를 확인할 권리",
+    "가격 캐시 만료와 검수 필요 여부를 결제 전에 확인할 권리",
+    "공유 리포트 접근을 해제할 권리",
+    "연락 동의 없이 후속 연락을 받지 않을 권리",
+  ],
+  risk_disclosures: [
+    "오픈마켓 가격과 쿠폰은 짧은 시간 안에 변동될 수 있습니다.",
+    "벤치마크는 목적별 참고 근거이며 실제 체감 성능을 보장하지 않습니다.",
+    "제휴 수익은 추천 순위에 직접 반영하지 않습니다.",
+  ],
+  plain_language_guarantee:
+    "최저가 하나만 밀지 않고 가격, 호환성, 리뷰 리스크, 개인정보 기준을 분리해 보여줍니다.",
+  proof_strip: ["신뢰 배지 4개 공개", "가격·제휴·개인정보 기준 분리", "구매자 권리 4개"],
+  primary_cta_label: "신뢰 기준 보고 분석 시작",
+  primary_cta_path: "#analysis",
+  next_actions: [
+    "분석 결과의 가격과 장바구니 최종가가 다르면 결제 전 검수를 먼저 실행하세요.",
+    "제휴 링크가 보이면 비제휴 대안과 추천 점수 기준을 함께 확인하세요.",
   ],
 };
 
@@ -741,6 +805,20 @@ async function loadSocialProofWall(): Promise<{
   }
 }
 
+async function loadBuyerTrustKit(): Promise<{
+  trustKit: PublicBuyerTrustKit;
+  isFallback: boolean;
+}> {
+  try {
+    const trustKit = await getJson<PublicBuyerTrustKit>(
+      "/public/buyer-trust-kit?limit=4",
+    );
+    return { trustKit, isFallback: false };
+  } catch {
+    return { trustKit: fallbackBuyerTrustKit, isFallback: true };
+  }
+}
+
 async function loadBuyerChecklist(): Promise<{
   checklist: PublicBuyerChecklist;
   isFallback: boolean;
@@ -930,6 +1008,7 @@ export default async function LaunchPage() {
   const [
     { room, isFallback },
     { wall, isFallback: proofFallback },
+    { trustKit, isFallback: trustKitFallback },
     { checklist, isFallback: checklistFallback },
     { kit: challengeKit, isFallback: challengeFallback },
     { scanner: specScanner, isFallback: scannerFallback },
@@ -938,6 +1017,7 @@ export default async function LaunchPage() {
   ] = await Promise.all([
     loadLaunchRoom(),
     loadSocialProofWall(),
+    loadBuyerTrustKit(),
     loadBuyerChecklist(),
     loadBuyerChallengeKit(),
     loadSpecRiskScanner(),
@@ -1059,6 +1139,78 @@ export default async function LaunchPage() {
             <p>{metric.detail}</p>
           </article>
         ))}
+      </section>
+
+      <section className="launchPublicSection launchBuyerTrustKit" id="buyer-trust-kit">
+        <div className="sectionHeader">
+          <div>
+            <div className="sectionLabel">
+              <ShieldCheck size={16} />
+              Buyer trust kit
+            </div>
+            <h2>{trustKit.headline}</h2>
+            <p>{trustKit.summary}</p>
+          </div>
+          <span className={`pill ${tone(trustKit.status)}`}>
+            {trustKitFallback ? "신뢰 키트 폴백" : "신뢰 기준 공개"}
+          </span>
+        </div>
+        <div className="launchBuyerTrustHero">
+          <strong>{trustKit.plain_language_guarantee}</strong>
+          <div className="launchPublicPills">
+            {trustKit.proof_strip.slice(0, 4).map((item) => (
+              <span className="pill ok" key={item}>
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="launchBuyerTrustGrid">
+          {trustKit.trust_badges.slice(0, 4).map((badge) => (
+            <article key={badge.badge_id}>
+              <span className={`pill ${tone(badge.status)}`}>{badge.label}</span>
+              <h3>{badge.summary}</h3>
+              <p>{badge.buyer_impact}</p>
+              <ul>
+                {badge.evidence.slice(0, 2).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <div className="launchBuyerTrustFooter">
+          <div>
+            <strong>구매자 권리</strong>
+            <ul>
+              {trustKit.buyer_rights.slice(0, 4).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <strong>위험 고지</strong>
+            <ul>
+              {trustKit.risk_disclosures.slice(0, 4).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <LaunchAnalysisLink
+            className="miniCta"
+            handoff={{
+              source: "buyer-trust-kit",
+              label: trustKit.primary_cta_label,
+              query:
+                "신뢰 기준을 확인했고, 가격 출처와 제휴 여부까지 함께 보는 컴퓨터 구매 리포트를 만들고 싶어요.",
+              category: "desktop_pc",
+              budget_krw: 2200000,
+              purpose: "trust_first_purchase",
+            }}
+          >
+            {trustKit.primary_cta_label}
+          </LaunchAnalysisLink>
+        </div>
       </section>
 
       <StartConciergePanel />

@@ -68,6 +68,7 @@ import type {
   PurchaseOutcome,
   PurchaseOutcomeStatus,
   PublicAcquisitionHub,
+  PublicConversionBoard,
   PublicLaunchRoom,
   PublicProofHub,
   ReportShareAssets,
@@ -164,6 +165,20 @@ function retentionMetricLabel(key: string) {
     completion_engagements: "완료 리포트 반응",
     ready_value_krw: "구매 가능 금액",
     unresolved_decisions: "미해결 결정",
+  };
+  return labels[key] ?? key.replaceAll("_", " ");
+}
+
+function publicConversionMetricLabel(key: string) {
+  const labels: Record<string, string> = {
+    analysis_runs: "분석",
+    public_share_views: "공유 조회",
+    share_rate_percent: "공유 CTA",
+    referral_waitlist: "추천 대기열",
+    pricing_intents: "요금제 관심",
+    estimated_mrr_krw: "예상 MRR",
+    pulse_score: "Pulse",
+    readiness_score: "readiness",
   };
   return labels[key] ?? key.replaceAll("_", " ");
 }
@@ -459,6 +474,11 @@ export default function Home() {
   >("idle");
   const [latestAcquisitionHub, setLatestAcquisitionHub] =
     useState<PublicAcquisitionHub | null>(null);
+  const [publicConversionStatus, setPublicConversionStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestPublicConversionBoard, setLatestPublicConversionBoard] =
+    useState<PublicConversionBoard | null>(null);
   const [retentionHubStatus, setRetentionHubStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -2158,6 +2178,27 @@ export default function Home() {
     }
   }
 
+  async function loadPublicConversionBoard() {
+    setPublicConversionStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/public-conversion-board?limit=12");
+      if (!response.ok) {
+        throw new Error(`public conversion board ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        board?: PublicConversionBoard;
+      };
+      if (!payload.ok || !payload.board) {
+        throw new Error("public conversion board rejected");
+      }
+      setLatestPublicConversionBoard(payload.board);
+      setPublicConversionStatus("sent");
+    } catch {
+      setPublicConversionStatus("error");
+    }
+  }
+
   async function loadRetentionHub() {
     setRetentionHubStatus("sending");
     try {
@@ -2480,6 +2521,7 @@ export default function Home() {
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#market-reports">시장 리포트</a>
           <a href="#acquisition-hub">유입 허브</a>
+          <a href="#public-conversion-board">전환 보드</a>
           <a href="#retention-hub">리텐션 허브</a>
           <a href="#growth-funnel">성장 퍼널</a>
           <a href="#launch-pulse">런치 Pulse</a>
@@ -7202,6 +7244,160 @@ export default function Home() {
                   ) : null}
                 </ul>
               </div>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="publicConversionBoardPanel" id="public-conversion-board">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <BarChart3 size={16} />
+            공개 전환 보드
+          </div>
+          <h2>출시 직후 유입, 공유, 추천, 유료 수요 병목을 한 번에 봅니다</h2>
+          <p>
+            공개 유입 허브, 성장 퍼널, 런치 Pulse, 추천 대기열, 요금제 관심,
+            readiness를 묶어 오늘 어떤 채널에 트래픽을 배정할지 판단합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestPublicConversionBoard
+                  ? gateTone(latestPublicConversionBoard.status)
+                  : "warn"
+              }`}
+            >
+              {latestPublicConversionBoard
+                ? `${Math.round(latestPublicConversionBoard.conversion_score)}점 · ${
+                    latestPublicConversionBoard.status
+                  }`
+                : "전환 보드 미조회"}
+            </span>
+            <span className="pill muted">public-conversion-board</span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={publicConversionStatus === "sending"}
+            onClick={loadPublicConversionBoard}
+          >
+            {publicConversionStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <BarChart3 size={18} />
+            )}
+            전환 보드 새로고침
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              publicConversionStatus,
+              "공개 전환 보드를 업데이트했습니다.",
+              "공개 전환 보드 조회에 실패했습니다.",
+            ) || "공개 후 유입과 전환 병목을 한 번에 확인합니다."}
+          </p>
+        </div>
+
+        {latestPublicConversionBoard ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestPublicConversionBoard.status)}`}>
+                {latestPublicConversionBoard.status}
+              </span>
+              <span className="pill muted">
+                {latestPublicConversionBoard.board_version}
+              </span>
+              <span className="pill muted">
+                Workspace {latestPublicConversionBoard.workspace_id}
+              </span>
+            </div>
+            <h3>{latestPublicConversionBoard.headline}</h3>
+            <p>{latestPublicConversionBoard.summary}</p>
+
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>전환 점수</dt>
+                <dd>{Math.round(latestPublicConversionBoard.conversion_score)}점</dd>
+              </div>
+              {Object.entries(latestPublicConversionBoard.metric_cards)
+                .slice(0, 7)
+                .map(([key, value]) => (
+                  <div key={key}>
+                    <dt>{publicConversionMetricLabel(key)}</dt>
+                    <dd>
+                      {key === "estimated_mrr_krw"
+                        ? won(Number(value))
+                        : String(value)}
+                    </dd>
+                  </div>
+                ))}
+            </dl>
+
+            <div className="growthStepGrid">
+              {latestPublicConversionBoard.stages.map((stage) => (
+                <article className="growthStepCard" key={stage.key}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(stage.status)}`}>
+                      {stage.status}
+                    </span>
+                    <span className="pill muted">{stage.metric}</span>
+                  </div>
+                  <h4>{stage.label}</h4>
+                  <p>{stage.insight}</p>
+                  <p>{stage.next_action}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="growthStepGrid">
+              {latestPublicConversionBoard.priority_surfaces.map((surface) => (
+                <article className="growthStepCard" key={surface.key}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(surface.status)}`}>
+                      {surface.status}
+                    </span>
+                    <span className="pill muted">{surface.channel}</span>
+                  </div>
+                  <h4>{surface.label}</h4>
+                  <p>{surface.path}</p>
+                  <p>{surface.proof}</p>
+                  <p>{surface.next_action}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>채널 액션</strong>
+                <ul>
+                  {latestPublicConversionBoard.channel_actions.slice(0, 6).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestPublicConversionBoard.next_actions.slice(0, 6).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestPublicConversionBoard.recent_growth_events.slice(0, 6).map((event) => (
+                <article className="gateCheckCard" key={event.event_id}>
+                  <div className="answerHeader">
+                    <span className="pill ok">{event.event_type}</span>
+                    <span className="pill muted">{event.surface}</span>
+                  </div>
+                  <h4>{event.label || event.event_id}</h4>
+                  <p>{event.product_id || event.report_id || event.trace_id || "workspace"}</p>
+                </article>
+              ))}
             </div>
           </div>
         ) : null}

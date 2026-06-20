@@ -57,6 +57,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/start-concierge`: 제품 API의 `/public/start-concierge`로 현재 입력 진단, 맞춤 플레이북, 시작 마일스톤, 빠른 CTA 조회
 - `/api/specpilot/growth-funnel`: 제품 API의 `/growth/events`, `/growth/funnel`로 분석 결과 조회, 추천/대안 카드, 공유/알림/구독 CTA 반응 이벤트와 전환율 조회
 - `/api/specpilot/acquisition-hub`: 제품 API의 `/growth/acquisition-hub`로 공개 데모, SEO 페이지, 공유 리포트, 추천 대기열, Trust Center, 요금제 관심 표면 준비도 조회
+- `/api/specpilot/public-conversion-board`: 제품 API의 `/growth/public-conversion-board`로 공개 유입, 활성화, 공유, 추천, 유료 수요, readiness 병목과 채널 액션 조회
 - `/api/specpilot/retention-hub`: 제품 API의 `/growth/retention-hub`로 저장 리포트, 알림, 공유 조회, 상담, 구매 결과, 완료 리포트 반응 기반 재참여 플레이 조회
 - `/api/specpilot/referrals`: 제품 API의 `/growth/waitlist-referrals`, `/growth/referral-dashboard`로 추천 코드, 공유 URL, 추천 유입 리더보드 조회
 - `/api/specpilot/launch-pulse`: 제품 API의 `/growth/launch-pulse`로 공개 반응 Pulse, 신호별 점수, 다음 액션, 최근 피드백/이벤트 조회
@@ -117,6 +118,7 @@ docker build -t specpilot-ai-site:local .
 - `POST /public/start-concierge`
 - `GET /demo/scenarios`
 - `GET /growth/acquisition-hub`
+- `GET /growth/public-conversion-board`
 - `GET /growth/retention-hub`
 - `GET /growth/launch-pulse`
 - `GET /public/proof-hub`

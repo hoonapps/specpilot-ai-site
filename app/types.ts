@@ -1071,6 +1071,31 @@ export type PublicAcquisitionHub = {
   recent_growth_events: GrowthEventRecord[];
 };
 
+export type PublicConversionStage = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  metric: string;
+  insight: string;
+  next_action: string;
+};
+
+export type PublicConversionBoard = {
+  board_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  conversion_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  stages: PublicConversionStage[];
+  priority_surfaces: PublicAcquisitionSurface[];
+  channel_actions: string[];
+  next_actions: string[];
+  recent_growth_events: GrowthEventRecord[];
+};
+
 export type PublicProofAsset = {
   key: string;
   label: string;

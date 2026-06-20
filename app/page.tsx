@@ -38,6 +38,8 @@ import type {
   CheckoutReview,
   CompletionReportWorkflowResponse,
   DataGovernanceBundle,
+  DemoScenario,
+  DemoScenarioGallery,
   FeedbackRecord,
   GrowthEventRecord,
   GrowthEventType,
@@ -162,6 +164,10 @@ export default function Home() {
   const [onboardingPlaybooks, setOnboardingPlaybooks] = useState<
     PurchaseOnboardingPlaybook[]
   >([]);
+  const [demoGalleryStatus, setDemoGalleryStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [demoGallery, setDemoGallery] = useState<DemoScenarioGallery | null>(null);
   const [statusText, setStatusText] = useState("데모 리포트");
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const [savedReportId, setSavedReportId] = useState<string | null>(null);
@@ -458,7 +464,29 @@ export default function Home() {
 
   useEffect(() => {
     void loadOnboardingPlaybooks();
+    void loadDemoGallery();
   }, []);
+
+  async function loadDemoGallery() {
+    setDemoGalleryStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/demo-scenarios");
+      if (!response.ok) {
+        throw new Error(`demo scenarios ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        gallery?: DemoScenarioGallery;
+      };
+      if (!payload.ok || !payload.gallery) {
+        throw new Error("demo scenarios rejected");
+      }
+      setDemoGallery(payload.gallery);
+      setDemoGalleryStatus("sent");
+    } catch {
+      setDemoGalleryStatus("error");
+    }
+  }
 
   async function loadOnboardingPlaybooks(category?: Category) {
     setOnboardingStatus("sending");
@@ -493,6 +521,28 @@ export default function Home() {
     });
     setMarketReportCategory(playbook.category);
     setStatusText(`${playbook.title} 플레이북 적용`);
+    window.location.hash = "analysis";
+  }
+
+  function applyDemoScenario(scenario: DemoScenario) {
+    setPayload({
+      query: scenario.request.query,
+      category: scenario.request.category,
+      budget: String(scenario.request.budget_krw || ""),
+      purpose: scenario.request.purpose,
+      mustHaves: scenario.request.must_haves.join(", "),
+      exclusions: scenario.request.exclusions.join(", "),
+    });
+    setMarketReportCategory(scenario.request.category);
+    setStatusText(`${scenario.title} 데모 적용`);
+    setLatestDiagnosis(null);
+    void recordGrowthEvent("analysis_view", scenario.title, "demo-scenario", {
+      silent: true,
+      metadata: {
+        scenario_id: scenario.scenario_id,
+        category: scenario.category,
+      },
+    });
     window.location.hash = "analysis";
   }
 
@@ -2201,6 +2251,34 @@ export default function Home() {
             구매 조건
           </div>
           <h1>컴퓨터와 노트북 구매 결정을 리포트로 끝냅니다</h1>
+          {demoGallery ? (
+            <section className="demoGallery" aria-label="공개 데모 시나리오">
+              <div className="demoGalleryHeader">
+                <span className="pill ok">{demoGallery.gallery_version}</span>
+                <strong>{demoGallery.primary_metric}</strong>
+              </div>
+              <div className="demoScenarioList">
+                {demoGallery.scenarios.map((scenario) => (
+                  <button
+                    key={scenario.scenario_id}
+                    type="button"
+                    className="demoScenarioButton"
+                    onClick={() => applyDemoScenario(scenario)}
+                  >
+                    <span>{scenario.persona}</span>
+                    <strong>{scenario.title}</strong>
+                    <small>{scenario.one_liner}</small>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : (
+            <div className="inlineNotice">
+              {demoGalleryStatus === "error"
+                ? "공개 데모 시나리오를 불러오지 못했습니다."
+                : "공개 데모 시나리오를 불러오는 중입니다."}
+            </div>
+          )}
           <form onSubmit={analyze} className="analysisForm">
             <label>
               요청

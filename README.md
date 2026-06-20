@@ -28,6 +28,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 브라우저는 제품 API를 직접 호출하지 않습니다. Next.js 서버 라우트가 제품 API를 대신 호출해 CORS와 공개 API 키 노출 리스크를 줄입니다.
 
 - `/api/specpilot/intake-diagnose`: 제품 API의 `/intake/diagnose`로 분석 전 조건 준비도와 보강 질문 조회
+- `/api/specpilot/demo-scenarios`: 제품 API의 `/demo/scenarios`로 첫 방문자가 바로 적용할 수 있는 공개 데모 preset 조회
 - `/api/specpilot/analyze`: 제품 API의 `/analyze`, `/reports/save`, `/reports/{id}/share`를 순서대로 호출
 - `/api/specpilot/feedback`: 제품 API의 `/feedback`으로 추천 만족도와 구매 의향 저장
 - `/api/specpilot/beta-leads`: 제품 API의 `/beta/leads`로 베타 신청 저장
@@ -60,6 +61,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 공개 페이지:
 
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
+- 첫 화면 공개 데모 갤러리는 데스크톱/노트북/팀 구매 preset을 분석 폼에 즉시 적용해 빈 폼 이탈을 줄임
 - 공개 리포트는 구매 판정, 최종 후보, TOP 3 비교, 공유 브리프, 대안 시나리오, 조건 충족 매트릭스, 예산/조건 스트레스 테스트, 구매 타이밍, 구매 실행 체크리스트, 제휴/비제휴 구매 링크를 한 화면에 표시
 - 구매 링크는 제품 API의 `/buy/{link_id}` 추적 redirect를 사용해 공개 클릭 지표를 유지
 - `/market/desktop-pc`, `/market/laptop`: 제품 API의 `/public/market/category-reports/{category}`를 읽어 SEO 제목, 월간 추천 픽, 가격 구간, 리스크 신호, 공개 체크리스트, 분석 CTA를 보여주는 공개 카테고리 리포트
@@ -102,6 +104,7 @@ docker build -t specpilot-ai-site:local .
 
 - `POST /analyze`
 - `POST /intake/diagnose`
+- `GET /demo/scenarios`
 - `POST /reports/save`
 - `POST /reports/{report_id}/share`
 - `POST /alerts/subscribe`

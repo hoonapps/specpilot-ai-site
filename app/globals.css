@@ -237,6 +237,71 @@ li {
   gap: 13px;
 }
 
+.demoGallery {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 18px;
+  border: 1px solid rgba(12, 116, 108, 0.2);
+  border-radius: 8px;
+  background: #fbfffc;
+  padding: 14px;
+}
+
+.demoGalleryHeader {
+  display: grid;
+  gap: 8px;
+}
+
+.demoGalleryHeader strong {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.demoScenarioList {
+  display: grid;
+  gap: 8px;
+}
+
+.demoScenarioButton {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 11px;
+  text-align: left;
+}
+
+.demoScenarioButton:hover {
+  border-color: rgba(12, 116, 108, 0.36);
+  background: var(--teal-soft);
+}
+
+.demoScenarioButton span {
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.demoScenarioButton strong,
+.demoScenarioButton small {
+  overflow-wrap: anywhere;
+}
+
+.demoScenarioButton strong {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.demoScenarioButton small {
+  color: var(--muted);
+  font-weight: 750;
+  line-height: 1.5;
+}
+
 label {
   display: grid;
   gap: 7px;

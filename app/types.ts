@@ -36,6 +36,30 @@ export type IntakeDiagnosisResponse = {
   warnings: string[];
 };
 
+export type DemoScenario = {
+  scenario_id: string;
+  title: string;
+  category: Category;
+  persona: string;
+  one_liner: string;
+  request: AnalyzePayload & {
+    purchase_timing: string;
+  };
+  expected_outcome: string;
+  proof_points: string[];
+  demo_cta: string;
+  share_angle: string;
+  tags: string[];
+};
+
+export type DemoScenarioGallery = {
+  gallery_version: string;
+  headline: string;
+  subheadline: string;
+  primary_metric: string;
+  scenarios: DemoScenario[];
+};
+
 export type Recommendation = {
   rank: number;
   product: {

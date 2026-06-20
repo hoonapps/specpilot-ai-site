@@ -1365,6 +1365,59 @@ export type PublicPurchaseApprovalBriefKit = {
   next_actions: string[];
 };
 
+export type SellerEvidenceRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  verdict: string;
+  budget_krw: number;
+  cart_total_krw: number | null;
+  risk_terms: string[];
+  missing_evidence: string[];
+  must_confirm: string[];
+  answer_text: string;
+  source: string;
+};
+
+export type SellerEvidenceQuestion = {
+  question_id: string;
+  label: string;
+  status: OpsStatus;
+  question: string;
+  required_answer: string;
+  why_it_matters: string;
+};
+
+export type SellerAnswerRubric = {
+  rubric_id: string;
+  label: string;
+  status: OpsStatus;
+  pass_signal: string;
+  fail_signal: string;
+};
+
+export type PublicSellerEvidenceKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  priority: OpsStatus;
+  answer_status: OpsStatus;
+  headline: string;
+  summary: string;
+  seller_message: string;
+  questions: SellerEvidenceQuestion[];
+  answer_rubric: SellerAnswerRubric[];
+  evidence_checklist: string[];
+  approval_prefill: PurchaseApprovalBriefRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

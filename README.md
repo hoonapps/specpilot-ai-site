@@ -64,6 +64,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/listing-decoder-kit`: 제품 API의 `/public/listing-decoder-kit`로 쇼핑몰 상품명/옵션명에서 CPU/GPU/RAM/SSD/OS와 리퍼·전시·해외 조건을 구조화하고 검수 prefill 조회
 - `/api/specpilot/spec-risk-scanner`: 제품 API의 `/public/spec-risk-scanner`, `/public/spec-risk-scanner/result`로 장바구니 옵션명, 최종가, 기대 사양, 배송/반품/AS 증거를 결제 전 blocker/warning으로 검수하고 구매 세이프티 브리프, 판매자 질문, 승인 요약, 캡처 체크리스트를 렌더링
 - `/api/specpilot/purchase-approval-brief-kit`: 제품 API의 `/public/purchase-approval-brief-kit`로 장바구니 검수 결과를 가족/팀/커뮤니티용 승인 질문, 투표 옵션, 채널별 복사 문구로 변환
+- `/api/specpilot/seller-evidence-kit`: 제품 API의 `/public/seller-evidence-kit`로 판매자 확인 질문, 복사용 문의 문구, 답변 판정 기준, 캡처 체크리스트를 생성
 - `/api/specpilot/checkout-nudge-kit`: 제품 API의 `/public/checkout-nudge-kit`로 장바구니 검수 결과를 판매자 답변 요청, 가격 재확인, 구매 결과 회수 후속 알림과 분석/대기열 prefill로 변환
 - `/api/specpilot/spec-rescue-kit`: 제품 API의 `/public/spec-rescue-kit`로 장바구니 보류/확인 필요 결과를 예산 내 대체 후보, 판매자 확인 메시지, 검색 문구, 분석/공유 prefill로 변환
 - `/api/specpilot/candidate-compare`: 제품 API의 `/public/candidate-compare`로 카테고리/예산/목적별 공개 후보 5개, 비교 축별 승자, 예산/성능/안전 우선 대안 시나리오, 공유 문구 조회
@@ -105,6 +106,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`는 `/public/buyer-trust-kit`을 hero 직후에 렌더링해 가격/제휴/개인정보/사람 검수 기준과 구매자 권리를 분석 폼 진입 전 먼저 보여준다.
 - `/launch`는 `/public/setup-compatibility-kit`을 구매 챌린지 다음에 렌더링해 CPU/GPU/RAM/SSD/모니터/파워 조합을 먼저 검수하고 분석/장바구니 검수 prefill로 연결한다.
 - `/launch`는 `/public/shopping-cart-intake-kit`을 세팅 호환성 다음에 렌더링해 쇼핑몰 장바구니 텍스트를 총액, 필수 슬롯 누락, 옵션/사양 검수 prefill, 구매 승인 prefill로 변환한다.
+- `/launch`는 `/public/seller-evidence-kit`을 장바구니 인테이크 다음에 렌더링해 실제 출고 사양, 배송, 반품, AS, 리퍼/해외/FreeDOS 조건을 판매자에게 물을 문구와 답변 판정 기준을 보여준다.
 - `/launch`의 옵션/사양 빠른 검수 폼은 `/public/listing-decoder-kit`을 먼저 호출해 쇼핑몰 상품명/옵션명에서 사양과 위험 조건을 구조화하고 검수 prefill을 자동 적용한다.
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/checkout-nudge-kit` 후속 넛지 키트도 호출해 판매자 답변 요청, 가격 재확인, 구매 결과 회수 단계와 복사용 후속 알림을 함께 보여준다.
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/spec-rescue-kit` 대체 후보 rescue도 호출해 보류 후보 대신 비교할 예산 내 대체안, 판매자 확인 메시지, 검색 문구를 함께 보여준다.

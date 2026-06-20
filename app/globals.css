@@ -3100,6 +3100,169 @@ ul {
   gap: 6px;
 }
 
+.launchSellerEvidence {
+  background: #f8fafc;
+}
+
+.launchSellerEvidenceGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchSellerEvidenceForm,
+.launchSellerEvidenceResult,
+.launchSellerMessage,
+.launchSellerQuestionGrid article,
+.launchSellerRubricGrid article {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+}
+
+.launchSellerEvidenceForm,
+.launchSellerEvidenceResult {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchSellerEvidenceControls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchSellerEvidenceControls.dense {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchSellerEvidenceForm label {
+  display: grid;
+  gap: 7px;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.launchSellerEvidenceForm input,
+.launchSellerEvidenceForm select,
+.launchSellerEvidenceForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  padding: 10px 11px;
+}
+
+.launchSellerEvidenceForm textarea {
+  resize: vertical;
+}
+
+.launchSellerEvidenceForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchSellerEvidenceStatus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchSellerEvidenceResult h3 {
+  color: #0f172a;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.launchSellerEvidenceResult p,
+.launchSellerEvidenceResult li,
+.launchSellerEvidenceResult small,
+.launchSellerQuestionGrid p,
+.launchSellerRubricGrid p,
+.launchSellerRubricGrid small {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchSellerMessage {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.launchSellerMessage strong,
+.launchSellerQuestionGrid strong {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.launchSellerMessage p {
+  white-space: pre-line;
+}
+
+.launchSellerMessage button {
+  align-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  width: fit-content;
+}
+
+.launchSellerQuestionGrid,
+.launchSellerRubricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchSellerQuestionGrid article,
+.launchSellerRubricGrid article {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchSellerQuestionGrid article.ok {
+  border-color: rgba(22, 163, 74, 0.24);
+  background: #f0fdf4;
+}
+
+.launchSellerQuestionGrid article.warning {
+  border-color: rgba(217, 119, 6, 0.28);
+  background: #fffbeb;
+}
+
+.launchSellerQuestionGrid article.blocker {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: #fef2f2;
+}
+
+.launchSellerQuestionGrid span {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  color: #0f172a;
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
 .launchApprovalBrief {
   background: #f8fafc;
 }
@@ -8272,6 +8435,11 @@ ul {
   .launchCartIntakeMetrics,
   .launchCartIntakeSlots,
   .launchCartIntakeLines,
+  .launchSellerEvidenceGrid,
+  .launchSellerEvidenceControls,
+  .launchSellerEvidenceControls.dense,
+  .launchSellerQuestionGrid,
+  .launchSellerRubricGrid,
   .launchApprovalGrid,
   .launchApprovalControls,
   .launchApprovalControls.dense,
@@ -8557,6 +8725,11 @@ ul {
   .launchCartIntakeMetrics,
   .launchCartIntakeSlots,
   .launchCartIntakeLines,
+  .launchSellerEvidenceGrid,
+  .launchSellerEvidenceControls,
+  .launchSellerEvidenceControls.dense,
+  .launchSellerQuestionGrid,
+  .launchSellerRubricGrid,
   .launchApprovalGrid,
   .launchApprovalControls,
   .launchApprovalControls.dense,

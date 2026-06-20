@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { getJson } from "../api/specpilot/_client";
 import type { PublicLaunchRoom } from "../types";
+import { LaunchConversionPanel } from "./LaunchConversionPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -322,6 +323,8 @@ export default async function LaunchPage() {
           ))}
         </div>
       </section>
+
+      <LaunchConversionPanel />
 
       <section className="launchPublicSection launchSharePanel">
         <div>

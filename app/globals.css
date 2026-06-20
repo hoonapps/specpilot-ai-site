@@ -1676,6 +1676,81 @@ ul {
   font-size: 18px;
 }
 
+.launchConversionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.launchConversionCard {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 26px);
+}
+
+.launchConversionCard h3 {
+  margin: 0;
+  word-break: keep-all;
+}
+
+.launchConversionCard p {
+  margin: 0;
+}
+
+.launchConversionCard textarea {
+  min-height: 96px;
+}
+
+.launchConversionCard button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ink);
+  color: white;
+  font-weight: 950;
+}
+
+.launchConversionCard button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.launchConversionResult {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(12, 116, 108, 0.24);
+  border-radius: 8px;
+  background: #fbfffc;
+  padding: 14px;
+}
+
+.launchConversionResult span,
+.launchConversionResult small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchConversionResult strong {
+  font-size: 24px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.launchConversionResult p {
+  overflow-wrap: anywhere;
+}
+
 .purchaseLinkGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2140,6 +2215,7 @@ ul {
   .publicGrid,
   .launchPublicMetrics,
   .launchPublicGrid.three,
+  .launchConversionGrid,
   .launchSharePanel,
   .purchaseLinkGrid,
   .trustPanel,
@@ -2348,6 +2424,7 @@ ul {
   .launchPublicGrid,
   .launchPublicGrid.three,
   .launchMarketGrid,
+  .launchConversionGrid,
   .launchSharePanel,
   .purchaseLinkGrid,
   .sourceMonitorGrid,

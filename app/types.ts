@@ -775,6 +775,45 @@ export type GrowthFunnelDashboard = {
   recent_events: GrowthEventRecord[];
 };
 
+export type LaunchCopyVariant = {
+  variant_id: string;
+  channel: string;
+  headline: string;
+  body: string;
+  cta_label: string;
+  cta_path: string;
+  tracking_event: GrowthEventType;
+};
+
+export type LaunchChannelPlaybook = {
+  channel: string;
+  audience: string;
+  angle: string;
+  post_timing: string;
+  copy_variants: LaunchCopyVariant[];
+  checklist: string[];
+  success_metric: string;
+};
+
+export type LaunchCampaignKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category | null;
+  audience: string;
+  offer: string;
+  positioning: string;
+  hero_message: string;
+  primary_cta: string;
+  primary_cta_path: string;
+  proof_points: string[];
+  target_segments: string[];
+  channel_playbooks: LaunchChannelPlaybook[];
+  cta_experiments: string[];
+  launch_checklist: string[];
+  risk_disclosures: string[];
+  measurement_plan: string[];
+};
+
 export type ReportAdvisorQuestionRequest = {
   report_id: string;
   question: string;

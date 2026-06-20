@@ -47,6 +47,7 @@ import type {
   IntegrationProvider,
   IntegrationReadinessDashboard,
   IntegrationStatus,
+  LaunchCampaignKit,
   LaunchReadinessBundle,
   ObservabilityOpsBundle,
   OpsLearningDashboard,
@@ -408,6 +409,11 @@ export default function Home() {
     useState<GrowthFunnelDashboard | null>(null);
   const [latestGrowthEvent, setLatestGrowthEvent] =
     useState<GrowthEventRecord | null>(null);
+  const [launchKitStatus, setLaunchKitStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestLaunchKit, setLatestLaunchKit] =
+    useState<LaunchCampaignKit | null>(null);
   const [launchStatus, setLaunchStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -583,6 +589,8 @@ export default function Home() {
     setGrowthStatus("idle");
     setLatestGrowthDashboard(null);
     setLatestGrowthEvent(null);
+    setLaunchKitStatus("idle");
+    setLatestLaunchKit(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -1874,6 +1882,31 @@ export default function Home() {
     }
   }
 
+  async function loadLaunchKit() {
+    setLaunchKitStatus("sending");
+    try {
+      const params = new URLSearchParams({ audience: "creator" });
+      if (marketReportCategory !== "all") {
+        params.set("category", marketReportCategory);
+      }
+      const response = await fetch(`/api/specpilot/launch-kit?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error(`launch kit ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        kit?: LaunchCampaignKit;
+      };
+      if (!payload.ok || !payload.kit) {
+        throw new Error("launch kit rejected");
+      }
+      setLatestLaunchKit(payload.kit);
+      setLaunchKitStatus("sent");
+    } catch {
+      setLaunchKitStatus("error");
+    }
+  }
+
   async function loadLaunchReadiness() {
     setLaunchStatus("sending");
 
@@ -2058,6 +2091,7 @@ export default function Home() {
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#market-reports">시장 리포트</a>
           <a href="#growth-funnel">성장 퍼널</a>
+          <a href="#launch-kit">출시 키트</a>
           <a href="#pricing-ops">수익화</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -6211,6 +6245,137 @@ export default function Home() {
                   <p>{event.product_id || event.report_id || event.trace_id || "workspace"}</p>
                 </article>
               ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="launchKitPanel" id="launch-kit">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Send size={16} />
+            출시 캠페인 키트
+          </div>
+          <h2>공개 베타를 바로 알릴 메시지와 체크리스트를 만듭니다</h2>
+          <p>
+            커뮤니티, 검색 리포트, 추천 대기열 채널별 카피와 CTA 실험,
+            위험 고지, 측정 계획을 한 번에 정리합니다.
+          </p>
+          <div className="advisorMeta">
+            <span className="pill muted">
+              {latestLaunchKit ? latestLaunchKit.kit_version : "launch-kit 미조회"}
+            </span>
+            <span className="pill ok">
+              {marketReportCategory === "all" ? "전체" : marketReportCategory}
+            </span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={launchKitStatus === "sending"}
+            onClick={loadLaunchKit}
+          >
+            {launchKitStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <Send size={18} />
+            )}
+            출시 키트 생성
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              launchKitStatus,
+              "출시 캠페인 키트를 불러왔습니다.",
+              "출시 캠페인 키트 조회에 실패했습니다.",
+            ) || "시장 리포트 카테고리 선택값을 기준으로 메시지가 달라집니다."}
+          </p>
+        </div>
+
+        {latestLaunchKit ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className="pill ok">{latestLaunchKit.audience}</span>
+              <span className="pill muted">{latestLaunchKit.offer}</span>
+            </div>
+            <h3>{latestLaunchKit.hero_message}</h3>
+            <p>{latestLaunchKit.positioning}</p>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>CTA</dt>
+                <dd>{latestLaunchKit.primary_cta}</dd>
+              </div>
+              <div>
+                <dt>채널</dt>
+                <dd>{latestLaunchKit.channel_playbooks.length}개</dd>
+              </div>
+              <div>
+                <dt>실험</dt>
+                <dd>{latestLaunchKit.cta_experiments.length}개</dd>
+              </div>
+              <div>
+                <dt>측정</dt>
+                <dd>{latestLaunchKit.measurement_plan.length}개</dd>
+              </div>
+            </dl>
+
+            <div className="advisorLists">
+              <div>
+                <strong>증거 포인트</strong>
+                <ul>
+                  {latestLaunchKit.proof_points.slice(0, 5).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>대상 세그먼트</strong>
+                <ul>
+                  {latestLaunchKit.target_segments.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="growthStepGrid">
+              {latestLaunchKit.channel_playbooks.map((playbook) => (
+                <article className="growthStepCard" key={playbook.channel}>
+                  <div className="answerHeader">
+                    <span className="pill ok">{playbook.channel}</span>
+                    <span className="pill muted">{playbook.post_timing}</span>
+                  </div>
+                  <h4>{playbook.angle}</h4>
+                  <p>{playbook.audience}</p>
+                  <strong>{playbook.copy_variants[0]?.headline}</strong>
+                  <p>{playbook.copy_variants[0]?.body}</p>
+                  <ul>
+                    {playbook.checklist.slice(0, 3).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>출시 체크리스트</strong>
+                <ul>
+                  {latestLaunchKit.launch_checklist.slice(0, 5).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>측정 계획</strong>
+                <ul>
+                  {latestLaunchKit.measurement_plan.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         ) : null}

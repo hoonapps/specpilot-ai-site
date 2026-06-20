@@ -737,6 +737,7 @@ ul {
 .betaOpsPanel,
 .marketReportPanel,
 .growthFunnelPanel,
+.launchKitPanel,
 .pricingOpsPanel,
 .launchPanel {
   display: grid;
@@ -1744,6 +1745,7 @@ ul {
   .betaOpsPanel,
   .marketReportPanel,
   .growthFunnelPanel,
+  .launchKitPanel,
   .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
@@ -1818,6 +1820,7 @@ ul {
   .betaOpsPanel,
   .marketReportPanel,
   .growthFunnelPanel,
+  .launchKitPanel,
   .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
@@ -1847,6 +1850,7 @@ ul {
   .betaOpsPanel,
   .marketReportPanel,
   .growthFunnelPanel,
+  .launchKitPanel,
   .pricingOpsPanel,
   .launchPanel {
     margin-right: 0;

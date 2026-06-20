@@ -47,6 +47,10 @@ jobs:
           LAUNCH_VISUAL_URL: http://127.0.0.1:3025/launch
           LAUNCH_VISUAL_OUT_DIR: ${{ runner.temp }}/launch-visual
         run: npm run check:launch-visual
+      - name: Launch metadata smoke
+        env:
+          LAUNCH_METADATA_URL: http://127.0.0.1:3025
+        run: npm run check:launch-metadata
       - name: Upload launch visual screenshots
         uses: actions/upload-artifact@v4
         if: always()

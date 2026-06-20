@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
+    "check:launch-metadata": "node scripts/check-launch-metadata.mjs",
     "check:launch-visual": "node scripts/check-launch-visual.mjs",
     "check": "npm run typecheck && npm run build"
   },

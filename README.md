@@ -131,13 +131,15 @@ curl http://127.0.0.1:3000/api/health
 ```bash
 npm run check
 LAUNCH_VISUAL_URL=http://127.0.0.1:3000/launch npm run check:launch-visual
+LAUNCH_METADATA_URL=http://127.0.0.1:3000 npm run check:launch-metadata
 npm audit --audit-level=moderate
 docker build -t specpilot-ai-site:local .
 ```
 
 `check`는 TypeScript 타입 검사와 Next.js production build를 실행합니다.
 `check:launch-visual`은 실행 중인 `/launch`를 Chrome headless로 열어 데스크톱/모바일 hero 제목, CTA, proof pill, 상시 전환 바, 공유 확산팩 버튼/링크, 가로 overflow를 검사하고 캡처를 저장합니다. `CHROME_PATH`와 `LAUNCH_VISUAL_OUT_DIR`로 Chrome 경로와 캡처 저장 위치를 지정할 수 있습니다.
-GitHub Actions는 `npm run check`, production 서버 기반 `check:launch-visual`, Docker build를 순서대로 실행하고 런칭 캡처를 artifact로 남깁니다.
+`check:launch-metadata`는 production `/launch`, `robots.txt`, `sitemap.xml`, `manifest.webmanifest`, `/launch/opengraph-image`, `/launch/twitter-image`를 열어 canonical, OG/Twitter 메타, JSON-LD, PNG 공유 이미지가 배포 가능한지 검사합니다.
+GitHub Actions는 `npm run check`, production 서버 기반 `check:launch-visual`, `check:launch-metadata`, Docker build를 순서대로 실행하고 런칭 캡처를 artifact로 남깁니다.
 
 ## 연결되는 제품 API
 

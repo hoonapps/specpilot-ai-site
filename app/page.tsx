@@ -30,6 +30,8 @@ import type {
   Category,
   CheckoutReview,
   FeedbackRecord,
+  OpsLearningDashboard,
+  OpsStatus,
   PurchaseOutcome,
   PurchaseOutcomeStatus,
   ReportAdvisorAnswer,
@@ -87,6 +89,14 @@ function purchaseOutcomeLabel(status: PurchaseOutcomeStatus) {
     return "구매 이탈";
   }
   return "반품/취소";
+}
+
+function percent(value: number) {
+  return `${Math.round(value * 100)}%`;
+}
+
+function statusTone(status: OpsStatus) {
+  return status === "ok" ? "ok" : "warn";
 }
 
 export default function Home() {
@@ -178,6 +188,11 @@ export default function Home() {
   >("idle");
   const [latestPurchaseOutcome, setLatestPurchaseOutcome] =
     useState<PurchaseOutcome | null>(null);
+  const [learningStatus, setLearningStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestLearningDashboard, setLatestLearningDashboard] =
+    useState<OpsLearningDashboard | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -245,6 +260,8 @@ export default function Home() {
     setLatestCheckoutReview(null);
     setOutcomeStatus("idle");
     setLatestPurchaseOutcome(null);
+    setLearningStatus("idle");
+    setLatestLearningDashboard(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -306,6 +323,7 @@ export default function Home() {
       setLatestAlertEvaluation(null);
       setLatestCheckoutReview(null);
       setLatestPurchaseOutcome(null);
+      setLatestLearningDashboard(null);
       setConnectionWarning(
         error instanceof Error
           ? error.message
@@ -562,8 +580,33 @@ export default function Home() {
       }
       setLatestPurchaseOutcome(payload.outcome);
       setOutcomeStatus("sent");
+      await loadLearningInsights();
     } catch {
       setOutcomeStatus("error");
+    }
+  }
+
+  async function loadLearningInsights() {
+    setLearningStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/learning-insights?limit=8", {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error(`learning ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        dashboard?: OpsLearningDashboard;
+      };
+      if (!payload.ok || !payload.dashboard) {
+        throw new Error("learning rejected");
+      }
+      setLatestLearningDashboard(payload.dashboard);
+      setLearningStatus("sent");
+    } catch {
+      setLearningStatus("error");
     }
   }
 
@@ -696,6 +739,7 @@ export default function Home() {
           <a href="#source-check">상품 검수</a>
           <a href="#checkout-review">결제 검수</a>
           <a href="#purchase-outcome">구매 결과</a>
+          <a href="#learning-insights">학습 인사이트</a>
           <a href="#advisor">구매 상담</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -1625,6 +1669,154 @@ export default function Home() {
               만족도 {latestPurchaseOutcome.satisfaction ?? "미입력"}점 · 출처{" "}
               {latestPurchaseOutcome.source_channel}
             </p>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="learningPanel" id="learning-insights">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Gauge size={16} />
+            학습 인사이트
+          </div>
+          <h2>실제 구매 데이터를 다음 추천 개선으로 전환합니다</h2>
+          <p>
+            구매 결과, 결제 전 검수 차단, 피드백 만족도를 제품별 전환율,
+            반품률, 가격 차이, 전환 금액, 개선 액션으로 집계합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestLearningDashboard
+                  ? statusTone(latestLearningDashboard.status)
+                  : savedReportId
+                    ? "ok"
+                    : "warn"
+              }`}
+            >
+              {latestLearningDashboard
+                ? `${latestLearningDashboard.status} · ${latestLearningDashboard.insight_count}개`
+                : savedReportId
+                  ? "인사이트 조회 가능"
+                  : "라이브 분석 필요"}
+            </span>
+            <span className="pill muted">구매 결과 + 검수 + 피드백</span>
+          </div>
+        </div>
+
+        <div className="learningControl">
+          <button
+            type="button"
+            disabled={learningStatus === "sending"}
+            onClick={loadLearningInsights}
+          >
+            {learningStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <Gauge size={18} />
+            )}
+            학습 인사이트 새로고침
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              learningStatus,
+              "제품별 학습 인사이트를 불러왔습니다.",
+              "학습 인사이트 조회에 실패했습니다.",
+            ) || "구매 결과를 저장하면 자동으로 새로고침됩니다."}
+          </p>
+        </div>
+
+        {latestLearningDashboard ? (
+          <div className="learningResult">
+            <div className="answerHeader">
+              <span className={`pill ${statusTone(latestLearningDashboard.status)}`}>
+                {latestLearningDashboard.status}
+              </span>
+              <span className="pill muted">
+                Workspace {latestLearningDashboard.workspace_id}
+              </span>
+              <span className="pill muted">
+                {latestLearningDashboard.generated_at.slice(0, 16)}
+              </span>
+            </div>
+            <h3>{latestLearningDashboard.summary}</h3>
+            <div className="advisorLists">
+              <div>
+                <strong>상위 개선 액션</strong>
+                <ul>
+                  {latestLearningDashboard.top_actions.length ? (
+                    latestLearningDashboard.top_actions.slice(0, 4).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))
+                  ) : (
+                    <li>현재 즉시 실행할 학습 액션은 없습니다.</li>
+                  )}
+                </ul>
+              </div>
+              <div>
+                <strong>집계 기준</strong>
+                <ul>
+                  <li>실제 구매 결과와 최종가 차이</li>
+                  <li>결제 전 검수 차단과 리스크 승인</li>
+                  <li>만족도와 구매 의향 피드백</li>
+                </ul>
+              </div>
+            </div>
+            {latestLearningDashboard.insights.length ? (
+              <div className="insightGrid">
+                {latestLearningDashboard.insights.slice(0, 4).map((insight) => (
+                  <article className="insightCard" key={insight.product_id}>
+                    <div className="answerHeader">
+                      <span className={`pill ${statusTone(insight.status)}`}>
+                        {insight.status}
+                      </span>
+                      <span className="pill muted">
+                        전환 {percent(insight.conversion_rate)}
+                      </span>
+                      <span className="pill muted">
+                        반품 {percent(insight.return_rate)}
+                      </span>
+                    </div>
+                    <h4>{insight.model_name || insight.product_id}</h4>
+                    <p>{insight.evidence}</p>
+                    <dl className="sourceMetricGrid">
+                      <div>
+                        <dt>구매/결과</dt>
+                        <dd>
+                          {insight.purchase_count}/{insight.outcome_count}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>결제 보류</dt>
+                        <dd>
+                          {insight.checkout_blocked_count}/
+                          {insight.checkout_review_count}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>만족도</dt>
+                        <dd>{insight.average_satisfaction.toFixed(1)}</dd>
+                      </div>
+                      <div>
+                        <dt>전환 금액</dt>
+                        <dd>{won(insight.conversion_value_krw)}</dd>
+                      </div>
+                    </dl>
+                    <p>{insight.recommended_action}</p>
+                    <div className="conceptList">
+                      {insight.learning_tags.slice(0, 4).map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="formStatus">
+                아직 제품별 학습 인사이트 표본이 없습니다. 구매 결과와 피드백을
+                더 저장하면 개선 액션이 생성됩니다.
+              </p>
+            )}
           </div>
         ) : null}
       </section>

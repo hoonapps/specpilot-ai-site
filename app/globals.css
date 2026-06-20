@@ -507,7 +507,8 @@ ul {
 .sourceCheckPanel,
 .alertPanel,
 .checkoutPanel,
-.outcomePanel {
+.outcomePanel,
+.learningPanel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
   gap: 18px;
@@ -548,10 +549,71 @@ ul {
 .sourceResult,
 .alertResult,
 .checkoutResult,
-.outcomeResult {
+.outcomeResult,
+.learningResult {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);
   padding-top: 18px;
+}
+
+.learningControl {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.learningControl button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: white;
+  font-weight: 950;
+}
+
+.learningControl button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.insightGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.insightCard {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 16px;
+}
+
+.insightCard h4 {
+  margin: 12px 0 8px;
+  font-size: 20px;
+}
+
+.conceptList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.conceptList span {
+  border-radius: 999px;
+  background: #eef2f0;
+  color: var(--muted);
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .sourceMetricGrid {
@@ -704,6 +766,7 @@ ul {
   .alertPanel,
   .checkoutPanel,
   .outcomePanel,
+  .learningPanel,
   .conversionPanel {
     grid-template-columns: 1fr;
   }
@@ -740,6 +803,7 @@ ul {
   .alertPanel,
   .checkoutPanel,
   .outcomePanel,
+  .learningPanel,
   .conversionPanel {
     padding-right: 14px;
     padding-left: 14px;
@@ -755,6 +819,7 @@ ul {
   .signalStrip,
   .advisorLists,
   .alertActionGrid,
+  .insightGrid,
   .sourceMetricGrid,
   .metricRow {
     grid-template-columns: 1fr;

@@ -375,3 +375,37 @@ export type PurchaseOutcome = {
   notes: string;
   created_at: string;
 };
+
+export type OpsStatus = "ok" | "warning" | "blocker";
+
+export type OpsLearningInsight = {
+  product_id: string;
+  model_name: string | null;
+  outcome_count: number;
+  purchase_count: number;
+  abandoned_count: number;
+  delayed_count: number;
+  returned_count: number;
+  checkout_review_count: number;
+  checkout_blocked_count: number;
+  feedback_count: number;
+  average_satisfaction: number;
+  conversion_rate: number;
+  return_rate: number;
+  average_price_delta_krw: number;
+  conversion_value_krw: number;
+  status: OpsStatus;
+  evidence: string;
+  recommended_action: string;
+  learning_tags: string[];
+};
+
+export type OpsLearningDashboard = {
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  summary: string;
+  insight_count: number;
+  top_actions: string[];
+  insights: OpsLearningInsight[];
+};

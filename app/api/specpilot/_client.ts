@@ -30,3 +30,17 @@ export async function postJson<T>(path: string, body?: unknown): Promise<T> {
 
   return (await response.json()) as T;
 }
+
+export async function getJson<T>(path: string): Promise<T> {
+  const response = await fetch(`${productApiBase}${path}`, {
+    method: "GET",
+    headers: productHeaders(),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(`${path} failed with ${response.status}`);
+  }
+
+  return (await response.json()) as T;
+}

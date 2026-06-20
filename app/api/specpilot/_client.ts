@@ -5,6 +5,12 @@ const productApiBase =
 
 const productApiKey = process.env.SPECPILOT_API_KEY || "specpilot-site-demo";
 
+type GetJsonOptions = {
+  cache?: RequestCache;
+  revalidateSeconds?: number;
+  timeoutMs?: number;
+};
+
 export function productPublicUrl(path: string) {
   return new URL(path, productApiBase).toString();
 }
@@ -46,16 +52,52 @@ export async function patchJson<T>(path: string, body?: unknown): Promise<T> {
   return (await response.json()) as T;
 }
 
-export async function getJson<T>(path: string): Promise<T> {
-  const response = await fetch(`${productApiBase}${path}`, {
+async function fetchJson<T>(path: string, options: GetJsonOptions = {}): Promise<T> {
+  const controller = new AbortController();
+  const timeoutMs = options.timeoutMs ?? 12_000;
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  const init: RequestInit & { next?: { revalidate: number } } = {
     method: "GET",
     headers: productHeaders(),
-    cache: "no-store",
-  });
+    cache: options.cache ?? "no-store",
+    signal: controller.signal,
+  };
+
+  if (options.revalidateSeconds !== undefined) {
+    init.next = { revalidate: options.revalidateSeconds };
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(`${productApiBase}${path}`, init);
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error(`${path} timed out after ${timeoutMs}ms`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     throw new Error(`${path} failed with ${response.status}`);
   }
 
   return (await response.json()) as T;
+}
+
+export async function getJson<T>(path: string): Promise<T> {
+  return fetchJson<T>(path);
+}
+
+export async function getCachedJson<T>(
+  path: string,
+  options: GetJsonOptions = {},
+): Promise<T> {
+  return fetchJson<T>(path, {
+    cache: "force-cache",
+    revalidateSeconds: 15,
+    timeoutMs: 8_000,
+    ...options,
+  });
 }

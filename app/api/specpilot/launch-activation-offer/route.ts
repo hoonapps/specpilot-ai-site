@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getJson } from "../_client";
+import { getCachedJson } from "../_client";
 import type { LaunchActivationOfferDashboard } from "../../../types";
 
 export async function GET(request: Request) {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const limit = url.searchParams.get("limit") || "8";
 
   try {
-    const dashboard = await getJson<LaunchActivationOfferDashboard>(
+    const dashboard = await getCachedJson<LaunchActivationOfferDashboard>(
       `/growth/launch-activation-offer?limit=${encodeURIComponent(limit)}`,
     );
     return NextResponse.json({ ok: true, dashboard });

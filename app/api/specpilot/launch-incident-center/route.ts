@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getJson } from "../_client";
+import { getCachedJson } from "../_client";
 import type { LaunchIncidentCenter } from "../../../types";
 
 export async function GET(request: Request) {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const limit = url.searchParams.get("limit") || "8";
 
   try {
-    const center = await getJson<LaunchIncidentCenter>(
+    const center = await getCachedJson<LaunchIncidentCenter>(
       `/growth/launch-incident-center?limit=${encodeURIComponent(limit)}`,
     );
     return NextResponse.json({ ok: true, center });

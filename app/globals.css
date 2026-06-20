@@ -3781,6 +3781,176 @@ ul {
   margin-bottom: 10px;
 }
 
+.launchSharePack {
+  border: 1px solid rgba(49, 95, 140, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(232, 239, 246, 0.86), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchSharePackStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchSharePackStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchSharePackHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  border: 1px solid rgba(49, 95, 140, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 16px;
+}
+
+.launchSharePackHero strong,
+.launchSharePackFooter strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.launchSharePackHero p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.launchSharePackHero button,
+.launchSharePackActions button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--blue);
+  color: white;
+  padding: 0 14px;
+  font-weight: 950;
+}
+
+.launchSharePackGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchSharePackCard {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 12px;
+  border: 1px solid rgba(49, 95, 140, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchSharePackCard > div:first-child,
+.launchSharePackActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchSharePackCard h3,
+.launchSharePackCard p,
+.launchSharePackCard li,
+.launchSharePackCard pre,
+.launchSharePackCard small,
+.launchSharePackActions a,
+.launchSharePackFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchSharePackCard h3 {
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+.launchSharePackCard p,
+.launchSharePackCard li,
+.launchSharePackCard small,
+.launchSharePackFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchSharePackCard ul,
+.launchSharePackFooter ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchSharePackCard pre {
+  max-height: 180px;
+  overflow: auto;
+  border: 1px solid rgba(49, 95, 140, 0.16);
+  border-radius: 8px;
+  background: #f7faf9;
+  color: #25312d;
+  padding: 12px;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
+.launchSharePackActions a {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(49, 95, 140, 0.22);
+  border-radius: 8px;
+  color: var(--blue);
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.launchSharePackFooter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.5fr) minmax(280px, 0.7fr);
+  gap: 12px;
+}
+
+.launchSharePackFooter > div {
+  min-width: 0;
+  border: 1px solid rgba(49, 95, 140, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 16px;
+}
+
+.launchSharePackFooter strong {
+  margin-bottom: 10px;
+}
+
 .launchReadinessGate {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -5580,6 +5750,8 @@ ul {
   .launchSocialProofFooter,
   .launchObjectionHero,
   .launchObjectionFooter,
+  .launchSharePackHero,
+  .launchSharePackFooter,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -5671,6 +5843,7 @@ ul {
   .launchReferralSharePreview,
   .launchObjectionGrid,
   .launchObjectionCompareRows,
+  .launchSharePackGrid,
   .launchPublicOpsScoreGrid,
   .launchPublicOpsMetricGrid,
   .launchPublicOpsStageGrid,
@@ -5901,6 +6074,9 @@ ul {
   .launchObjectionGrid,
   .launchObjectionCompareRows,
   .launchObjectionFooter,
+  .launchSharePackHero,
+  .launchSharePackGrid,
+  .launchSharePackFooter,
   .launchReadinessMetricGrid,
   .launchReadinessCheckGrid,
   .launchReadinessFooter,

@@ -35,6 +35,7 @@ import { LaunchPublicOpsPanel } from "./LaunchPublicOpsPanel";
 import { LaunchReadinessGatePanel } from "./LaunchReadinessGatePanel";
 import { LaunchReferralMomentumPanel } from "./LaunchReferralMomentumPanel";
 import { LaunchRetentionLoopPanel } from "./LaunchRetentionLoopPanel";
+import { LaunchSharePackPanel } from "./LaunchSharePackPanel";
 import { LaunchTeamConsultPreviewPanel } from "./LaunchTeamConsultPreviewPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
@@ -1041,6 +1042,8 @@ export default async function LaunchPage() {
       </section>
 
       <LaunchObjectionKitPanel />
+
+      <LaunchSharePackPanel />
 
       <LaunchProofHubPanel />
 

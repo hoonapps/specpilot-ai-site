@@ -1614,6 +1614,37 @@ export type PublicLaunchObjectionKit = {
   next_actions: string[];
 };
 
+export type PublicLaunchShareVariant = {
+  channel: string;
+  label: string;
+  audience: string;
+  share_url: string;
+  headline: string;
+  body: string;
+  cta_label: string;
+  copy_text: string;
+  tracking_event: string;
+  proof_points: string[];
+  disclosure: string;
+};
+
+export type PublicLaunchSharePack = {
+  pack_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  share_score: number;
+  headline: string;
+  summary: string;
+  primary_url: string;
+  primary_copy: string;
+  variants: PublicLaunchShareVariant[];
+  proof_strip: string[];
+  trust_disclosures: string[];
+  measurement_events: string[];
+  next_actions: string[];
+};
+
 export type PublicProofEvidence = {
   title: string;
   status: OpsStatus;

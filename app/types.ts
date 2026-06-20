@@ -538,6 +538,66 @@ export type OpsLearningDashboard = {
   insights: OpsLearningInsight[];
 };
 
+export type IntegrationCategory =
+  | "price_api"
+  | "marketplace"
+  | "official_store"
+  | "review_feed"
+  | "benchmark"
+  | "email"
+  | "sms"
+  | "webhook"
+  | "observability"
+  | "affiliate"
+  | "scheduler";
+
+export type IntegrationStatus = "mock" | "configured" | "verified" | "blocked";
+
+export type IntegrationProviderRequest = {
+  provider_name: string;
+  category: IntegrationCategory;
+  status: IntegrationStatus;
+  credential_status: string;
+  rate_limit_per_hour: number;
+  retention_days: number;
+  endpoint: string;
+  evidence: string;
+  notes: string;
+};
+
+export type IntegrationProvider = IntegrationProviderRequest & {
+  integration_id: string;
+  workspace_id: string;
+  created_at: string;
+  updated_at: string;
+  last_verified_at: string | null;
+};
+
+export type IntegrationReadinessCheck = {
+  category: IntegrationCategory;
+  label: string;
+  status: OpsStatus;
+  provider_name: string | null;
+  metric: string;
+  recommendation: string;
+};
+
+export type IntegrationReadinessDashboard = {
+  workspace_id: string;
+  generated_at: string;
+  readiness_score: number;
+  status: OpsStatus;
+  verified_count: number;
+  configured_count: number;
+  blocker_count: number;
+  mock_count: number;
+  required_count: number;
+  summary: string;
+  required_actions: string[];
+  providers: IntegrationProvider[];
+  checks: IntegrationReadinessCheck[];
+};
+
 export type BetaReadinessCheck = {
   area: string;
   label: string;

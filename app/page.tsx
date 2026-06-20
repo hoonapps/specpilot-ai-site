@@ -32,6 +32,10 @@ import type {
   CheckoutReview,
   FeedbackRecord,
   IntakeDiagnosisResponse,
+  IntegrationCategory,
+  IntegrationProvider,
+  IntegrationReadinessDashboard,
+  IntegrationStatus,
   LaunchReadinessBundle,
   OpsLearningDashboard,
   OpsStatus,
@@ -227,6 +231,24 @@ export default function Home() {
   >("idle");
   const [latestLearningDashboard, setLatestLearningDashboard] =
     useState<OpsLearningDashboard | null>(null);
+  const [integrationProvider, setIntegrationProvider] = useState({
+    providerName: "가격 비교 공식 API",
+    category: "price_api" as IntegrationCategory,
+    status: "configured" as IntegrationStatus,
+    credentialStatus: "vault_connected",
+    rateLimit: "120",
+    retentionDays: "30",
+    endpoint: "https://api.example.com/prices",
+    evidence: "운영자가 credential vault 연결과 smoke test 범위를 확인했습니다.",
+    notes: "실제 API 키 값은 SpecPilot 저장소 밖의 vault에 보관합니다.",
+  });
+  const [integrationStatus, setIntegrationStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestIntegrationDashboard, setLatestIntegrationDashboard] =
+    useState<IntegrationReadinessDashboard | null>(null);
+  const [latestIntegrationProvider, setLatestIntegrationProvider] =
+    useState<IntegrationProvider | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -346,6 +368,9 @@ export default function Home() {
     setLatestPurchaseOutcome(null);
     setLearningStatus("idle");
     setLatestLearningDashboard(null);
+    setIntegrationStatus("idle");
+    setLatestIntegrationDashboard(null);
+    setLatestIntegrationProvider(null);
     setLaunchStatus("idle");
     setLatestLaunchDashboard(null);
     setFeedbackStatus("idle");
@@ -780,6 +805,68 @@ export default function Home() {
     }
   }
 
+  async function saveIntegrationProvider() {
+    setIntegrationStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/integrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider_name: integrationProvider.providerName,
+          category: integrationProvider.category,
+          status: integrationProvider.status,
+          credential_status: integrationProvider.credentialStatus,
+          rate_limit_per_hour: Number(integrationProvider.rateLimit || 0),
+          retention_days: Number(integrationProvider.retentionDays || 0),
+          endpoint: integrationProvider.endpoint,
+          evidence: integrationProvider.evidence,
+          notes: integrationProvider.notes,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`integration ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        provider?: IntegrationProvider;
+        dashboard?: IntegrationReadinessDashboard;
+      };
+      if (!payload.ok || !payload.provider || !payload.dashboard) {
+        throw new Error("integration rejected");
+      }
+      setLatestIntegrationProvider(payload.provider);
+      setLatestIntegrationDashboard(payload.dashboard);
+      setIntegrationStatus("sent");
+    } catch {
+      setIntegrationStatus("error");
+    }
+  }
+
+  async function loadIntegrationReadiness() {
+    setIntegrationStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/integrations", {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error(`integration ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        dashboard?: IntegrationReadinessDashboard;
+      };
+      if (!payload.ok || !payload.dashboard) {
+        throw new Error("integration readiness rejected");
+      }
+      setLatestIntegrationDashboard(payload.dashboard);
+      setIntegrationStatus("sent");
+    } catch {
+      setIntegrationStatus("error");
+    }
+  }
+
   async function submitFeedback(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFeedbackStatus("sending");
@@ -939,6 +1026,7 @@ export default function Home() {
           <a href="#purchase-outcome">구매 결과</a>
           <a href="#learning-insights">학습 인사이트</a>
           <a href="#advisor">구매 상담</a>
+          <a href="#integrations">외부 연동</a>
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -2401,6 +2489,274 @@ export default function Home() {
                   ))}
                 </ul>
               </div>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="integrationPanel" id="integrations">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Link2 size={16} />
+            외부 연동 준비도
+          </div>
+          <h2>공식 provider 연결 상태를 출시 게이트에 반영합니다</h2>
+          <p>
+            가격 API, 오픈마켓, 공식 스토어, 이메일, observability, scheduler
+            연동 상태를 등록하고 공개 전 blocker를 확인합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestIntegrationDashboard
+                  ? gateTone(latestIntegrationDashboard.status)
+                  : "warn"
+              }`}
+            >
+              {latestIntegrationDashboard
+                ? `${Math.round(latestIntegrationDashboard.readiness_score)}점 · verified ${latestIntegrationDashboard.verified_count}개`
+                : "연동 준비도 미조회"}
+            </span>
+            <span className="pill muted">integration-readiness</span>
+          </div>
+        </div>
+
+        <div className="integrationForm">
+          <div className="fieldGrid">
+            <label>
+              Provider
+              <input
+                value={integrationProvider.providerName}
+                onChange={(event) =>
+                  setIntegrationProvider((current) => ({
+                    ...current,
+                    providerName: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              카테고리
+              <select
+                value={integrationProvider.category}
+                onChange={(event) =>
+                  setIntegrationProvider((current) => ({
+                    ...current,
+                    category: event.target.value as IntegrationCategory,
+                  }))
+                }
+              >
+                <option value="price_api">가격 API</option>
+                <option value="marketplace">오픈마켓</option>
+                <option value="official_store">공식 스토어</option>
+                <option value="review_feed">리뷰 feed</option>
+                <option value="benchmark">벤치마크</option>
+                <option value="email">이메일</option>
+                <option value="sms">SMS</option>
+                <option value="webhook">Webhook</option>
+                <option value="observability">Observability</option>
+                <option value="affiliate">제휴</option>
+                <option value="scheduler">Scheduler</option>
+              </select>
+            </label>
+          </div>
+          <div className="fieldGrid">
+            <label>
+              상태
+              <select
+                value={integrationProvider.status}
+                onChange={(event) =>
+                  setIntegrationProvider((current) => ({
+                    ...current,
+                    status: event.target.value as IntegrationStatus,
+                  }))
+                }
+              >
+                <option value="configured">Configured</option>
+                <option value="verified">Verified</option>
+                <option value="mock">Mock</option>
+                <option value="blocked">Blocked</option>
+              </select>
+            </label>
+            <label>
+              Credential
+              <input
+                value={integrationProvider.credentialStatus}
+                onChange={(event) =>
+                  setIntegrationProvider((current) => ({
+                    ...current,
+                    credentialStatus: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <div className="fieldGrid">
+            <label>
+              시간당 한도
+              <input
+                inputMode="numeric"
+                value={integrationProvider.rateLimit}
+                onChange={(event) =>
+                  setIntegrationProvider((current) => ({
+                    ...current,
+                    rateLimit: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label>
+              보존 기간
+              <input
+                inputMode="numeric"
+                value={integrationProvider.retentionDays}
+                onChange={(event) =>
+                  setIntegrationProvider((current) => ({
+                    ...current,
+                    retentionDays: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label>
+            Endpoint
+            <input
+              value={integrationProvider.endpoint}
+              onChange={(event) =>
+                setIntegrationProvider((current) => ({
+                  ...current,
+                  endpoint: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            운영 증거
+            <textarea
+              value={integrationProvider.evidence}
+              onChange={(event) =>
+                setIntegrationProvider((current) => ({
+                  ...current,
+                  evidence: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            메모
+            <input
+              value={integrationProvider.notes}
+              onChange={(event) =>
+                setIntegrationProvider((current) => ({
+                  ...current,
+                  notes: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <div className="alertActionGrid">
+            <button
+              type="button"
+              disabled={
+                integrationStatus === "sending" ||
+                integrationProvider.providerName.trim().length < 2
+              }
+              onClick={saveIntegrationProvider}
+            >
+              {integrationStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Link2 size={18} />
+              )}
+              provider 등록
+            </button>
+            <button
+              type="button"
+              disabled={integrationStatus === "sending"}
+              onClick={loadIntegrationReadiness}
+            >
+              <Activity size={18} />
+              준비도만 조회
+            </button>
+          </div>
+          <p className="formStatus">
+            {statusMessage(
+              integrationStatus,
+              "외부 연동 준비도를 갱신했습니다.",
+              "외부 연동 준비도 처리에 실패했습니다.",
+            ) || "등록된 provider는 워크스페이스별 출시 게이트에 반영됩니다."}
+          </p>
+        </div>
+
+        {latestIntegrationDashboard ? (
+          <div className="integrationResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestIntegrationDashboard.status)}`}>
+                {latestIntegrationDashboard.status}
+              </span>
+              <span className="pill muted">
+                Workspace {latestIntegrationDashboard.workspace_id}
+              </span>
+              {latestIntegrationProvider ? (
+                <span className="pill ok">
+                  {latestIntegrationProvider.provider_name} 저장됨
+                </span>
+              ) : null}
+            </div>
+            <h3>{latestIntegrationDashboard.summary}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>준비도</dt>
+                <dd>{Math.round(latestIntegrationDashboard.readiness_score)}점</dd>
+              </div>
+              <div>
+                <dt>Verified</dt>
+                <dd>{latestIntegrationDashboard.verified_count}</dd>
+              </div>
+              <div>
+                <dt>Configured</dt>
+                <dd>{latestIntegrationDashboard.configured_count}</dd>
+              </div>
+              <div>
+                <dt>Blocker</dt>
+                <dd>{latestIntegrationDashboard.blocker_count}</dd>
+              </div>
+            </dl>
+
+            <div className="advisorLists">
+              <div>
+                <strong>필수 액션</strong>
+                <ul>
+                  {latestIntegrationDashboard.required_actions.slice(0, 5).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>최근 provider</strong>
+                <ul>
+                  {latestIntegrationDashboard.providers.slice(0, 5).map((provider) => (
+                    <li key={provider.integration_id}>
+                      {provider.provider_name} · {provider.category} · {provider.status}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestIntegrationDashboard.checks.slice(0, 8).map((check) => (
+                <article className="gateCheckCard" key={check.category}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(check.status)}`}>{check.status}</span>
+                    <span className="pill muted">{check.category}</span>
+                  </div>
+                  <h4>{check.label}</h4>
+                  <p>{check.metric}</p>
+                  <p>{check.recommendation}</p>
+                </article>
+              ))}
             </div>
           </div>
         ) : null}

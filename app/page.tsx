@@ -22,7 +22,7 @@ import {
   Sparkles,
   TimerReset,
 } from "lucide-react";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { demoResponse } from "./demo-data";
 import type {
   AlertEvaluationResponse,
@@ -53,6 +53,7 @@ import type {
   OpsStatus,
   PricingOpsBundle,
   CategoryMarketReport,
+  PurchaseOnboardingPlaybook,
   PurchaseDecisionBoard,
   PurchaseLink,
   PurchaseLinkGovernance,
@@ -151,6 +152,12 @@ export default function Home() {
   >("idle");
   const [latestDiagnosis, setLatestDiagnosis] =
     useState<IntakeDiagnosisResponse | null>(null);
+  const [onboardingStatus, setOnboardingStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [onboardingPlaybooks, setOnboardingPlaybooks] = useState<
+    PurchaseOnboardingPlaybook[]
+  >([]);
   const [statusText, setStatusText] = useState("데모 리포트");
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const [savedReportId, setSavedReportId] = useState<string | null>(null);
@@ -421,6 +428,46 @@ export default function Home() {
     }),
     [payload],
   );
+
+  useEffect(() => {
+    void loadOnboardingPlaybooks();
+  }, []);
+
+  async function loadOnboardingPlaybooks(category?: Category) {
+    setOnboardingStatus("sending");
+    const query = category ? `?category=${encodeURIComponent(category)}` : "";
+    try {
+      const response = await fetch(`/api/specpilot/onboarding-playbooks${query}`);
+      if (!response.ok) {
+        throw new Error(`onboarding ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        playbooks?: PurchaseOnboardingPlaybook[];
+      };
+      if (!payload.ok || !payload.playbooks) {
+        throw new Error("onboarding rejected");
+      }
+      setOnboardingPlaybooks(payload.playbooks);
+      setOnboardingStatus("sent");
+    } catch {
+      setOnboardingStatus("error");
+    }
+  }
+
+  function applyOnboardingPlaybook(playbook: PurchaseOnboardingPlaybook) {
+    setPayload({
+      query: playbook.hero_query,
+      category: playbook.category,
+      budget: String(playbook.budget_hint_krw),
+      purpose: playbook.purpose,
+      mustHaves: playbook.must_haves.join(", "),
+      exclusions: playbook.exclusions.join(", "),
+    });
+    setMarketReportCategory(playbook.category);
+    setStatusText(`${playbook.title} 플레이북 적용`);
+    window.location.hash = "analysis";
+  }
 
   function applyDiagnosedRequest() {
     if (!latestDiagnosis) {
@@ -1884,6 +1931,7 @@ export default function Home() {
           <a href="https://github.com/hoonapps/specpilot-ai" target="_blank">
             제품 API <ExternalLink size={14} />
           </a>
+          <a href="#onboarding">온보딩</a>
           <a href="#analysis">분석</a>
           <a href="#price-alert">가격 알림</a>
           <a href="#alert-ops">알림 운영</a>
@@ -1908,6 +1956,101 @@ export default function Home() {
           <a href="#trust">신뢰 정책</a>
         </nav>
       </header>
+
+      <section className="onboardingPanel" id="onboarding">
+        <div className="sectionHeader">
+          <div>
+            <div className="sectionLabel">
+              <Sparkles size={16} />
+              구매 온보딩 플레이북
+            </div>
+            <h2>처음 온 사용자도 바로 자기 조건으로 시작합니다</h2>
+            <p>
+              카테고리와 구매 상황별로 필요한 입력, 검수 게이트, 다음 액션을
+              먼저 보여주고 분석 폼까지 한 번에 연결합니다.
+            </p>
+          </div>
+          <div className="statusRow">
+            <span className={`pill ${onboardingStatus === "sent" ? "ok" : "muted"}`}>
+              {onboardingStatus === "sent"
+                ? `${onboardingPlaybooks.length}개 플레이북`
+                : onboardingStatus === "sending"
+                  ? "불러오는 중"
+                  : "공개 온보딩"}
+            </span>
+            <button
+              className="secondaryButton"
+              type="button"
+              onClick={() => loadOnboardingPlaybooks()}
+              disabled={onboardingStatus === "sending"}
+            >
+              {onboardingStatus === "sending" ? (
+                <Loader2 className="spin" size={15} />
+              ) : (
+                <TimerReset size={15} />
+              )}
+              새로고침
+            </button>
+          </div>
+        </div>
+
+        {onboardingPlaybooks.length > 0 ? (
+          <div className="onboardingGrid">
+            {onboardingPlaybooks.slice(0, 3).map((playbook) => (
+              <article className="onboardingCard" key={playbook.playbook_id}>
+                <div className="answerHeader">
+                  <span className="pill ok">
+                    {playbook.category === "desktop_pc" ? "데스크톱" : "노트북"}
+                  </span>
+                  <span className="pill muted">{playbook.recommended_plan_id}</span>
+                </div>
+                <h3>{playbook.title}</h3>
+                <p>{playbook.description}</p>
+                <div className="miniMetricGrid">
+                  <div>
+                    <span>예산 힌트</span>
+                    <strong>{won(playbook.budget_hint_krw)}</strong>
+                  </div>
+                  <div>
+                    <span>필수 입력</span>
+                    <strong>{playbook.readiness_slots.length}개</strong>
+                  </div>
+                </div>
+                <ul>
+                  {playbook.steps.slice(0, 3).map((step) => (
+                    <li key={step.title}>
+                      <strong>{step.title}</strong>
+                      <span>{step.output}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="tagWrap">
+                  {playbook.trust_gates.slice(0, 3).map((gate) => (
+                    <span className="miniTag" key={gate}>
+                      {gate}
+                    </span>
+                  ))}
+                </div>
+                <button
+                  className="primaryButton fullWidthButton"
+                  type="button"
+                  onClick={() => applyOnboardingPlaybook(playbook)}
+                >
+                  {playbook.cta_label}
+                </button>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="emptyState">
+            {statusMessage(
+              onboardingStatus,
+              "구매 온보딩 플레이북을 불러왔습니다.",
+              "제품 API 연결 후 온보딩 플레이북을 다시 불러오세요.",
+            ) || "공개 플레이북을 불러와 첫 분석 입력값으로 바로 적용합니다."}
+          </div>
+        )}
+      </section>
 
       <section className="workspace" id="analysis">
         <aside className="controlPanel">

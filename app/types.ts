@@ -577,6 +577,32 @@ export type PublicCategoryMarketReport = {
   report: CategoryMarketReport;
 };
 
+export type PurchaseOnboardingStep = {
+  title: string;
+  description: string;
+  required_inputs: string[];
+  output: string;
+};
+
+export type PurchaseOnboardingPlaybook = {
+  playbook_id: string;
+  category: Category;
+  persona: string;
+  title: string;
+  description: string;
+  hero_query: string;
+  purpose: string;
+  budget_hint_krw: number;
+  must_haves: string[];
+  exclusions: string[];
+  readiness_slots: string[];
+  steps: PurchaseOnboardingStep[];
+  trust_gates: string[];
+  recommended_plan_id: string;
+  cta_label: string;
+  cta_anchor: string;
+};
+
 export type GrowthEventType =
   | "analysis_view"
   | "recommendation_click"

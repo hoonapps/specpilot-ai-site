@@ -1396,6 +1396,120 @@ ul {
   font-weight: 950;
 }
 
+.onboardingPanel {
+  display: grid;
+  gap: 18px;
+  margin: 24px 24px 36px;
+  border: 1px solid rgba(12, 116, 108, 0.24);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 2.5vw, 30px);
+}
+
+.onboardingPanel h2 {
+  max-width: 760px;
+}
+
+.onboardingPanel p {
+  max-width: 880px;
+}
+
+.onboardingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.onboardingCard {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 16px;
+}
+
+.onboardingCard h3,
+.onboardingCard p,
+.onboardingCard li,
+.onboardingCard span {
+  overflow-wrap: anywhere;
+}
+
+.onboardingCard ul {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.onboardingCard li strong,
+.onboardingCard li span {
+  display: block;
+}
+
+.onboardingCard li strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.miniMetricGrid span {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.miniMetricGrid strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.tagWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.miniTag {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  border: 1px solid rgba(12, 116, 108, 0.2);
+  border-radius: 999px;
+  background: var(--teal-soft);
+  color: var(--teal);
+  padding: 0 9px;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 0 13px;
+  font-weight: 950;
+}
+
+.primaryButton {
+  border: 0;
+  background: var(--teal);
+  color: white;
+}
+
+.fullWidthButton {
+  width: 100%;
+}
+
 .alertActionGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1546,6 +1660,7 @@ ul {
 
   .cards.three,
   .cards.two,
+  .onboardingGrid,
   .scenarioGrid,
   .stressGrid,
   .criteriaMatrix,
@@ -1585,6 +1700,7 @@ ul {
   }
 
   .workspace,
+  .onboardingPanel,
   .publicReport,
   .signalStrip,
   .trustPanel,
@@ -1662,8 +1778,14 @@ ul {
     padding-top: 14px;
   }
 
+  .sectionHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .fieldGrid,
   .diagnosisActions,
+  .onboardingGrid,
   .cards.three,
   .cards.two,
   .scenarioGrid,

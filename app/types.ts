@@ -1640,6 +1640,63 @@ export type PublicOwnershipCostKit = {
   next_actions: string[];
 };
 
+export type WarrantyReturnRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  purchase_price_krw: number;
+  return_window_days: number;
+  exchange_window_days: number;
+  dead_on_arrival_days: number;
+  warranty_months: number;
+  opened_box_return_allowed: boolean | null;
+  warranty_provider: string;
+  warranty_transferable: boolean | null;
+  return_shipping_fee_krw: number;
+  restocking_fee_percent: number;
+  policy_text: string;
+  risk_terms: string[];
+  source: string;
+};
+
+export type WarrantyReturnCheck = {
+  check_id: string;
+  label: string;
+  status: OpsStatus;
+  finding: string;
+  recommendation: string;
+};
+
+export type WarrantyReturnCostLine = {
+  line_id: string;
+  label: string;
+  amount_krw: number;
+  explanation: string;
+};
+
+export type PublicWarrantyReturnKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  priority: OpsStatus;
+  protection_score: number;
+  estimated_return_cost_krw: number;
+  headline: string;
+  summary: string;
+  policy_checks: WarrantyReturnCheck[];
+  cost_lines: WarrantyReturnCostLine[];
+  seller_questions: string[];
+  evidence_checklist: string[];
+  buyer_message: string;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

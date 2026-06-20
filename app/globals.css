@@ -5213,6 +5213,181 @@ ul {
   font-weight: 950;
 }
 
+.launchWarranty {
+  background: #f7fbff;
+}
+
+.launchWarrantyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchWarrantyForm,
+.launchWarrantyResult,
+.launchWarrantyScore,
+.launchWarrantyCheckGrid article,
+.launchWarrantyCostGrid article,
+.launchWarrantyColumns > div,
+.launchWarrantyMessage {
+  border: 1px solid rgba(37, 99, 142, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(37, 99, 142, 0.07);
+}
+
+.launchWarrantyForm,
+.launchWarrantyResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchWarrantyControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchWarrantyControls.dense {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchWarrantyForm label {
+  display: grid;
+  gap: 7px;
+  color: #25638e;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchWarrantyForm input,
+.launchWarrantyForm select,
+.launchWarrantyForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(37, 99, 142, 0.18);
+  border-radius: 8px;
+  background: #f7fbff;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchWarrantyForm textarea {
+  resize: vertical;
+}
+
+.launchWarrantyForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchWarrantyResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchWarrantyResult p,
+.launchWarrantyResult li,
+.launchWarrantyResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchWarrantyScore {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.launchWarrantyScore strong {
+  color: #25638e;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1;
+}
+
+.launchWarrantyScore span,
+.launchWarrantyCheckGrid span,
+.launchWarrantyCostGrid span {
+  color: #25638e;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchWarrantyCheckGrid,
+.launchWarrantyCostGrid,
+.launchWarrantyColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchWarrantyCheckGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchWarrantyCostGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchWarrantyCheckGrid article,
+.launchWarrantyCostGrid article,
+.launchWarrantyColumns > div,
+.launchWarrantyMessage {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchWarrantyCheckGrid span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.launchWarrantyCheckGrid article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchWarrantyCheckGrid article.warning {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchWarrantyCheckGrid article.blocker {
+  border-color: rgba(220, 38, 38, 0.26);
+  background: #fef2f2;
+}
+
+.launchWarrantyCostGrid strong,
+.launchWarrantyColumns strong,
+.launchWarrantyMessage strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchWarrantyColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchWarrantyColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -9063,6 +9238,7 @@ ul {
   .launchFirstBootGrid,
   .launchUpgradeGrid,
   .launchOwnershipGrid,
+  .launchWarrantyGrid,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchObjectionHero,
@@ -9228,6 +9404,11 @@ ul {
   .launchOwnershipLineGrid,
   .launchOwnershipScenarioGrid,
   .launchOwnershipColumns,
+  .launchWarrantyControls,
+  .launchWarrantyControls.dense,
+  .launchWarrantyCheckGrid,
+  .launchWarrantyCostGrid,
+  .launchWarrantyColumns,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
@@ -9544,6 +9725,12 @@ ul {
   .launchOwnershipLineGrid,
   .launchOwnershipScenarioGrid,
   .launchOwnershipColumns,
+  .launchWarrantyGrid,
+  .launchWarrantyControls,
+  .launchWarrantyControls.dense,
+  .launchWarrantyCheckGrid,
+  .launchWarrantyCostGrid,
+  .launchWarrantyColumns,
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,

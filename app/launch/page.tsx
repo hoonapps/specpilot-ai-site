@@ -66,6 +66,7 @@ import { SetupCompatibilityPanel } from "./SetupCompatibilityPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
 import { UpgradeReadinessPanel } from "./UpgradeReadinessPanel";
+import { WarrantyReturnPanel } from "./WarrantyReturnPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -1407,6 +1408,8 @@ export default async function LaunchPage() {
       <UpgradeReadinessPanel />
 
       <OwnershipCostPanel />
+
+      <WarrantyReturnPanel />
 
       <ShoppingCartIntakePanel />
 

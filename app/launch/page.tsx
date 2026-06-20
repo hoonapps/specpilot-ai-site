@@ -23,6 +23,7 @@ import type {
 } from "../types";
 import { absoluteUrl, siteConfig } from "../site-config";
 import { LaunchActionRouterPanel } from "./LaunchActionRouterPanel";
+import { LaunchActivationOfferPanel } from "./LaunchActivationOfferPanel";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
@@ -1124,6 +1125,8 @@ export default async function LaunchPage() {
       <LaunchCommunityKitPanel />
 
       <LaunchMediaKitPanel />
+
+      <LaunchActivationOfferPanel />
 
       <LaunchRetentionLoopPanel />
 

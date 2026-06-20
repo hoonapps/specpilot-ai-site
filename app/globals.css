@@ -4915,6 +4915,167 @@ ul {
   gap: 8px;
 }
 
+.launchActivationOffer {
+  border: 1px solid rgba(29, 89, 78, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchActivationStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchActivationStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchActivationMetricGrid,
+.launchActivationGrid,
+.launchActivationFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchActivationMetricGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.launchActivationGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.launchActivationFooter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchActivationMetricGrid article,
+.launchActivationPrimary,
+.launchActivationOfferCard,
+.launchActivationFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: #f7fcfa;
+  padding: 16px;
+}
+
+.launchActivationMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchActivationMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.launchActivationPrimary {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  background: #ffffff;
+}
+
+.launchActivationPrimary > div,
+.launchActivationOfferCard > div,
+.launchActivationFooter strong,
+.launchActivationEvents {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchActivationPrimary strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.launchActivationPrimary p,
+.launchActivationOfferCard h3,
+.launchActivationOfferCard p,
+.launchActivationOfferCard strong,
+.launchActivationOfferCard small,
+.launchActivationFooter li,
+.launchActivationPrompt span {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchActivationPrimary p,
+.launchActivationOfferCard p,
+.launchActivationOfferCard small,
+.launchActivationFooter li,
+.launchActivationPrompt span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchActivationOfferCard {
+  background: #ffffff;
+}
+
+.launchActivationOfferCard h3 {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.launchActivationOfferCard > strong {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.launchActivationOfferCard a,
+.launchActivationPrompt {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(12, 116, 108, 0.24);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--teal);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.launchActivationPrompt {
+  justify-content: flex-start;
+  width: 100%;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.launchActivationFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchRetentionLoop {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -6635,6 +6796,10 @@ ul {
   .launchMediaMetricGrid,
   .launchMediaGrid,
   .launchMediaFooter,
+  .launchActivationMetricGrid,
+  .launchActivationGrid,
+  .launchActivationFooter,
+  .launchActivationPrimary,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -6981,6 +7146,10 @@ ul {
   .launchMediaMetricGrid,
   .launchMediaGrid,
   .launchMediaFooter,
+  .launchActivationMetricGrid,
+  .launchActivationGrid,
+  .launchActivationFooter,
+  .launchActivationPrimary,
   .launchRetentionMetricGrid,
   .launchRetentionSignalGrid,
   .launchRetentionPlayGrid,

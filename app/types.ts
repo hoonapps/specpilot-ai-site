@@ -1649,6 +1649,37 @@ export type LaunchMediaKit = {
   next_actions: string[];
 };
 
+export type LaunchActivationOffer = {
+  key: string;
+  label: string;
+  audience: string;
+  trigger: string;
+  cta_label: string;
+  cta_path: string;
+  value_prop: string;
+  proof: string;
+  friction: string;
+  tracking_event: string;
+  priority_score: number;
+};
+
+export type LaunchActivationOfferDashboard = {
+  offer_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  activation_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  primary_offer: LaunchActivationOffer;
+  offers: LaunchActivationOffer[];
+  handoff_prompts: string[];
+  proof_points: string[];
+  tracking_events: string[];
+  next_actions: string[];
+};
+
 export type PublicAcquisitionSurface = {
   key: string;
   label: string;

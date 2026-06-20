@@ -67,7 +67,10 @@ const starterPayload: AnalyzePayload = {
   channels: ["price_compare", "open_market", "official_store"],
 };
 
-function won(value: number) {
+function won(value: number | null | undefined) {
+  if (value === null || value === undefined) {
+    return "확인 필요";
+  }
   return new Intl.NumberFormat("ko-KR").format(value) + "원";
 }
 
@@ -1960,6 +1963,118 @@ export default function Home() {
                 ))}
               </ul>
             </article>
+          </section>
+
+          <section className="decisionProofPanel" aria-label="구매 결정 강화 근거">
+            <div className="sectionHeader compact">
+              <div>
+                <p className="sectionLabel">Decision proof</p>
+                <h2>우선순위와 조건 변화에도 추천이 버티는지 확인합니다</h2>
+              </div>
+              <span className="pill muted">
+                scenario {result.report.scenario_options?.length ?? 0} · stress{" "}
+                {result.report.stress_tests?.length ?? 0}
+              </span>
+            </div>
+
+            <div className="scenarioGrid">
+              {(result.report.scenario_options || []).map((option) => (
+                <article className="scenarioCard" key={option.scenario}>
+                  <span className="rank">{option.label}</span>
+                  <h3>{option.model_name}</h3>
+                  <dl className="miniMetricGrid">
+                    <div>
+                      <dt>실구매가</dt>
+                      <dd>{won(option.effective_price_krw)}</dd>
+                    </div>
+                    <div>
+                      <dt>점수</dt>
+                      <dd>{option.total_score}점</dd>
+                    </div>
+                  </dl>
+                  <p>{option.why}</p>
+                  <small>{option.tradeoff}</small>
+                </article>
+              ))}
+            </div>
+
+            <div className="stressGrid">
+              {(result.report.stress_tests || []).map((item) => (
+                <article className="stressCard" key={item.scenario}>
+                  <div className="answerHeader">
+                    <span className={`pill ${statusTone(item.status)}`}>
+                      {item.label}
+                    </span>
+                    <span className="pill muted">{won(item.budget_krw)}</span>
+                  </div>
+                  <h3>{item.selected_model_name || "선택 보류"}</h3>
+                  <p>{item.impact}</p>
+                  <small>{item.recommendation}</small>
+                </article>
+              ))}
+            </div>
+
+            <div className="criteriaMatrix">
+              {(result.report.criteria_matches || []).slice(0, 3).map((match) => (
+                <article key={match.product_id}>
+                  <div className="answerHeader">
+                    <span className="pill ok">충족 {match.matched_count}</span>
+                    <span className="pill warn">확인 {match.warning_count}</span>
+                    <span
+                      className={`pill ${
+                        match.blocker_count ? "danger" : "muted"
+                      }`}
+                    >
+                      차단 {match.blocker_count}
+                    </span>
+                  </div>
+                  <h3>{match.model_name}</h3>
+                  <p>{match.summary}</p>
+                  <div className="coverageBar" aria-label={`조건 충족률 ${match.coverage_score}점`}>
+                    <span style={{ width: `${match.coverage_score}%` }} />
+                  </div>
+                  <ul>
+                    {match.items.slice(0, 3).map((item) => (
+                      <li key={`${match.product_id}-${item.check_type}-${item.criterion}`}>
+                        {item.criterion} · {item.status} · {item.evidence}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+
+            {result.report.execution_plan ? (
+              <div className="executionPackage">
+                <div>
+                  <span className="sectionLabel">구매 실행 패키지</span>
+                  <h3>{result.report.execution_plan.headline}</h3>
+                  <p>{result.report.execution_plan.primary_action}</p>
+                </div>
+                <div className="advisorLists">
+                  <div>
+                    <strong>결제 전 실행</strong>
+                    <ul>
+                      {result.report.execution_plan.checkout_steps
+                        .slice(0, 4)
+                        .map((step) => (
+                          <li key={step}>{step}</li>
+                        ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <strong>판매자 확인 질문</strong>
+                    <ul>
+                      {result.report.execution_plan.seller_questions
+                        .slice(0, 4)
+                        .map((question) => (
+                          <li key={question}>{question}</li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </section>
         </section>
       </section>

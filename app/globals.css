@@ -18,9 +18,13 @@
 
 html {
   scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
+  max-width: 100%;
+  overflow-x: hidden;
   min-width: 320px;
   margin: 0;
   background: var(--bg);
@@ -34,7 +38,15 @@ button,
 input,
 select,
 textarea {
+  max-width: 100%;
   font: inherit;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-width: 0;
 }
 
 button {
@@ -150,6 +162,10 @@ section[id] {
 .visualPanel,
 .summaryPanel,
 .card,
+.scenarioCard,
+.stressCard,
+.criteriaMatrix article,
+.executionPackage,
 .trustPanel,
 .conversionCard {
   border: 1px solid var(--line);
@@ -516,6 +532,101 @@ textarea:focus {
 }
 
 .card {
+  box-shadow: none;
+}
+
+.decisionProofPanel {
+  display: grid;
+  gap: 16px;
+  border: 1px solid rgba(12, 116, 108, 0.2);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: clamp(16px, 2.3vw, 24px);
+}
+
+.sectionHeader.compact {
+  padding: 0;
+}
+
+.scenarioGrid,
+.stressGrid,
+.criteriaMatrix {
+  display: grid;
+  gap: 14px;
+}
+
+.scenarioGrid,
+.stressGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.criteriaMatrix {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.scenarioCard,
+.stressCard,
+.criteriaMatrix article {
+  min-width: 0;
+  box-shadow: none;
+  padding: 16px;
+}
+
+.scenarioCard small,
+.stressCard small {
+  display: block;
+  color: var(--muted);
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.miniMetricGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.miniMetricGrid div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 10px;
+}
+
+.miniMetricGrid dt {
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.miniMetricGrid dd {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.coverageBar {
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #edf2ef;
+}
+
+.coverageBar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--teal), #46a997);
+}
+
+.executionPackage {
+  display: grid;
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
   box-shadow: none;
 }
 
@@ -1352,6 +1463,10 @@ ul {
 
   .cards.three,
   .cards.two,
+  .scenarioGrid,
+  .stressGrid,
+  .criteriaMatrix,
+  .executionPackage,
   .signalStrip,
   .purchaseLinkGrid {
     grid-template-columns: 1fr 1fr;
@@ -1361,6 +1476,8 @@ ul {
 @media (max-width: 720px) {
   .topbar {
     position: static;
+    width: 100%;
+    max-width: 100%;
     align-items: flex-start;
     flex-direction: column;
     gap: 12px;
@@ -1368,7 +1485,17 @@ ul {
   }
 
   .topbar nav {
-    justify-content: flex-start;
+    display: grid;
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+  }
+
+  .topbar a {
+    justify-content: center;
+    padding: 0 6px;
+    text-align: center;
   }
 
   .workspace,
@@ -1391,8 +1518,50 @@ ul {
   .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     padding-right: 14px;
     padding-left: 14px;
+  }
+
+  .trustPanel,
+  .advisorPanel,
+  .sourceCheckPanel,
+  .sourceMonitorPanel,
+  .alertPanel,
+  .alertOpsPanel,
+  .purchaseLinkPanel,
+  .completionPanel,
+  .checkoutPanel,
+  .outcomePanel,
+  .learningPanel,
+  .observabilityPanel,
+  .integrationPanel,
+  .betaOpsPanel,
+  .pricingOpsPanel,
+  .launchPanel {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .controlPanel,
+  .decisionBoard,
+  .publicHero > div,
+  .publicHeroCard,
+  .card,
+  .scenarioCard,
+  .stressCard,
+  .criteriaMatrix article {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: clamp(30px, 8vw, 40px);
+    line-height: 1.12;
+    word-break: normal;
+    overflow-wrap: anywhere;
   }
 
   .workspace {
@@ -1403,6 +1572,10 @@ ul {
   .diagnosisActions,
   .cards.three,
   .cards.two,
+  .scenarioGrid,
+  .stressGrid,
+  .criteriaMatrix,
+  .executionPackage,
   .signalStrip,
   .publicHero,
   .publicGrid,

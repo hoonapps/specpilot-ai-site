@@ -86,6 +86,48 @@ export type DealWindow = {
   monitoring_plan: string[];
 };
 
+export type ScenarioOption = {
+  scenario: string;
+  label: string;
+  product_id: string;
+  model_name: string;
+  effective_price_krw: number;
+  total_score: number;
+  why: string;
+  tradeoff: string;
+};
+
+export type CriterionMatchItem = {
+  check_type: string;
+  criterion: string;
+  status: OpsStatus;
+  evidence: string;
+};
+
+export type ProductCriteriaMatch = {
+  product_id: string;
+  model_name: string;
+  coverage_score: number;
+  matched_count: number;
+  warning_count: number;
+  blocker_count: number;
+  summary: string;
+  items: CriterionMatchItem[];
+};
+
+export type PurchaseStressTest = {
+  scenario: string;
+  label: string;
+  assumption: string;
+  status: OpsStatus;
+  budget_krw: number | null;
+  selected_product_id: string | null;
+  selected_model_name: string | null;
+  price_gap_krw: number;
+  impact: string;
+  recommendation: string;
+};
+
 export type PriceAlertPlan = {
   product_id: string;
   current_price_krw: number;
@@ -124,6 +166,9 @@ export type AnalyzeResponse = {
     comparison_table?: ComparisonRow[];
     verification_flags?: string[];
     citations?: string[];
+    scenario_options?: ScenarioOption[];
+    criteria_matches?: ProductCriteriaMatch[];
+    stress_tests?: PurchaseStressTest[];
     execution_plan?: {
       product_id: string | null;
       model_name: string | null;

@@ -176,6 +176,78 @@ export default async function PublicReportPage({ params }: PageProps) {
         </div>
       </section>
 
+      <section className="publicSection">
+        <div className="sectionHeader">
+          <div>
+            <p className="sectionLabel">결정 검증</p>
+            <h2>대안 시나리오와 스트레스 테스트까지 같이 봅니다</h2>
+          </div>
+        </div>
+
+        <div className="scenarioGrid publicCards">
+          {(purchase.scenario_options || []).map((option) => (
+            <article className="scenarioCard" key={option.scenario}>
+              <span className="rank">{option.label}</span>
+              <h3>{option.model_name}</h3>
+              <dl className="miniMetricGrid">
+                <div>
+                  <dt>실구매가</dt>
+                  <dd>{won(option.effective_price_krw)}</dd>
+                </div>
+                <div>
+                  <dt>점수</dt>
+                  <dd>{option.total_score}점</dd>
+                </div>
+              </dl>
+              <p>{option.why}</p>
+              <small>{option.tradeoff}</small>
+            </article>
+          ))}
+        </div>
+
+        <div className="stressGrid publicCards">
+          {(purchase.stress_tests || []).map((item) => (
+            <article className="stressCard" key={item.scenario}>
+              <div className="answerHeader">
+                <span className={`pill ${statusTone(item.status)}`}>
+                  {item.label}
+                </span>
+                <span className="pill muted">{won(item.budget_krw)}</span>
+              </div>
+              <h3>{item.selected_model_name || "선택 보류"}</h3>
+              <p>{item.impact}</p>
+              <small>{item.recommendation}</small>
+            </article>
+          ))}
+        </div>
+
+        <div className="criteriaMatrix publicCriteriaMatrix">
+          {(purchase.criteria_matches || []).slice(0, 3).map((match) => (
+            <article key={match.product_id}>
+              <div className="answerHeader">
+                <span className="pill ok">충족 {match.matched_count}</span>
+                <span className="pill warn">확인 {match.warning_count}</span>
+                <span className={`pill ${match.blocker_count ? "danger" : "muted"}`}>
+                  차단 {match.blocker_count}
+                </span>
+              </div>
+              <h3>{match.model_name}</h3>
+              <p>{match.summary}</p>
+              <div className="coverageBar" aria-label={`조건 충족률 ${match.coverage_score}점`}>
+                <span style={{ width: `${match.coverage_score}%` }} />
+              </div>
+              <ul>
+                {match.items.slice(0, 3).map((item) => (
+                  <li key={`${match.product_id}-${item.check_type}-${item.criterion}`}>
+                    {item.criterion} · {item.status} · {item.evidence}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="publicGrid">
         <article className="publicPanel">
           <div className="sectionLabel">

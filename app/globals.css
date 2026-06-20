@@ -4198,6 +4198,130 @@ ul {
   align-items: center;
 }
 
+.launchPreflight {
+  border: 1px solid rgba(12, 116, 108, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(246, 250, 248, 0.94)),
+    #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchPreflightDecision {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchPreflightDecision small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchPreflightMetricGrid,
+.launchPreflightCheckGrid,
+.launchPreflightFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchPreflightMetricGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchPreflightCheckGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchPreflightFooter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchPreflightMetricGrid article,
+.launchPreflightCheck,
+.launchPreflightFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchPreflightMetricGrid span,
+.launchPreflightCheck small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchPreflightMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.4vw, 30px);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.launchPreflightCheck > div,
+.launchPreflightFooter strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchPreflightCheck a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.launchPreflightCheck h3,
+.launchPreflightCheck p,
+.launchPreflightCheck strong,
+.launchPreflightFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchPreflightCheck h3 {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.launchPreflightCheck p,
+.launchPreflightCheck strong,
+.launchPreflightFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchPreflightFooter strong {
+  color: var(--ink);
+}
+
+.launchPreflightFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchSmokePanel {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -7036,6 +7160,9 @@ ul {
   .launchSharePackFooter,
   .launchActionRouterBody,
   .launchActionRouterFooter,
+  .launchPreflightMetricGrid,
+  .launchPreflightCheckGrid,
+  .launchPreflightFooter,
   .launchSmokeMetricGrid,
   .launchSmokeCheckGrid,
   .launchSmokeFooter,
@@ -7392,6 +7519,9 @@ ul {
   .launchReadinessMetricGrid,
   .launchReadinessCheckGrid,
   .launchReadinessFooter,
+  .launchPreflightMetricGrid,
+  .launchPreflightCheckGrid,
+  .launchPreflightFooter,
   .launchSmokeMetricGrid,
   .launchSmokeCheckGrid,
   .launchSmokeFooter,

@@ -2769,6 +2769,33 @@ export type PublicLaunchSmokeDashboard = {
   next_actions: string[];
 };
 
+export type PublicLaunchPreflightCheck = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  owner: string;
+  metric: string;
+  evidence: string;
+  required_action: string;
+  public_path: string;
+};
+
+export type PublicLaunchPreflightDashboard = {
+  preflight_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  go_decision: string;
+  preflight_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  checks: PublicLaunchPreflightCheck[];
+  launch_brief: string[];
+  tracking_events: string[];
+  next_actions: string[];
+};
+
 export type DataInventoryItem = {
   table_name: string;
   label: string;

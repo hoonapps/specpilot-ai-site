@@ -37,6 +37,7 @@ import { LaunchIncidentCenterPanel } from "./LaunchIncidentCenterPanel";
 import { LaunchMediaKitPanel } from "./LaunchMediaKitPanel";
 import { LaunchObjectionKitPanel } from "./LaunchObjectionKitPanel";
 import { LaunchProofHubPanel } from "./LaunchProofHubPanel";
+import { LaunchPreflightPanel } from "./LaunchPreflightPanel";
 import { LaunchPublicOpsPanel } from "./LaunchPublicOpsPanel";
 import { LaunchReadinessGatePanel } from "./LaunchReadinessGatePanel";
 import { LaunchReferralMomentumPanel } from "./LaunchReferralMomentumPanel";
@@ -1124,6 +1125,8 @@ export default async function LaunchPage() {
       <LaunchProofHubPanel />
 
       <LaunchReadinessGatePanel />
+
+      <LaunchPreflightPanel />
 
       <LaunchSmokePanel />
 

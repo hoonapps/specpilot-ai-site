@@ -3552,6 +3552,136 @@ ul {
   font-size: 18px;
 }
 
+.launchPublicDistribution {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchDistributionRefresh {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(12, 116, 108, 0.24);
+  border-radius: 8px;
+  background: #f5fbf8;
+  color: var(--teal);
+  font-weight: 950;
+}
+
+.launchDistributionRefresh:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.launchDistributionSummary,
+.launchDistributionPublicGrid,
+.launchDistributionGuardrails {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchDistributionSummary article,
+.launchDistributionPublicSlot,
+.launchDistributionGuardrails > div,
+.launchDistributionEmpty {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchDistributionSummary strong,
+.launchDistributionPublicSlot h3,
+.launchDistributionPublicSlot p,
+.launchDistributionPublicSlot li,
+.launchDistributionPublicSlot dd,
+.launchDistributionGuardrails li,
+.launchDistributionGuardrails p {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchDistributionSummary strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.4vw, 30px);
+  line-height: 1.1;
+}
+
+.launchDistributionSummary p,
+.launchDistributionPublicSlot p,
+.launchDistributionPublicSlot li,
+.launchDistributionPublicSlot dd,
+.launchDistributionGuardrails li,
+.launchDistributionGuardrails p,
+.launchDistributionEmpty {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchDistributionPublicSlot > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchDistributionPublicSlot h3 {
+  font-size: 18px;
+}
+
+.launchDistributionPublicSlot dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.launchDistributionPublicSlot dt {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.launchDistributionPublicSlot ul,
+.launchDistributionGuardrails ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchDistributionPublicSlot button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ink);
+  color: white;
+  font-weight: 950;
+}
+
+.launchDistributionGuardrails strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 15px;
+}
+
 .launchConversionGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4805,6 +4935,9 @@ ul {
   .launchSocialProofMetrics,
   .launchSocialProofGrid,
   .launchSocialProofFooter,
+  .launchDistributionSummary,
+  .launchDistributionPublicGrid,
+  .launchDistributionGuardrails,
   .launchPublicGrid,
   .launchPublicGrid.three,
   .launchMarketGrid,

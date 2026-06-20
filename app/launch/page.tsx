@@ -26,6 +26,7 @@ import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
+import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
@@ -1108,6 +1109,8 @@ export default async function LaunchPage() {
       </section>
 
       <LaunchConversionPanel />
+
+      <LaunchDistributionPlanPanel />
 
       <section className="launchPublicSection launchSharePanel">
         <div>

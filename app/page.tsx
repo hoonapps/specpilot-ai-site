@@ -24,6 +24,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { demoResponse } from "./demo-data";
 import type {
   AlertEvaluationResponse,
+  AlertOpsBundle,
   AlertSubscription,
   AnalyzeAndShareResponse,
   AnalyzePayload,
@@ -200,6 +201,20 @@ export default function Home() {
     useState<AlertSubscription | null>(null);
   const [latestAlertEvaluation, setLatestAlertEvaluation] =
     useState<AlertEvaluationResponse | null>(null);
+  const [alertOps, setAlertOps] = useState({
+    channel: "email",
+    displayName: "운영 이메일 outbox",
+    target: "ops@example.com",
+    retryLimit: "3",
+    enabled: true,
+    dryRun: false,
+    limit: "20",
+  });
+  const [alertOpsStatus, setAlertOpsStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestAlertOpsBundle, setLatestAlertOpsBundle] =
+    useState<AlertOpsBundle | null>(null);
   const [purchaseLink, setPurchaseLink] = useState({
     sellerName: "공식 스토어",
     url: "https://shop.example.com/specpilot-desktop",
@@ -426,6 +441,8 @@ export default function Home() {
     setAlertEvalStatus("idle");
     setLatestAlertSubscription(null);
     setLatestAlertEvaluation(null);
+    setAlertOpsStatus("idle");
+    setLatestAlertOpsBundle(null);
     setPurchaseLinkStatus("idle");
     setLatestPurchaseLink(null);
     setLatestPurchaseLinkGovernance(null);
@@ -807,6 +824,100 @@ export default function Home() {
       setAlertEvalStatus("sent");
     } catch {
       setAlertEvalStatus("error");
+    }
+  }
+
+  async function loadAlertOps() {
+    setAlertOpsStatus("sending");
+    try {
+      const response = await fetch(
+        `/api/specpilot/alert-ops?limit=${encodeURIComponent(alertOps.limit)}`,
+      );
+      if (!response.ok) {
+        throw new Error(`alert ops ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: AlertOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("alert ops rejected");
+      }
+      setLatestAlertOpsBundle(payload.bundle);
+      setAlertOpsStatus("sent");
+    } catch {
+      setAlertOpsStatus("error");
+    }
+  }
+
+  async function saveAlertChannel(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setAlertOpsStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/alert-ops", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "upsert_channel",
+          limit: Number(alertOps.limit) || 20,
+          channel: {
+            channel: alertOps.channel,
+            display_name: alertOps.displayName,
+            target: alertOps.target,
+            enabled: alertOps.enabled,
+            retry_limit: Number(alertOps.retryLimit) || 3,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`alert channel ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: AlertOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("alert channel rejected");
+      }
+      setLatestAlertOpsBundle(payload.bundle);
+      setAlertOpsStatus("sent");
+    } catch {
+      setAlertOpsStatus("error");
+    }
+  }
+
+  async function dispatchAlertDeliveries() {
+    setAlertOpsStatus("sending");
+    try {
+      const eventIds =
+        latestAlertEvaluation?.events
+          .filter((event) => event.delivery_status === "queued")
+          .map((event) => event.event_id) || [];
+      const response = await fetch("/api/specpilot/alert-ops", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "dispatch",
+          event_ids: eventIds,
+          dry_run: alertOps.dryRun,
+          limit: Number(alertOps.limit) || 20,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`alert dispatch ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: AlertOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("alert dispatch rejected");
+      }
+      setLatestAlertOpsBundle(payload.bundle);
+      setAlertOpsStatus("sent");
+      await loadLaunchReadiness();
+    } catch {
+      setAlertOpsStatus("error");
     }
   }
 
@@ -1562,6 +1673,7 @@ export default function Home() {
           </a>
           <a href="#analysis">분석</a>
           <a href="#price-alert">가격 알림</a>
+          <a href="#alert-ops">알림 운영</a>
           <a href="#purchase-links">구매 링크</a>
           <a href="#completion-reports">완료 리포트</a>
           <a href="#source-check">상품 검수</a>
@@ -2070,6 +2182,281 @@ export default function Home() {
                   ) : (
                     <li>목표가 도달 테스트를 실행하면 큐 이벤트가 표시됩니다.</li>
                   )}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="alertOpsPanel" id="alert-ops">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Send size={16} />
+            알림 발송 운영
+          </div>
+          <h2>목표가 큐를 실제 발송 outbox까지 추적합니다</h2>
+          <p>
+            이메일, 웹훅, SMS 채널 설정과 queued 알림 dispatch, 성공/실패,
+            재시도 예정 상태를 묶어 출시 게이트의 발송 운영 증거로 남깁니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestAlertOpsBundle?.dispatch?.failed_count ? "warn" : "ok"
+              }`}
+            >
+              delivery {latestAlertOpsBundle?.deliveries.length ?? 0}건
+            </span>
+            <span className="pill muted">
+              queued {latestAlertOpsBundle?.events.length ?? latestAlertEvaluation?.events.length ?? 0}건
+            </span>
+          </div>
+        </div>
+
+        <form className="conversionForm advisorForm" onSubmit={saveAlertChannel}>
+          <div className="fieldGrid">
+            <label>
+              운영 채널
+              <select
+                value={alertOps.channel}
+                onChange={(event) =>
+                  setAlertOps((current) => ({
+                    ...current,
+                    channel: event.target.value,
+                  }))
+                }
+              >
+                <option value="email">이메일</option>
+                <option value="webhook">웹훅</option>
+                <option value="sms">SMS</option>
+              </select>
+            </label>
+            <label>
+              재시도 한도
+              <input
+                inputMode="numeric"
+                value={alertOps.retryLimit}
+                onChange={(event) =>
+                  setAlertOps((current) => ({
+                    ...current,
+                    retryLimit: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label>
+            채널 이름
+            <input
+              value={alertOps.displayName}
+              onChange={(event) =>
+                setAlertOps((current) => ({
+                  ...current,
+                  displayName: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            대상 주소
+            <input
+              value={alertOps.target}
+              onChange={(event) =>
+                setAlertOps((current) => ({
+                  ...current,
+                  target: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <div className="fieldGrid">
+            <label>
+              조회/발송 한도
+              <input
+                inputMode="numeric"
+                value={alertOps.limit}
+                onChange={(event) =>
+                  setAlertOps((current) => ({
+                    ...current,
+                    limit: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={alertOps.enabled}
+                onChange={(event) =>
+                  setAlertOps((current) => ({
+                    ...current,
+                    enabled: event.target.checked,
+                  }))
+                }
+              />
+              채널 활성화
+            </label>
+          </div>
+          <label className="toggleLabel">
+            <input
+              type="checkbox"
+              checked={alertOps.dryRun}
+              onChange={(event) =>
+                setAlertOps((current) => ({
+                  ...current,
+                  dryRun: event.target.checked,
+                }))
+              }
+            />
+            dispatch dry-run
+          </label>
+          <div className="alertActionGrid">
+            <button type="submit" disabled={alertOpsStatus === "sending"}>
+              {alertOpsStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <ShieldCheck size={18} />
+              )}
+              채널 저장
+            </button>
+            <button
+              type="button"
+              className="secondaryButton"
+              disabled={alertOpsStatus === "sending"}
+              onClick={dispatchAlertDeliveries}
+            >
+              <Send size={18} />
+              queued dispatch
+            </button>
+            <button
+              type="button"
+              className="secondaryButton"
+              disabled={alertOpsStatus === "sending"}
+              onClick={loadAlertOps}
+            >
+              <TimerReset size={18} />
+              운영 상태 조회
+            </button>
+          </div>
+          <p className="formStatus">
+            {statusMessage(
+              alertOpsStatus,
+              "알림 운영 상태를 갱신했습니다.",
+              "알림 운영 처리에 실패했습니다.",
+            ) ||
+              "목표가 도달 테스트로 queued 이벤트를 만든 뒤 dispatch하면 발송 시도 이력이 남습니다."}
+          </p>
+        </form>
+
+        {latestAlertOpsBundle ? (
+          <div className="alertResult">
+            <div className="answerHeader">
+              {latestAlertOpsBundle.created_channel ? (
+                <span className="pill ok">
+                  channel {latestAlertOpsBundle.created_channel.channel}
+                </span>
+              ) : null}
+              {latestAlertOpsBundle.dispatch ? (
+                <>
+                  <span className="pill ok">
+                    sent {latestAlertOpsBundle.dispatch.sent_count}건
+                  </span>
+                  <span
+                    className={`pill ${
+                      latestAlertOpsBundle.dispatch.failed_count ? "warn" : "muted"
+                    }`}
+                  >
+                    failed {latestAlertOpsBundle.dispatch.failed_count}건
+                  </span>
+                </>
+              ) : null}
+              <span className="pill muted">
+                channel {latestAlertOpsBundle.channels.length}개
+              </span>
+            </div>
+
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>큐 이벤트</dt>
+                <dd>{latestAlertOpsBundle.events.length}건</dd>
+              </div>
+              <div>
+                <dt>발송 시도</dt>
+                <dd>{latestAlertOpsBundle.deliveries.length}건</dd>
+              </div>
+              <div>
+                <dt>선택 이벤트</dt>
+                <dd>{latestAlertOpsBundle.dispatch?.selected_count ?? 0}건</dd>
+              </div>
+              <div>
+                <dt>dry-run</dt>
+                <dd>{latestAlertOpsBundle.dispatch?.dry_run ? "on" : "off"}</dd>
+              </div>
+            </dl>
+
+            <div className="sourceMonitorGrid">
+              <article>
+                <h3>채널 설정</h3>
+                {latestAlertOpsBundle.channels.length ? (
+                  <div className="reviewQueueList">
+                    {latestAlertOpsBundle.channels.map((channel) => (
+                      <div key={channel.channel_id}>
+                        <strong>{channel.display_name}</strong>
+                        <span>
+                          {channel.channel} · {channel.target_masked} · retry{" "}
+                          {channel.retry_limit}
+                        </span>
+                        <span>{channel.enabled ? "enabled" : "disabled"}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>아직 운영 알림 채널이 없습니다.</p>
+                )}
+              </article>
+
+              <article>
+                <h3>발송 시도 이력</h3>
+                {latestAlertOpsBundle.deliveries.length ? (
+                  <div className="reviewQueueList">
+                    {latestAlertOpsBundle.deliveries.slice(0, 6).map((attempt) => (
+                      <div key={attempt.attempt_id}>
+                        <strong>{attempt.delivery_status}</strong>
+                        <span>
+                          {attempt.channel} · {attempt.contact_masked} · retry{" "}
+                          {attempt.retry_count}
+                        </span>
+                        <span>{attempt.provider_message}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>dispatch를 실행하면 채널별 발송 시도가 표시됩니다.</p>
+                )}
+              </article>
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>최근 큐 이벤트</strong>
+                <ul>
+                  {latestAlertOpsBundle.events.slice(0, 4).map((event) => (
+                    <li key={event.event_id}>
+                      {event.delivery_status} · {event.message}
+                    </li>
+                  ))}
+                  {!latestAlertOpsBundle.events.length ? (
+                    <li>목표가 도달 테스트를 먼저 실행하세요.</li>
+                  ) : null}
+                </ul>
+              </div>
+              <div>
+                <strong>운영 판단</strong>
+                <ul>
+                  <li>채널 미설정이면 dispatch는 failed로 남아 launch gate 증거가 됩니다.</li>
+                  <li>dry-run은 외부 발송 없이 provider 메시지만 검증합니다.</li>
+                  <li>성공/실패 수는 제품 API 운영 지표와 출시 게이트에 반영됩니다.</li>
                 </ul>
               </div>
             </div>

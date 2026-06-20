@@ -680,6 +680,57 @@ export type AlertEvaluationResponse = {
   events: AlertDeliveryEvent[];
 };
 
+export type AlertNotificationChannelRequest = {
+  channel: string;
+  display_name: string;
+  target: string;
+  enabled: boolean;
+  retry_limit: number;
+};
+
+export type AlertNotificationChannel = {
+  channel_id: string;
+  workspace_id: string;
+  channel: string;
+  display_name: string;
+  target_masked: string;
+  enabled: boolean;
+  retry_limit: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AlertDispatchResponse = {
+  workspace_id: string;
+  selected_count: number;
+  sent_count: number;
+  failed_count: number;
+  dry_run: boolean;
+  attempts: AlertDeliveryAttempt[];
+};
+
+export type AlertDeliveryAttempt = {
+  attempt_id: string;
+  event_id: string;
+  subscription_id: string;
+  workspace_id: string;
+  channel: string;
+  contact_masked: string;
+  delivery_status: string;
+  provider_message: string;
+  retry_count: number;
+  next_retry_at: string | null;
+  created_at: string;
+};
+
+export type AlertOpsBundle = {
+  channels: AlertNotificationChannel[];
+  events: AlertDeliveryEvent[];
+  deliveries: AlertDeliveryAttempt[];
+  created_channel?: AlertNotificationChannel | null;
+  dispatch?: AlertDispatchResponse | null;
+};
+
 export type CheckoutReviewRequest = {
   report_id: string;
   product_id: string | null;

@@ -175,6 +175,9 @@ async function checkViewport(pageWsUrl, viewport) {
       const primary = document.querySelector(".launchPublicActions .primaryButton");
       const secondary = document.querySelector(".launchPublicActions .secondaryLaunchButton");
       const pills = [...document.querySelectorAll(".launchPublicPills .pill")];
+      const sharePack = document.querySelector(".launchSharePack");
+      const shareButtons = [...document.querySelectorAll(".launchSharePackActions button")];
+      const shareLinks = [...document.querySelectorAll(".launchSharePackActions a")];
       const inspect = (el) => {
         if (!el) return null;
         const rect = el.getBoundingClientRect();
@@ -197,6 +200,14 @@ async function checkViewport(pageWsUrl, viewport) {
           item.right > viewportWidth + 1 ||
           item.scrollWidth > item.clientWidth + 1
         );
+      const shareActionNodes = [sharePack, ...shareButtons, ...shareLinks].filter(Boolean);
+      const shareOverflows = shareActionNodes
+        .map((el) => ({ tag: el.tagName.toLowerCase(), className: el.className, ...inspect(el) }))
+        .filter((item) =>
+          item.left < -1 ||
+          item.right > viewportWidth + 1 ||
+          item.scrollWidth > item.clientWidth + 1
+        );
       const failures = [];
       if (document.documentElement.scrollWidth > viewportWidth + 1) {
         failures.push("document-horizontal-overflow");
@@ -206,6 +217,10 @@ async function checkViewport(pageWsUrl, viewport) {
       if (!secondary || !inspect(secondary).visible) failures.push("missing-secondary-cta");
       if (pills.length < 3) failures.push("missing-proof-pills");
       if (overflows.length > 0) failures.push("hero-node-overflow");
+      if (!sharePack || !inspect(sharePack).visible) failures.push("missing-share-pack");
+      if (shareButtons.length < 4) failures.push("missing-share-pack-buttons");
+      if (shareLinks.length < 2) failures.push("missing-share-pack-links");
+      if (shareOverflows.length > 0) failures.push("share-pack-overflow");
       return {
         viewportWidth,
         documentScrollWidth: document.documentElement.scrollWidth,
@@ -214,6 +229,9 @@ async function checkViewport(pageWsUrl, viewport) {
         secondary: inspect(secondary),
         pillCount: pills.length,
         overflows,
+        shareButtonCount: shareButtons.length,
+        shareLinkCount: shareLinks.length,
+        shareOverflows,
         failures,
       };
     })()`,

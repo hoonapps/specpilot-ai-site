@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { Copy, ExternalLink, LoaderCircle, Share2 } from "lucide-react";
-import type { OpsStatus, PublicLaunchSharePack } from "../types";
+import type {
+  GrowthEventRequest,
+  OpsStatus,
+  PublicLaunchSharePack,
+  PublicLaunchShareVariant,
+} from "../types";
 
 type Status = "loading" | "ready" | "error";
 
@@ -68,9 +73,12 @@ export function LaunchSharePackPanel() {
   const [pack, setPack] = useState<PublicLaunchSharePack>(fallbackPack);
   const [status, setStatus] = useState<Status>("loading");
   const [copiedChannel, setCopiedChannel] = useState<string | null>(null);
+  const [shareMessage, setShareMessage] = useState<string | null>(null);
+  const [siteOrigin, setSiteOrigin] = useState("");
 
   useEffect(() => {
     let alive = true;
+    setSiteOrigin(window.location.origin);
 
     async function loadPack() {
       setStatus("loading");
@@ -104,13 +112,92 @@ export function LaunchSharePackPanel() {
     };
   }, []);
 
-  async function copyText(channel: string, text: string) {
+  function absoluteUrl(path: string) {
+    if (!siteOrigin) {
+      return path;
+    }
+    return new URL(path, siteOrigin).toString();
+  }
+
+  function copyWithAbsoluteUrl(text: string, shareUrl: string) {
+    return text.replaceAll(shareUrl, absoluteUrl(shareUrl));
+  }
+
+  async function recordShareEvent(
+    channel: string,
+    action: "copy" | "native_share" | "open",
+    trackingEvent: string,
+    shareUrl: string,
+  ) {
+    const event: GrowthEventRequest = {
+      event_type: "share_cta",
+      source: "launch-share-pack",
+      surface: "launch-share-pack",
+      label:
+        action === "native_share"
+          ? `${channel} 네이티브 공유`
+          : action === "open"
+            ? `${channel} 링크 열기`
+            : `${channel} 문구 복사`,
+      metadata: {
+        channel,
+        action,
+        tracking_event: trackingEvent,
+        share_url: absoluteUrl(shareUrl),
+      },
+    };
+    await fetch("/api/specpilot/growth-funnel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({ limit: 8, event }),
+    });
+  }
+
+  async function copyText(
+    channel: string,
+    text: string,
+    trackingEvent: string,
+    shareUrl: string,
+  ) {
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(copyWithAbsoluteUrl(text, shareUrl));
+      await recordShareEvent(channel, "copy", trackingEvent, shareUrl);
       setCopiedChannel(channel);
+      setShareMessage("공유 반응이 기록되었습니다.");
       window.setTimeout(() => setCopiedChannel(null), 1600);
     } catch {
       setCopiedChannel(null);
+      setShareMessage("공유 기록을 다시 시도하세요.");
+    }
+  }
+
+  async function nativeShare(variant: PublicLaunchShareVariant) {
+    const shareUrl = absoluteUrl(variant.share_url);
+    const copyText = copyWithAbsoluteUrl(variant.copy_text, variant.share_url);
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: variant.headline,
+          text: variant.body,
+          url: shareUrl,
+        });
+        await recordShareEvent(
+          variant.channel,
+          "native_share",
+          variant.tracking_event,
+          variant.share_url,
+        );
+        setShareMessage("공유 반응이 기록되었습니다.");
+        return;
+      }
+      await navigator.clipboard.writeText(copyText);
+      await recordShareEvent(variant.channel, "copy", variant.tracking_event, variant.share_url);
+      setCopiedChannel(variant.channel);
+      setShareMessage("공유 문구가 복사되었습니다.");
+      window.setTimeout(() => setCopiedChannel(null), 1600);
+    } catch {
+      setShareMessage("공유를 다시 시도하세요.");
     }
   }
 
@@ -142,13 +229,19 @@ export function LaunchSharePackPanel() {
       <div className="launchSharePackHero">
         <div>
           <strong>대표 공유 링크</strong>
-          <p>{pack.primary_url}</p>
+          <p>{absoluteUrl(pack.primary_url)}</p>
         </div>
-        <button type="button" onClick={() => copyText("primary", pack.primary_copy)}>
+        <button
+          type="button"
+          onClick={() =>
+            copyText("primary", pack.primary_copy, "launch_share_primary", pack.primary_url)
+          }
+        >
           <Copy size={16} />
           {copiedChannel === "primary" ? "복사됨" : "대표 문구 복사"}
         </button>
       </div>
+      {shareMessage ? <small className="launchSharePackEvent">{shareMessage}</small> : null}
 
       <div className="launchSharePackGrid">
         {pack.variants.slice(0, 4).map((variant) => (
@@ -166,11 +259,39 @@ export function LaunchSharePackPanel() {
             </ul>
             <pre>{variant.copy_text}</pre>
             <div className="launchSharePackActions">
-              <button type="button" onClick={() => copyText(variant.channel, variant.copy_text)}>
+              <button
+                type="button"
+                onClick={() =>
+                  copyText(
+                    variant.channel,
+                    variant.copy_text,
+                    variant.tracking_event,
+                    variant.share_url,
+                  )
+                }
+              >
                 <Copy size={15} />
                 {copiedChannel === variant.channel ? "복사됨" : "문구 복사"}
               </button>
-              <a href={variant.share_url}>
+              <button
+                className="secondaryShareButton"
+                type="button"
+                onClick={() => void nativeShare(variant)}
+              >
+                <Share2 size={15} />
+                바로 공유
+              </button>
+              <a
+                href={absoluteUrl(variant.share_url)}
+                onClick={() => {
+                  void recordShareEvent(
+                    variant.channel,
+                    "open",
+                    variant.tracking_event,
+                    variant.share_url,
+                  );
+                }}
+              >
                 {variant.cta_label}
                 <ExternalLink size={14} />
               </a>

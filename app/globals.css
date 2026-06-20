@@ -3857,6 +3857,24 @@ ul {
   font-weight: 950;
 }
 
+.launchSharePackActions .secondaryShareButton {
+  border: 1px solid rgba(49, 95, 140, 0.22);
+  background: #ffffff;
+  color: var(--blue);
+}
+
+.launchSharePackEvent {
+  display: inline-flex;
+  width: fit-content;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 999px;
+  background: rgba(236, 248, 245, 0.86);
+  color: #0f5f58;
+  padding: 7px 11px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .launchSharePackGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

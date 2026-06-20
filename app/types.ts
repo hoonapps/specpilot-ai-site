@@ -770,6 +770,36 @@ export type PurchaseOnboardingPlaybook = {
   cta_anchor: string;
 };
 
+export type StartConciergeMilestone = {
+  step: string;
+  title: string;
+  status: OpsStatus;
+  detail: string;
+  next_action: string;
+};
+
+export type StartConciergeAction = {
+  label: string;
+  target: string;
+  action_type: string;
+  reason: string;
+};
+
+export type PurchaseStartConcierge = {
+  concierge_version: string;
+  category: Category;
+  readiness_score: number;
+  headline: string;
+  summary: string;
+  primary_action: StartConciergeAction;
+  matched_playbook: PurchaseOnboardingPlaybook;
+  diagnosis: IntakeDiagnosisResponse;
+  milestones: StartConciergeMilestone[];
+  quick_actions: StartConciergeAction[];
+  proof_points: string[];
+  conversion_prompt: string;
+};
+
 export type GrowthEventType =
   | "analysis_view"
   | "recommendation_click"

@@ -1578,6 +1578,89 @@ ul {
   font-size: 13px;
 }
 
+.startConciergePanel {
+  display: grid;
+  gap: 16px;
+  border: 1px solid rgba(12, 116, 108, 0.22);
+  border-radius: 8px;
+  background: #f6fbf8;
+  padding: 16px;
+}
+
+.startConciergePanel h3,
+.startConciergePanel h4,
+.startConciergePanel p,
+.startConciergePanel li,
+.startConciergePanel small {
+  overflow-wrap: anywhere;
+}
+
+.conciergeResultGrid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+  gap: 14px;
+}
+
+.conciergeHero,
+.conciergeMilestones article {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.conciergeHero p,
+.conciergeMilestones p {
+  margin: 0;
+}
+
+.conciergeHero strong {
+  color: var(--teal);
+  line-height: 1.55;
+}
+
+.conciergeMilestones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.conciergeMilestones h4 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.conciergeMilestones small,
+.startConciergePanel li span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.startConciergePanel .advisorLists {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+.startConciergePanel .advisorLists ul {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+.startConciergePanel .advisorLists a,
+.startConciergePanel .advisorLists span {
+  display: block;
+}
+
+.startConciergePanel .advisorLists a {
+  color: var(--teal);
+  font-weight: 950;
+  text-decoration: none;
+}
+
 .miniMetricGrid span {
   display: block;
   margin-bottom: 2px;
@@ -1891,7 +1974,8 @@ ul {
   .purchaseLinkGrid,
   .decisionBoardGrid,
   .marketReportGrid,
-  .growthStepGrid {
+  .growthStepGrid,
+  .conciergeResultGrid {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -2043,6 +2127,8 @@ ul {
   .decisionBoardGrid,
   .marketReportGrid,
   .growthStepGrid,
+  .conciergeResultGrid,
+  .conciergeMilestones,
   .gateCheckGrid,
   .sourceMetricGrid,
   .metricRow {

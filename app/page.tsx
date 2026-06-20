@@ -59,6 +59,7 @@ import type {
   PricingOpsBundle,
   CategoryMarketReport,
   PurchaseOnboardingPlaybook,
+  PurchaseStartConcierge,
   PurchaseDecisionBoard,
   PurchaseLink,
   PurchaseLinkGovernance,
@@ -168,6 +169,11 @@ export default function Home() {
   const [onboardingPlaybooks, setOnboardingPlaybooks] = useState<
     PurchaseOnboardingPlaybook[]
   >([]);
+  const [startConciergeStatus, setStartConciergeStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestStartConcierge, setLatestStartConcierge] =
+    useState<PurchaseStartConcierge | null>(null);
   const [demoGalleryStatus, setDemoGalleryStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -543,6 +549,65 @@ export default function Home() {
     window.location.hash = "analysis";
   }
 
+  function applyStartConcierge() {
+    if (!latestStartConcierge) {
+      return;
+    }
+    const diagnosed = latestStartConcierge.diagnosis.normalized_request;
+    setPayload({
+      query: diagnosed.query,
+      category: diagnosed.category,
+      budget: String(diagnosed.budget_krw || ""),
+      purpose: diagnosed.purpose,
+      mustHaves: diagnosed.must_haves.join(", "),
+      exclusions: diagnosed.exclusions.join(", "),
+    });
+    setLatestDiagnosis(latestStartConcierge.diagnosis);
+    setMarketReportCategory(diagnosed.category);
+    setStatusText("첫 구매 진단 콘시어지 적용");
+    window.location.hash = "analysis";
+  }
+
+  async function runStartConcierge() {
+    setStartConciergeStatus("sending");
+    setConnectionWarning(null);
+    try {
+      const response = await fetch("/api/specpilot/start-concierge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formPayload),
+      });
+      if (!response.ok) {
+        throw new Error(`start concierge ${response.status}`);
+      }
+      const data = (await response.json()) as {
+        ok: boolean;
+        concierge?: PurchaseStartConcierge;
+      };
+      if (!data.ok || !data.concierge) {
+        throw new Error("start concierge rejected");
+      }
+      setLatestStartConcierge(data.concierge);
+      setLatestDiagnosis(data.concierge.diagnosis);
+      setStartConciergeStatus("sent");
+      void recordGrowthEvent("analysis_view", "첫 구매 진단 콘시어지", "start-concierge", {
+        silent: true,
+        metadata: {
+          readiness_score: data.concierge.readiness_score,
+          category: data.concierge.category,
+        },
+      });
+    } catch (error) {
+      setLatestStartConcierge(null);
+      setStartConciergeStatus("error");
+      setConnectionWarning(
+        error instanceof Error
+          ? error.message
+          : "첫 구매 진단 콘시어지 조회에 실패했습니다.",
+      );
+    }
+  }
+
   function applyDemoScenario(scenario: DemoScenario) {
     setPayload({
       query: scenario.request.query,
@@ -615,6 +680,8 @@ export default function Home() {
     setPublicUrl(null);
     setLatestShareAssets(null);
     setShareAssetStatus("idle");
+    setStartConciergeStatus("idle");
+    setLatestStartConcierge(null);
     setSavedReportId(null);
     setAdvisorStatus("idle");
     setLatestAdvisorAnswer(null);
@@ -2354,6 +2421,118 @@ export default function Home() {
             ) || "공개 플레이북을 불러와 첫 분석 입력값으로 바로 적용합니다."}
           </div>
         )}
+
+        <div className="startConciergePanel">
+          <div className="advisorIntro">
+            <div>
+              <div className="sectionLabel">
+                <Gauge size={16} />
+                첫 구매 진단 콘시어지
+              </div>
+              <h3>방문자의 첫 문장을 분석 가능한 구매 여정으로 바꿉니다</h3>
+              <p>
+                현재 입력값을 진단하고 가장 가까운 온보딩 플레이북, 누락 질문,
+                분석 실행, 공유/가격 대기, 결제 전 검수까지 이어지는 다음 행동을
+                한 번에 정합니다.
+              </p>
+            </div>
+            <div className="statusRow">
+              <span
+                className={`pill ${
+                  latestStartConcierge
+                    ? gateTone(
+                        latestStartConcierge.primary_action.action_type ===
+                          "complete_intake"
+                          ? "blocker"
+                          : latestStartConcierge.primary_action.action_type ===
+                              "apply_and_analyze"
+                            ? "warning"
+                            : "ok",
+                      )
+                    : "muted"
+                }`}
+              >
+                {latestStartConcierge
+                  ? `${latestStartConcierge.readiness_score}점`
+                  : startConciergeStatus === "sending"
+                    ? "진단 중"
+                    : "미진단"}
+              </span>
+              <button
+                className="secondaryButton"
+                type="button"
+                onClick={runStartConcierge}
+                disabled={startConciergeStatus === "sending" || isLoading}
+              >
+                {startConciergeStatus === "sending" ? (
+                  <Loader2 className="spin" size={15} />
+                ) : (
+                  <Sparkles size={15} />
+                )}
+                콘시어지 실행
+              </button>
+            </div>
+          </div>
+
+          {latestStartConcierge ? (
+            <div className="conciergeResultGrid">
+              <article className="conciergeHero">
+                <span className="pill ok">{latestStartConcierge.concierge_version}</span>
+                <h3>{latestStartConcierge.headline}</h3>
+                <p>{latestStartConcierge.summary}</p>
+                <strong>{latestStartConcierge.conversion_prompt}</strong>
+                <button
+                  className="primaryButton fullWidthButton"
+                  type="button"
+                  onClick={applyStartConcierge}
+                >
+                  {latestStartConcierge.primary_action.label}
+                </button>
+              </article>
+              <div className="conciergeMilestones">
+                {latestStartConcierge.milestones.map((milestone) => (
+                  <article key={milestone.step}>
+                    <span className={`pill ${gateTone(milestone.status)}`}>
+                      {milestone.step}
+                    </span>
+                    <h4>{milestone.title}</h4>
+                    <p>{milestone.detail}</p>
+                    <small>{milestone.next_action}</small>
+                  </article>
+                ))}
+              </div>
+              <div className="advisorLists">
+                <div>
+                  <strong>매칭 근거</strong>
+                  <ul>
+                    {latestStartConcierge.proof_points.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <strong>빠른 이동</strong>
+                  <ul>
+                    {latestStartConcierge.quick_actions.map((action) => (
+                      <li key={action.action_type}>
+                        <a href={action.target}>{action.label}</a>
+                        <span>{action.reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="emptyState">
+              {statusMessage(
+                startConciergeStatus,
+                "첫 구매 진단 콘시어지를 업데이트했습니다.",
+                "제품 API 연결 후 콘시어지를 다시 실행하세요.",
+              ) || "현재 구매 조건으로 가장 빠른 시작 경로를 계산합니다."}
+            </div>
+          )}
+        </div>
       </section>
 
       <section className="workspace" id="analysis">

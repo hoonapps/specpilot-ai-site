@@ -30,6 +30,7 @@ import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
 import { LaunchProofHubPanel } from "./LaunchProofHubPanel";
+import { LaunchReadinessGatePanel } from "./LaunchReadinessGatePanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
@@ -1035,6 +1036,8 @@ export default async function LaunchPage() {
       </section>
 
       <LaunchProofHubPanel />
+
+      <LaunchReadinessGatePanel />
 
       <section className="launchPublicSection">
         <div className="sectionHeader">

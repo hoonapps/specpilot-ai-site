@@ -162,6 +162,7 @@ section[id] {
 .visualPanel,
 .summaryPanel,
 .card,
+.shareAssetPanel,
 .scenarioCard,
 .stressCard,
 .criteriaMatrix article,
@@ -526,6 +527,7 @@ textarea:focus {
 .decisionCard,
 .summaryPanel,
 .card,
+.shareAssetPanel,
 .trustPanel {
   padding: clamp(16px, 2.3vw, 24px);
 }
@@ -598,6 +600,58 @@ textarea:focus {
 
 .card {
   box-shadow: none;
+}
+
+.shareAssetPanel {
+  display: grid;
+  gap: 16px;
+  box-shadow: none;
+}
+
+.shareAssetGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.shareAssetGrid article {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 14px;
+}
+
+.shareAssetGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.shareAssetGrid strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.shareAssetGrid p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.shareAssetFooter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.shareAssetFooter ul {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .decisionProofPanel {
@@ -1825,6 +1879,7 @@ ul {
 
   .cards.three,
   .cards.two,
+  .shareAssetGrid,
   .onboardingGrid,
   .scenarioGrid,
   .stressGrid,
@@ -1965,6 +2020,8 @@ ul {
   .onboardingGrid,
   .cards.three,
   .cards.two,
+  .shareAssetGrid,
+  .shareAssetFooter,
   .scenarioGrid,
   .stressGrid,
   .criteriaMatrix,

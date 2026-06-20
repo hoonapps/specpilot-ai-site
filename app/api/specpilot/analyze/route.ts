@@ -4,10 +4,11 @@ import type {
   AnalyzeAndShareResponse,
   AnalyzePayload,
   AnalyzeResponse,
+  ReportShareAssets,
   SaveReportResponse,
   ShareReportResponse,
 } from "../../../types";
-import { postJson } from "../_client";
+import { getJson, postJson } from "../_client";
 
 function reportTitle(analysis: AnalyzeResponse) {
   const top = analysis.report.top_recommendations[0];
@@ -30,12 +31,16 @@ export async function POST(request: Request) {
     const share = await postJson<ShareReportResponse>(
       `/reports/${savedReport.report_id}/share`,
     );
+    const shareAssets = await getJson<ReportShareAssets>(
+      `/reports/${savedReport.report_id}/share-assets`,
+    );
     const publicUrl = new URL(share.public_path, request.url).toString();
 
     return NextResponse.json<AnalyzeAndShareResponse>({
       analysis,
       saved_report: savedReport,
       share,
+      share_assets: shareAssets,
       public_url: publicUrl,
       mode: "live",
     });
@@ -44,6 +49,7 @@ export async function POST(request: Request) {
       analysis: demoResponse,
       saved_report: null,
       share: null,
+      share_assets: null,
       public_url: null,
       mode: "demo",
       warning:

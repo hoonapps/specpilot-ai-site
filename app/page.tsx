@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   ClipboardCheck,
   Clock3,
+  Copy,
   CreditCard,
   Cpu,
   ExternalLink,
@@ -63,6 +64,7 @@ import type {
   PurchaseLinkGovernance,
   PurchaseOutcome,
   PurchaseOutcomeStatus,
+  ReportShareAssets,
   ReportAdvisorAnswer,
   SourceCandidate,
   SourceMonitorOpsBundle,
@@ -171,6 +173,11 @@ export default function Home() {
   const [demoGallery, setDemoGallery] = useState<DemoScenarioGallery | null>(null);
   const [statusText, setStatusText] = useState("데모 리포트");
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
+  const [latestShareAssets, setLatestShareAssets] =
+    useState<ReportShareAssets | null>(null);
+  const [shareAssetStatus, setShareAssetStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
   const [savedReportId, setSavedReportId] = useState<string | null>(null);
   const [connectionWarning, setConnectionWarning] = useState<string | null>(null);
   const [advisorQuestion, setAdvisorQuestion] = useState({
@@ -600,6 +607,8 @@ export default function Home() {
     setStatusText("서버 프록시 분석 중");
     setConnectionWarning(null);
     setPublicUrl(null);
+    setLatestShareAssets(null);
+    setShareAssetStatus("idle");
     setSavedReportId(null);
     setAdvisorStatus("idle");
     setLatestAdvisorAnswer(null);
@@ -663,6 +672,8 @@ export default function Home() {
       setResult(data.analysis);
       setIsDemo(data.mode === "demo");
       setPublicUrl(data.public_url);
+      setLatestShareAssets(data.share_assets);
+      setShareAssetStatus(data.share_assets ? "sent" : "idle");
       setSavedReportId(data.saved_report?.report_id ?? null);
       setSourceEvidence((current) => ({
         ...current,
@@ -718,6 +729,8 @@ export default function Home() {
       setResult(demoResponse);
       setIsDemo(true);
       setSavedReportId(null);
+      setLatestShareAssets(null);
+      setShareAssetStatus("idle");
       setLatestAdvisorAnswer(null);
       setLatestAlertSubscription(null);
       setLatestAlertEvaluation(null);
@@ -793,6 +806,45 @@ export default function Home() {
       if (!options.silent) {
         setGrowthStatus("error");
       }
+    }
+  }
+
+  async function loadShareAssets() {
+    if (!savedReportId) {
+      return;
+    }
+    setShareAssetStatus("sending");
+    try {
+      const response = await fetch(
+        `/api/specpilot/share-assets?report_id=${encodeURIComponent(savedReportId)}`,
+      );
+      if (!response.ok) {
+        throw new Error(`share assets ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        share_assets?: ReportShareAssets;
+      };
+      if (!payload.ok || !payload.share_assets) {
+        throw new Error("share assets rejected");
+      }
+      setLatestShareAssets(payload.share_assets);
+      setShareAssetStatus("sent");
+    } catch {
+      setShareAssetStatus("error");
+    }
+  }
+
+  async function copyShareAsset(copyText: string, channel: string) {
+    try {
+      await navigator.clipboard.writeText(copyText);
+      setShareAssetStatus("sent");
+      await recordGrowthEvent("share_cta", `공유 자산 복사: ${channel}`, "share-assets", {
+        silent: true,
+        metadata: { channel },
+      });
+    } catch {
+      setShareAssetStatus("error");
     }
   }
 
@@ -2599,6 +2651,82 @@ export default function Home() {
               </ul>
             </article>
           </section>
+
+          {latestShareAssets ? (
+            <section className="shareAssetPanel" aria-label="공유 자산">
+              <div className="sectionHeader compact">
+                <div>
+                  <p className="sectionLabel">Share assets</p>
+                  <h2>{latestShareAssets.headline}</h2>
+                  <p>{latestShareAssets.subheadline}</p>
+                </div>
+                <div className="statusRow">
+                  <span className="pill muted">{latestShareAssets.asset_version}</span>
+                  {publicUrl ? (
+                    <a className="pill link" href={publicUrl} target="_blank">
+                      공개 리포트 <ExternalLink size={13} />
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+              <div className="shareAssetGrid">
+                <article>
+                  <span>OG title</span>
+                  <strong>{latestShareAssets.og_title}</strong>
+                  <p>{latestShareAssets.og_description}</p>
+                  <div className="tagWrap">
+                    {latestShareAssets.hashtags.map((tag) => (
+                      <span className="miniTag" key={tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </article>
+                {latestShareAssets.variants.map((variant) => (
+                  <article key={variant.channel}>
+                    <span>{variant.label}</span>
+                    <strong>{variant.headline}</strong>
+                    <p>{variant.body}</p>
+                    <button
+                      type="button"
+                      className="secondaryButton"
+                      onClick={() => void copyShareAsset(variant.copy_text, variant.channel)}
+                    >
+                      <Copy size={16} />
+                      문구 복사
+                    </button>
+                  </article>
+                ))}
+              </div>
+              <div className="shareAssetFooter">
+                <ul>
+                  {latestShareAssets.reviewer_questions.slice(0, 3).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  className="secondaryButton"
+                  disabled={!savedReportId || shareAssetStatus === "sending"}
+                  onClick={() => void loadShareAssets()}
+                >
+                  {shareAssetStatus === "sending" ? (
+                    <Loader2 className="spin" size={16} />
+                  ) : (
+                    <Sparkles size={16} />
+                  )}
+                  공유 자산 새로고침
+                </button>
+              </div>
+              <p className="helperText">
+                {statusMessage(
+                  shareAssetStatus,
+                  "공유 자산이 준비됐습니다.",
+                  "공유 자산 처리에 실패했습니다.",
+                )}
+              </p>
+            </section>
+          ) : null}
 
           <section className="decisionProofPanel" aria-label="구매 결정 강화 근거">
             <div className="sectionHeader compact">

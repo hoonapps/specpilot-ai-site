@@ -230,6 +230,33 @@ export type ShareReportResponse = {
   share_views?: number;
 };
 
+export type ReportShareAssetVariant = {
+  channel: string;
+  label: string;
+  headline: string;
+  body: string;
+  cta: string;
+  copy_text: string;
+};
+
+export type ReportShareAssets = {
+  asset_version: string;
+  workspace_id: string;
+  report_id: string;
+  share_token: string | null;
+  public_path: string | null;
+  generated_at: string;
+  headline: string;
+  subheadline: string;
+  og_title: string;
+  og_description: string;
+  visual_card_text: string[];
+  hashtags: string[];
+  reviewer_questions: string[];
+  variants: ReportShareAssetVariant[];
+  next_actions: string[];
+};
+
 export type PurchaseLink = {
   link_id: string;
   report_id: string;
@@ -415,6 +442,7 @@ export type AnalyzeAndShareResponse = {
   analysis: AnalyzeResponse;
   saved_report: SaveReportResponse | null;
   share: ShareReportResponse | null;
+  share_assets: ReportShareAssets | null;
   public_url: string | null;
   mode: "live" | "demo";
   warning?: string;

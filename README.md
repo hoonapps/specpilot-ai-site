@@ -2,7 +2,7 @@
 
 SpecPilot AI 제품 API를 공개 사용자에게 보여주는 Next.js 웹사이트입니다.
 
-이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 공개 구매 온보딩 플레이북으로 시작 질문을 고르고, 구매 조건을 입력하고, 분석 전 조건 진단, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 대안 시나리오, 조건 충족 매트릭스, 스트레스 테스트, 구매 실행 패키지, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 가격 알림, 알림 발송 운영, 구매 링크 거버넌스, 완료 리포트 batch 발송, 상품 페이지 근거 검수, URL 모니터 운영, 결제 전 검수, 구매 의사결정 보드, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 품질 회귀와 observability export, 외부 연동 준비도, 프라이버시/데이터 거버넌스, 공개 Trust Center, 베타 cohort와 개선 백로그 운영, 월간 카테고리 리포트, 공개 카테고리 리포트, 성장 퍼널, 추천 대기열, 수익화 준비도, 출시 게이트, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
+이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 공개 구매 온보딩 플레이북으로 시작 질문을 고르고, 구매 조건을 입력하고, 분석 전 조건 진단, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 대안 시나리오, 조건 충족 매트릭스, 스트레스 테스트, 구매 실행 패키지, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 채널별 공유 자산, 가격 알림, 알림 발송 운영, 구매 링크 거버넌스, 완료 리포트 batch 발송, 상품 페이지 근거 검수, URL 모니터 운영, 결제 전 검수, 구매 의사결정 보드, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 품질 회귀와 observability export, 외부 연동 준비도, 프라이버시/데이터 거버넌스, 공개 Trust Center, 베타 cohort와 개선 백로그 운영, 월간 카테고리 리포트, 공개 카테고리 리포트, 성장 퍼널, 추천 대기열, 수익화 준비도, 출시 게이트, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
 
 ## 실행
 
@@ -29,7 +29,8 @@ SPECPILOT_API_KEY=specpilot-site-demo
 
 - `/api/specpilot/intake-diagnose`: 제품 API의 `/intake/diagnose`로 분석 전 조건 준비도와 보강 질문 조회
 - `/api/specpilot/demo-scenarios`: 제품 API의 `/demo/scenarios`로 첫 방문자가 바로 적용할 수 있는 공개 데모 preset 조회
-- `/api/specpilot/analyze`: 제품 API의 `/analyze`, `/reports/save`, `/reports/{id}/share`를 순서대로 호출
+- `/api/specpilot/analyze`: 제품 API의 `/analyze`, `/reports/save`, `/reports/{id}/share`, `/reports/{id}/share-assets`를 순서대로 호출
+- `/api/specpilot/share-assets`: 제품 API의 `/reports/{report_id}/share-assets`로 공개 리포트 기반 카카오톡/커뮤니티/블로그 복사 문구와 OG 메타 조회
 - `/api/specpilot/feedback`: 제품 API의 `/feedback`으로 추천 만족도와 구매 의향 저장
 - `/api/specpilot/beta-leads`: 제품 API의 `/beta/leads`로 베타 신청 저장
 - `/api/specpilot/subscription-intents`: 제품 API의 `/billing/subscription-intents`로 Premium/Team 요금제 관심과 예상 MRR 저장
@@ -109,6 +110,7 @@ docker build -t specpilot-ai-site:local .
 - `GET /growth/launch-pulse`
 - `POST /reports/save`
 - `POST /reports/{report_id}/share`
+- `GET /reports/{report_id}/share-assets`
 - `POST /alerts/subscribe`
 - `POST /alerts/evaluate`
 - `GET /alerts/channels`

@@ -40,6 +40,7 @@ import { LaunchProofHubPanel } from "./LaunchProofHubPanel";
 import { LaunchPublicOpsPanel } from "./LaunchPublicOpsPanel";
 import { LaunchReadinessGatePanel } from "./LaunchReadinessGatePanel";
 import { LaunchReferralMomentumPanel } from "./LaunchReferralMomentumPanel";
+import { LaunchResponseLoopPanel } from "./LaunchResponseLoopPanel";
 import { LaunchRetentionLoopPanel } from "./LaunchRetentionLoopPanel";
 import { LaunchSharePackPanel } from "./LaunchSharePackPanel";
 import { LaunchSmokePanel } from "./LaunchSmokePanel";
@@ -1130,6 +1131,8 @@ export default async function LaunchPage() {
       <LaunchMediaKitPanel />
 
       <LaunchActivationOfferPanel />
+
+      <LaunchResponseLoopPanel />
 
       <LaunchRetentionLoopPanel />
 

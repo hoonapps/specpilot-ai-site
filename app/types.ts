@@ -1715,6 +1715,37 @@ export type LaunchActivationOfferDashboard = {
   next_actions: string[];
 };
 
+export type LaunchResponseFollowup = {
+  key: string;
+  label: string;
+  owner: string;
+  priority: string;
+  trigger: string;
+  action: string;
+  reply_copy: string;
+  proof_policy: string;
+  tracking_event: string;
+};
+
+export type LaunchResponseLoopDashboard = {
+  loop_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  response_score: number;
+  headline: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  followups: LaunchResponseFollowup[];
+  proof_candidates: string[];
+  founder_reply_queue: string[];
+  product_fix_queue: string[];
+  tracking_events: string[];
+  recent_feedback: FeedbackRecord[];
+  recent_growth_events: GrowthEventRecord[];
+  next_actions: string[];
+};
+
 export type PublicAcquisitionSurface = {
   key: string;
   label: string;

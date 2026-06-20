@@ -5204,6 +5204,134 @@ ul {
   padding-left: 18px;
 }
 
+.launchResponseLoop {
+  border: 1px solid rgba(184, 119, 33, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchResponseStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchResponseStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchResponseMetricGrid,
+.launchResponseFollowupGrid,
+.launchResponseFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchResponseMetricGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchResponseFollowupGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.launchResponseFooter {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchResponseMetricGrid article,
+.launchResponseFollowup,
+.launchResponseFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(184, 119, 33, 0.16);
+  border-radius: 8px;
+  background: #fffdf8;
+  padding: 16px;
+}
+
+.launchResponseMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchResponseMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.launchResponseFollowup > div,
+.launchResponseFooter strong,
+.launchResponseEvents {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchResponseFollowup h3,
+.launchResponseFollowup p,
+.launchResponseFollowup small,
+.launchResponseFollowup strong,
+.launchResponseFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchResponseFollowup h3 {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.launchResponseFollowup p,
+.launchResponseFollowup small,
+.launchResponseFollowup strong,
+.launchResponseFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchResponseFollowup button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(184, 119, 33, 0.28);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--amber);
+  font-weight: 900;
+}
+
+.launchResponseFooter strong {
+  color: var(--ink);
+}
+
+.launchResponseFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchRetentionLoop {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -6931,6 +7059,9 @@ ul {
   .launchActivationGrid,
   .launchActivationFooter,
   .launchActivationPrimary,
+  .launchResponseMetricGrid,
+  .launchResponseFollowupGrid,
+  .launchResponseFooter,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -7284,6 +7415,9 @@ ul {
   .launchActivationGrid,
   .launchActivationFooter,
   .launchActivationPrimary,
+  .launchResponseMetricGrid,
+  .launchResponseFollowupGrid,
+  .launchResponseFooter,
   .launchRetentionMetricGrid,
   .launchRetentionSignalGrid,
   .launchRetentionPlayGrid,

@@ -13,14 +13,17 @@ import {
 } from "lucide-react";
 import { getJson } from "../api/specpilot/_client";
 import type {
+  Category,
   PublicBuyerChallengeKit,
   PublicBuyerChecklist,
   PublicCandidateCompare,
   PublicDealTimingWindow,
   PublicLaunchRoom,
+  PublicLaunchRoomCard,
   PublicSocialProofWall,
   PublicSpecRiskScanner,
 } from "../types";
+import type { LaunchAnalysisHandoffInput } from "../analysis-handoff";
 import { absoluteUrl, siteConfig } from "../site-config";
 import { LaunchActionRouterPanel } from "./LaunchActionRouterPanel";
 import { LaunchActivationOfferPanel } from "./LaunchActivationOfferPanel";
@@ -821,6 +824,74 @@ function hrefFor(path: string) {
   return path;
 }
 
+function isAnalysisEntryPath(path: string) {
+  const href = hrefFor(path);
+  return href === "/#analysis" || href === "/#workspace";
+}
+
+function heroAnalysisHandoff(label: string): LaunchAnalysisHandoffInput {
+  return {
+    source: "launch-hero",
+    label,
+    query:
+      "영상 편집과 QHD 게임용 데스크톱을 220만원 안에서 사고 싶어요. 가격 타이밍과 제외해야 할 옵션까지 같이 봐주세요.",
+    category: "desktop_pc",
+    budget_krw: 2200000,
+    purpose: "qhd_creator",
+    must_haves: ["QHD 게임", "영상 편집", "32GB RAM", "업그레이드 여지"],
+    exclusions: ["출처 없는 최저가", "A/S 불명확한 조립 옵션"],
+  };
+}
+
+function demoCardCategory(card: PublicLaunchRoomCard): Category {
+  const text = `${card.key} ${card.title} ${card.body} ${card.metric}`.toLowerCase();
+  return text.includes("laptop") || text.includes("노트북") ? "laptop" : "desktop_pc";
+}
+
+function demoCardAnalysisHandoff(card: PublicLaunchRoomCard): LaunchAnalysisHandoffInput {
+  const category = demoCardCategory(card);
+
+  if (card.key.includes("team")) {
+    return {
+      source: `launch-demo-card:${card.key}`,
+      label: card.cta_label,
+      query:
+        "팀 장비 구매를 위해 개발자와 디자이너용 컴퓨터, 노트북 후보를 예산과 승인 기준에 맞춰 비교해 주세요.",
+      category: "laptop",
+      budget_krw: 18000000,
+      purpose: "team_refresh",
+      must_haves: ["팀별 요구 조건 취합", "승인용 비교 근거", "A/S 기준"],
+      exclusions: ["구매 후 확장성이 낮은 옵션", "내부 승인 근거가 부족한 후보"],
+    };
+  }
+
+  if (category === "laptop") {
+    return {
+      source: `launch-demo-card:${card.key}`,
+      label: card.cta_label,
+      query:
+        "휴대성과 배터리가 중요한 노트북을 180만원 안에서 찾고 있어요. 장기 사용 리스크와 A/S까지 비교해 주세요.",
+      category,
+      budget_krw: 1800000,
+      purpose: "portable_creator",
+      must_haves: ["1.5kg 이하", "긴 배터리", "괜찮은 디스플레이", "A/S 안정성"],
+      exclusions: ["발열이 큰 모델", "메모리 확장이 어려운 구성"],
+    };
+  }
+
+  return {
+    source: `launch-demo-card:${card.key}`,
+    label: card.cta_label,
+    query:
+      "영상 편집과 QHD 144Hz 게임용 데스크톱을 예산 안에서 맞추고 싶어요. 성능, 가격 타이밍, 업그레이드 리스크를 비교해 주세요.",
+    category,
+    budget_krw: 2200000,
+    purpose: "qhd_creator",
+    must_haves: ["QHD 144Hz", "영상 편집", "32GB RAM", "SSD 1TB 이상"],
+    exclusions: ["전원부가 약한 구성", "가격 근거가 부족한 후보"],
+  };
+}
+
 function publicMetricCards(
   room: PublicLaunchRoom,
   wall: PublicSocialProofWall,
@@ -948,10 +1019,19 @@ export default async function LaunchPage() {
           <h1>{room.headline}</h1>
           <p>{room.hero_message}</p>
           <div className="launchPublicActions">
-            <a className="primaryButton" href={hrefFor(room.primary_cta_path)}>
+            <LaunchAnalysisLink
+              className="primaryButton"
+              handoff={heroAnalysisHandoff(room.primary_cta)}
+              eventSurface="launch-hero-primary"
+              eventMetadata={{
+                room_version: room.room_version,
+                status: room.status,
+                launch_score: room.launch_score,
+              }}
+            >
               {room.primary_cta}
               <ArrowRight size={18} />
-            </a>
+            </LaunchAnalysisLink>
             <Link className="secondaryLaunchButton" href="/market/desktop-pc">
               시장 리포트 보기
               <ExternalLink size={17} />
@@ -1263,9 +1343,24 @@ export default async function LaunchPage() {
               <h3>{card.title}</h3>
               <p>{card.body}</p>
               <strong>{card.metric}</strong>
-              <a className="miniCta" href={hrefFor(card.cta_path)}>
-                {card.cta_label}
-              </a>
+              {isAnalysisEntryPath(card.cta_path) ? (
+                <LaunchAnalysisLink
+                  className="miniCta"
+                  handoff={demoCardAnalysisHandoff(card)}
+                  eventSurface="launch-demo-card"
+                  eventMetadata={{
+                    card_key: card.key,
+                    card_status: card.status,
+                    card_metric: card.metric,
+                  }}
+                >
+                  {card.cta_label}
+                </LaunchAnalysisLink>
+              ) : (
+                <a className="miniCta" href={hrefFor(card.cta_path)}>
+                  {card.cta_label}
+                </a>
+              )}
             </article>
           ))}
         </div>

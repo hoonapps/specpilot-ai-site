@@ -2,7 +2,7 @@
 
 SpecPilot AI 제품 API를 공개 사용자에게 보여주는 Next.js 웹사이트입니다.
 
-이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 구매 조건을 입력하고, 분석 전 조건 진단, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 대안 시나리오, 조건 충족 매트릭스, 스트레스 테스트, 구매 실행 패키지, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 가격 알림, 알림 발송 운영, 구매 링크 거버넌스, 완료 리포트 batch 발송, 상품 페이지 근거 검수, URL 모니터 운영, 결제 전 검수, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 품질 회귀와 observability export, 외부 연동 준비도, 프라이버시/데이터 거버넌스, 베타 cohort와 개선 백로그 운영, 수익화 준비도, 출시 게이트, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
+이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 구매 조건을 입력하고, 분석 전 조건 진단, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 대안 시나리오, 조건 충족 매트릭스, 스트레스 테스트, 구매 실행 패키지, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 가격 알림, 알림 발송 운영, 구매 링크 거버넌스, 완료 리포트 batch 발송, 상품 페이지 근거 검수, URL 모니터 운영, 결제 전 검수, 구매 의사결정 보드, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 품질 회귀와 observability export, 외부 연동 준비도, 프라이버시/데이터 거버넌스, 베타 cohort와 개선 백로그 운영, 수익화 준비도, 출시 게이트, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
 
 ## 실행
 
@@ -41,6 +41,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/source-ingest`: 제품 API의 `/sources/ingest-url`로 상품 URL/HTML 스냅샷 가격, 배송비, 할인, 재고, 모델명 일치도 검수
 - `/api/specpilot/source-monitors`: 제품 API의 `/sources/monitors`, `/sources/schedule`, `/sources/refresh-due`, `/sources/refresh-runs`, `/admin/reviews`로 반복 상품 URL 수집, due refresh, 검수 큐 승인/반려 관리
 - `/api/specpilot/checkout-review`: 제품 API의 `/reports/{report_id}/checkout-review`로 최종 결제 금액, 판매자 답변, 리스크 승인 상태 검수
+- `/api/specpilot/decision-board`: 제품 API의 `/reports/decision-board`로 저장 리포트별 결제 가능, 가격 대기, 검수 차단, 링크/결과 미기록 큐 조회
 - `/api/specpilot/purchase-outcomes`: 제품 API의 `/reports/{report_id}/purchase-outcomes`로 실제 구매, 지연, 이탈, 반품/취소 결과와 최종가 차이 저장
 - `/api/specpilot/learning-insights`: 제품 API의 `/ops/learning-insights`로 구매 결과, 결제 검수, 피드백 기반 제품별 개선 액션 조회
 - `/api/specpilot/observability`: 제품 API의 `/ops/regression`, `/ops/observability/exports`, `/ops/observability/dispatch`로 품질 회귀와 trace export outbox 관리
@@ -120,6 +121,7 @@ docker build -t specpilot-ai-site:local .
 - `GET /admin/reviews`
 - `POST /admin/reviews/{review_id}/decision`
 - `POST /reports/{report_id}/checkout-review`
+- `GET /reports/decision-board`
 - `POST /reports/{report_id}/purchase-outcomes`
 - `GET /ops/learning-insights`
 - `GET /ops/regression`

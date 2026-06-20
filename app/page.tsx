@@ -47,6 +47,7 @@ import type {
   OpsLearningDashboard,
   OpsStatus,
   PricingOpsBundle,
+  PurchaseDecisionBoard,
   PurchaseLink,
   PurchaseLinkGovernance,
   PurchaseOutcome,
@@ -280,6 +281,11 @@ export default function Home() {
   >("idle");
   const [latestPurchaseOutcome, setLatestPurchaseOutcome] =
     useState<PurchaseOutcome | null>(null);
+  const [decisionBoardStatus, setDecisionBoardStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestDecisionBoard, setLatestDecisionBoard] =
+    useState<PurchaseDecisionBoard | null>(null);
   const [learningStatus, setLearningStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -461,6 +467,8 @@ export default function Home() {
     setLatestCheckoutReview(null);
     setOutcomeStatus("idle");
     setLatestPurchaseOutcome(null);
+    setDecisionBoardStatus("idle");
+    setLatestDecisionBoard(null);
     setLearningStatus("idle");
     setLatestLearningDashboard(null);
     setSourceMonitorStatus("idle");
@@ -538,6 +546,7 @@ export default function Home() {
           ? `Trace ${data.analysis.graph_trace_id}`
           : "API 미연결 데모",
       );
+      await loadPurchaseDecisionBoard();
     } catch (error) {
       setResult(demoResponse);
       setIsDemo(true);
@@ -971,6 +980,7 @@ export default function Home() {
       setLatestPurchaseLink(payload.link);
       setLatestPurchaseLinkGovernance(payload.governance);
       setPurchaseLinkStatus("sent");
+      await loadPurchaseDecisionBoard();
     } catch {
       setPurchaseLinkStatus("error");
     }
@@ -1186,6 +1196,7 @@ export default function Home() {
         ...current,
         acknowledgeMissing: false,
       }));
+      await loadPurchaseDecisionBoard();
     } catch {
       setCheckoutStatus("error");
     }
@@ -1231,9 +1242,34 @@ export default function Home() {
       }
       setLatestPurchaseOutcome(payload.outcome);
       setOutcomeStatus("sent");
+      await loadPurchaseDecisionBoard();
       await loadLearningInsights();
     } catch {
       setOutcomeStatus("error");
+    }
+  }
+
+  async function loadPurchaseDecisionBoard() {
+    setDecisionBoardStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/decision-board?limit=12", {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error(`decision board ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        board?: PurchaseDecisionBoard;
+      };
+      if (!payload.ok || !payload.board) {
+        throw new Error("decision board rejected");
+      }
+      setLatestDecisionBoard(payload.board);
+      setDecisionBoardStatus("sent");
+    } catch {
+      setDecisionBoardStatus("error");
     }
   }
 
@@ -1711,6 +1747,7 @@ export default function Home() {
           <a href="#source-check">상품 검수</a>
           <a href="#source-monitors">URL 모니터</a>
           <a href="#checkout-review">결제 검수</a>
+          <a href="#decision-board">구매 보드</a>
           <a href="#purchase-outcome">구매 결과</a>
           <a href="#learning-insights">학습 인사이트</a>
           <a href="#advisor">구매 상담</a>
@@ -3789,6 +3826,155 @@ export default function Home() {
               만족도 {latestPurchaseOutcome.satisfaction ?? "미입력"}점 · 출처{" "}
               {latestPurchaseOutcome.source_channel}
             </p>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="decisionBoardPanel" id="decision-board">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <ClipboardCheck size={16} />
+            구매 의사결정 보드
+          </div>
+          <h2>저장 리포트의 결제, 대기, 검수 큐를 한 번에 봅니다</h2>
+          <p>
+            여러 PC/노트북 구매 리포트의 최종 후보, 가격 차이, 결제 검수,
+            구매 링크, 구매 결과 기록 상태를 모아 다음 행동을 정리합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestDecisionBoard
+                  ? statusTone(latestDecisionBoard.status)
+                  : savedReportId
+                    ? "ok"
+                    : "warn"
+              }`}
+            >
+              {latestDecisionBoard
+                ? `${latestDecisionBoard.status} · ${latestDecisionBoard.report_count}건`
+                : savedReportId
+                  ? "보드 조회 가능"
+                  : "라이브 분석 필요"}
+            </span>
+            <span className="pill muted">저장 리포트 기준</span>
+          </div>
+        </div>
+
+        <div className="learningControl">
+          <button
+            type="button"
+            disabled={decisionBoardStatus === "sending"}
+            onClick={loadPurchaseDecisionBoard}
+          >
+            {decisionBoardStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <ClipboardCheck size={18} />
+            )}
+            구매 보드 새로고침
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              decisionBoardStatus,
+              "구매 의사결정 보드를 불러왔습니다.",
+              "구매 의사결정 보드 조회에 실패했습니다.",
+            ) || "분석 저장, 링크 등록, 검수, 구매 결과 저장 후 자동 갱신됩니다."}
+          </p>
+        </div>
+
+        {latestDecisionBoard ? (
+          <div className="decisionBoardResult">
+            <div className="answerHeader">
+              <span className={`pill ${statusTone(latestDecisionBoard.status)}`}>
+                {latestDecisionBoard.status}
+              </span>
+              <span className="pill muted">
+                Workspace {latestDecisionBoard.workspace_id}
+              </span>
+              <span className="pill muted">
+                {latestDecisionBoard.generated_at.slice(0, 16)}
+              </span>
+            </div>
+            <h3>{latestDecisionBoard.summary}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>저장 리포트</dt>
+                <dd>{latestDecisionBoard.report_count}건</dd>
+              </div>
+              <div>
+                <dt>결제 가능</dt>
+                <dd>{latestDecisionBoard.ready_to_buy_count}건</dd>
+              </div>
+              <div>
+                <dt>가격 대기</dt>
+                <dd>{latestDecisionBoard.price_wait_count}건</dd>
+              </div>
+              <div>
+                <dt>결과 미기록</dt>
+                <dd>{latestDecisionBoard.missing_outcome_count}건</dd>
+              </div>
+            </dl>
+            <div className="advisorLists">
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestDecisionBoard.next_actions.slice(0, 5).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>결제 가능 금액</strong>
+                <p>{won(latestDecisionBoard.total_ready_value_krw)}</p>
+              </div>
+            </div>
+            {latestDecisionBoard.items.length ? (
+              <div className="decisionBoardGrid">
+                {latestDecisionBoard.items.slice(0, 6).map((item) => (
+                  <article className="decisionBoardCard" key={item.report_id}>
+                    <div className="answerHeader">
+                      <span className={`pill ${statusTone(item.board_status)}`}>
+                        {item.decision_label}
+                      </span>
+                      <span className="pill muted">
+                        확신도 {Math.round(item.confidence)}점
+                      </span>
+                    </div>
+                    <h4>{item.top_model_name || item.title}</h4>
+                    <p>{item.recommended_action}</p>
+                    <dl className="sourceMetricGrid">
+                      <div>
+                        <dt>실구매가</dt>
+                        <dd>{won(item.effective_price_krw)}</dd>
+                      </div>
+                      <div>
+                        <dt>목표가 차이</dt>
+                        <dd>{won(item.price_gap_krw)}</dd>
+                      </div>
+                      <div>
+                        <dt>링크</dt>
+                        <dd>{item.has_purchase_links ? "등록" : "필요"}</dd>
+                      </div>
+                      <div>
+                        <dt>결과</dt>
+                        <dd>{item.has_purchase_outcome ? "기록" : "미기록"}</dd>
+                      </div>
+                    </dl>
+                    <ul>
+                      {item.next_steps.slice(0, 3).map((step) => (
+                        <li key={step}>{step}</li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="formStatus">
+                아직 저장된 리포트가 없습니다. 분석을 실행하면 자동 저장된 리포트가
+                구매 보드에 표시됩니다.
+              </p>
+            )}
           </div>
         ) : null}
       </section>

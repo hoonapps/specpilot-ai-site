@@ -856,6 +856,47 @@ export type PurchaseOutcome = {
 
 export type OpsStatus = "ok" | "warning" | "blocker";
 
+export type PurchaseDecisionBoardItem = {
+  report_id: string;
+  trace_id: string;
+  title: string;
+  owner_label: string;
+  category: Category;
+  purpose: string;
+  top_model_name: string | null;
+  final_pick_id: string | null;
+  decision_label: string;
+  board_status: OpsStatus;
+  recommended_action: string;
+  effective_price_krw: number | null;
+  target_price_krw: number | null;
+  price_gap_krw: number | null;
+  confidence: number;
+  checkout_blocked: boolean;
+  has_purchase_outcome: boolean;
+  has_purchase_links: boolean;
+  is_shared: boolean;
+  next_steps: string[];
+  risk_flags: string[];
+  created_at: string;
+  updated_at: string;
+};
+
+export type PurchaseDecisionBoard = {
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  summary: string;
+  report_count: number;
+  ready_to_buy_count: number;
+  price_wait_count: number;
+  checkout_blocked_count: number;
+  missing_outcome_count: number;
+  total_ready_value_krw: number;
+  next_actions: string[];
+  items: PurchaseDecisionBoardItem[];
+};
+
 export type OpsLearningInsight = {
   product_id: string;
   model_name: string | null;

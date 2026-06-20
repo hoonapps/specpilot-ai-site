@@ -728,6 +728,7 @@ ul {
 .completionPanel,
 .checkoutPanel,
 .outcomePanel,
+.decisionBoardPanel,
 .learningPanel,
 .observabilityPanel,
 .integrationPanel,
@@ -779,6 +780,7 @@ ul {
 .completionResult,
 .checkoutResult,
 .outcomeResult,
+.decisionBoardResult,
 .learningResult,
 .observabilityResult,
 .integrationResult,
@@ -1113,7 +1115,22 @@ ul {
   margin-top: 18px;
 }
 
+.decisionBoardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
 .insightCard {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 16px;
+}
+
+.decisionBoardCard {
   min-width: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1124,6 +1141,17 @@ ul {
 .insightCard h4 {
   margin: 12px 0 8px;
   font-size: 20px;
+}
+
+.decisionBoardCard h4 {
+  margin: 12px 0 8px;
+  font-size: 20px;
+}
+
+.decisionBoardCard ul {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
 }
 
 .conceptList {
@@ -1448,6 +1476,7 @@ ul {
   .completionPanel,
   .checkoutPanel,
   .outcomePanel,
+  .decisionBoardPanel,
   .learningPanel,
   .observabilityPanel,
   .integrationPanel,
@@ -1470,7 +1499,8 @@ ul {
   .criteriaMatrix,
   .executionPackage,
   .signalStrip,
-  .purchaseLinkGrid {
+  .purchaseLinkGrid,
+  .decisionBoardGrid {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -1513,6 +1543,7 @@ ul {
   .completionPanel,
   .checkoutPanel,
   .outcomePanel,
+  .decisionBoardPanel,
   .learningPanel,
   .observabilityPanel,
   .integrationPanel,
@@ -1538,6 +1569,7 @@ ul {
   .completionPanel,
   .checkoutPanel,
   .outcomePanel,
+  .decisionBoardPanel,
   .learningPanel,
   .observabilityPanel,
   .integrationPanel,
@@ -1589,6 +1621,7 @@ ul {
   .advisorLists,
   .alertActionGrid,
   .insightGrid,
+  .decisionBoardGrid,
   .gateCheckGrid,
   .sourceMetricGrid,
   .metricRow {

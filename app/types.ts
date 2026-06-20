@@ -934,6 +934,45 @@ export type LaunchCampaignKit = {
   measurement_plan: string[];
 };
 
+export type LaunchDistributionSlot = {
+  slot_id: string;
+  phase: string;
+  channel: string;
+  timing: string;
+  audience: string;
+  priority: number;
+  status: OpsStatus;
+  headline: string;
+  body: string;
+  cta_label: string;
+  cta_path: string;
+  copy_text: string;
+  tracking_event: GrowthEventType;
+  success_metric: string;
+  proof_to_attach: string[];
+  checklist: string[];
+};
+
+export type LaunchDistributionPlan = {
+  plan_version: string;
+  workspace_id: string;
+  generated_at: string;
+  category: Category | null;
+  audience: string;
+  launch_window: string;
+  status: OpsStatus;
+  distribution_score: number;
+  headline: string;
+  summary: string;
+  primary_cta: string;
+  priority_channels: string[];
+  experiment_to_promote: string;
+  slots: LaunchDistributionSlot[];
+  measurement_events: string[];
+  risk_controls: string[];
+  next_actions: string[];
+};
+
 export type LaunchExperimentVariantRequest = {
   label: string;
   headline: string;

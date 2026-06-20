@@ -52,6 +52,7 @@ import type {
   IntegrationReadinessDashboard,
   IntegrationStatus,
   LaunchCampaignKit,
+  LaunchDistributionPlan,
   LaunchExperimentDashboard,
   LaunchPulseDashboard,
   LaunchReadinessBundle,
@@ -506,6 +507,13 @@ export default function Home() {
   >("idle");
   const [latestLaunchKit, setLatestLaunchKit] =
     useState<LaunchCampaignKit | null>(null);
+  const [launchDistributionStatus, setLaunchDistributionStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestLaunchDistributionPlan, setLatestLaunchDistributionPlan] =
+    useState<LaunchDistributionPlan | null>(null);
+  const [launchDistributionCopyStatus, setLaunchDistributionCopyStatus] =
+    useState("idle");
   const [launchStatus, setLaunchStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -802,6 +810,9 @@ export default function Home() {
     setLatestLaunchExperimentDashboard(null);
     setLaunchKitStatus("idle");
     setLatestLaunchKit(null);
+    setLaunchDistributionStatus("idle");
+    setLatestLaunchDistributionPlan(null);
+    setLaunchDistributionCopyStatus("idle");
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -2337,6 +2348,46 @@ export default function Home() {
     }
   }
 
+  async function loadLaunchDistributionPlan() {
+    setLaunchDistributionStatus("sending");
+    try {
+      const params = new URLSearchParams({ audience: "creator", limit: "12" });
+      if (marketReportCategory !== "all") {
+        params.set("category", marketReportCategory);
+      }
+      const response = await fetch(
+        `/api/specpilot/launch-distribution-plan?${params.toString()}`,
+      );
+      if (!response.ok) {
+        throw new Error(`launch distribution ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        plan?: LaunchDistributionPlan;
+      };
+      if (!payload.ok || !payload.plan) {
+        throw new Error("launch distribution rejected");
+      }
+      setLatestLaunchDistributionPlan(payload.plan);
+      setLaunchDistributionStatus("sent");
+    } catch {
+      setLaunchDistributionStatus("error");
+    }
+  }
+
+  async function copyLaunchDistributionSlot(slotId: string, copyText: string) {
+    try {
+      await navigator.clipboard.writeText(copyText);
+      setLaunchDistributionCopyStatus(slotId);
+      await recordGrowthEvent("share_cta", "출시 배포 슬롯 문구 복사", "launch-distribution", {
+        silent: true,
+        metadata: { slot_id: slotId },
+      });
+    } catch {
+      setLaunchDistributionCopyStatus("error");
+    }
+  }
+
   async function loadLaunchReadiness() {
     setLaunchStatus("sending");
 
@@ -2527,6 +2578,7 @@ export default function Home() {
           <a href="#launch-pulse">런치 Pulse</a>
           <a href="#launch-experiments">출시 실험</a>
           <a href="#launch-kit">출시 키트</a>
+          <a href="#launch-distribution">배포 플랜</a>
           <a href="#pricing-ops">수익화</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -8226,6 +8278,175 @@ export default function Home() {
                   ))}
                 </ul>
               </div>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="launchDistributionPanel" id="launch-distribution">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Clock3 size={16} />
+            출시 배포 플랜
+          </div>
+          <h2>첫 주 채널 배포 순서와 복사 문구를 확정합니다</h2>
+          <p>
+            출시 키트, 전환 보드, 런치 Pulse, CTA 실험, 추천 대기열을 합쳐
+            D-day부터 D+7까지 어떤 채널에 무엇을 배포할지 정리합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestLaunchDistributionPlan
+                  ? statusTone(latestLaunchDistributionPlan.status)
+                  : "warn"
+              }`}
+            >
+              {latestLaunchDistributionPlan
+                ? `${Math.round(latestLaunchDistributionPlan.distribution_score)}점 · ${latestLaunchDistributionPlan.status}`
+                : "플랜 미조회"}
+            </span>
+            <span className="pill muted">
+              {latestLaunchDistributionPlan
+                ? latestLaunchDistributionPlan.launch_window
+                : "D-day~D+7"}
+            </span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={launchDistributionStatus === "sending"}
+            onClick={loadLaunchDistributionPlan}
+          >
+            {launchDistributionStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <Clock3 size={18} />
+            )}
+            배포 플랜 생성
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              launchDistributionStatus,
+              "출시 배포 플랜을 불러왔습니다.",
+              "출시 배포 플랜 조회에 실패했습니다.",
+            ) || "시장 리포트 카테고리와 현재 성장 신호를 기준으로 우선 채널을 정합니다."}
+          </p>
+        </div>
+
+        {latestLaunchDistributionPlan ? (
+          <div className="marketReportResult launchDistributionResult">
+            <div className="answerHeader">
+              <span
+                className={`pill ${statusTone(latestLaunchDistributionPlan.status)}`}
+              >
+                {latestLaunchDistributionPlan.status}
+              </span>
+              <span className="pill muted">
+                Workspace {latestLaunchDistributionPlan.workspace_id}
+              </span>
+              {latestLaunchDistributionPlan.experiment_to_promote ? (
+                <span className="pill ok">
+                  {latestLaunchDistributionPlan.experiment_to_promote}
+                </span>
+              ) : null}
+            </div>
+            <h3>{latestLaunchDistributionPlan.headline}</h3>
+            <p>{latestLaunchDistributionPlan.summary}</p>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>배포 점수</dt>
+                <dd>{Math.round(latestLaunchDistributionPlan.distribution_score)}점</dd>
+              </div>
+              <div>
+                <dt>우선 채널</dt>
+                <dd>{latestLaunchDistributionPlan.priority_channels.length}개</dd>
+              </div>
+              <div>
+                <dt>슬롯</dt>
+                <dd>{latestLaunchDistributionPlan.slots.length}개</dd>
+              </div>
+              <div>
+                <dt>CTA</dt>
+                <dd>{latestLaunchDistributionPlan.primary_cta}</dd>
+              </div>
+            </dl>
+
+            <div className="launchDistributionSlotGrid">
+              {latestLaunchDistributionPlan.slots.map((slot) => (
+                <article className="launchDistributionSlot" key={slot.slot_id}>
+                  <div className="answerHeader">
+                    <span className={`pill ${statusTone(slot.status)}`}>
+                      {slot.phase}
+                    </span>
+                    <span className="pill muted">{slot.channel}</span>
+                    <span className="pill ok">우선순위 {slot.priority}</span>
+                  </div>
+                  <h4>{slot.headline}</h4>
+                  <p>{slot.body}</p>
+                  <div className="miniMetricGrid">
+                    <div>
+                      <span>대상</span>
+                      <strong>{slot.audience}</strong>
+                    </div>
+                    <div>
+                      <span>측정</span>
+                      <strong>{slot.tracking_event}</strong>
+                    </div>
+                  </div>
+                  <ul>
+                    {slot.proof_to_attach.slice(0, 3).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      void copyLaunchDistributionSlot(slot.slot_id, slot.copy_text)
+                    }
+                  >
+                    <Copy size={16} />
+                    {launchDistributionCopyStatus === slot.slot_id
+                      ? "문구 복사 완료"
+                      : `${slot.cta_label} 문구 복사`}
+                  </button>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>측정 이벤트</strong>
+                <ul>
+                  {latestLaunchDistributionPlan.measurement_events.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>위험 통제</strong>
+                <ul>
+                  {latestLaunchDistributionPlan.risk_controls.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="referralBox mutedBox">
+              <strong>다음 액션</strong>
+              <ul>
+                {latestLaunchDistributionPlan.next_actions.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <p className="formStatus">
+                {launchDistributionCopyStatus === "error"
+                  ? "배포 문구 복사에 실패했습니다."
+                  : "각 슬롯 문구는 클립보드 복사와 동시에 성장 이벤트로 기록됩니다."}
+              </p>
             </div>
           </div>
         ) : null}

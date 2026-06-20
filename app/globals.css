@@ -864,6 +864,7 @@ ul {
 .launchPulsePanel,
 .launchExperimentPanel,
 .launchKitPanel,
+.launchDistributionPanel,
 .pricingOpsPanel,
 .launchPanel {
   display: grid;
@@ -1818,6 +1819,42 @@ ul {
   font-size: 13px;
 }
 
+.launchDistributionResult {
+  gap: 14px;
+}
+
+.launchDistributionSlotGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchDistributionSlot {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  padding: 14px;
+  background: #fbfffc;
+}
+
+.launchDistributionSlot h4,
+.launchDistributionSlot p,
+.launchDistributionSlot li {
+  overflow-wrap: anywhere;
+}
+
+.launchDistributionSlot button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
 .launchReferralShareKit {
   display: grid;
   gap: 8px;
@@ -2460,6 +2497,7 @@ ul {
   .launchPulsePanel,
   .launchExperimentPanel,
   .launchKitPanel,
+  .launchDistributionPanel,
   .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
@@ -2483,6 +2521,7 @@ ul {
   .decisionBoardGrid,
   .marketReportGrid,
   .growthStepGrid,
+  .launchDistributionSlotGrid,
   .conciergeResultGrid {
     grid-template-columns: 1fr 1fr;
   }
@@ -2545,6 +2584,7 @@ ul {
   .launchPulsePanel,
   .launchExperimentPanel,
   .launchKitPanel,
+  .launchDistributionPanel,
   .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
@@ -2582,6 +2622,7 @@ ul {
   .launchPulsePanel,
   .launchExperimentPanel,
   .launchKitPanel,
+  .launchDistributionPanel,
   .pricingOpsPanel,
   .launchPanel {
     margin-right: 0;
@@ -2659,6 +2700,7 @@ ul {
   .decisionBoardGrid,
   .marketReportGrid,
   .growthStepGrid,
+  .launchDistributionSlotGrid,
   .conciergeResultGrid,
   .conciergeMilestones,
   .gateCheckGrid,

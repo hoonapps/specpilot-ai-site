@@ -1585,6 +1585,61 @@ export type PublicUpgradeReadinessKit = {
   next_actions: string[];
 };
 
+export type OwnershipCostRequest = {
+  category: Category;
+  product_title: string;
+  purchase_price_krw: number;
+  expected_years: number;
+  resale_rate_percent: number | null;
+  yearly_maintenance_krw: number;
+  planned_upgrade_cost_krw: number;
+  warranty_months: number;
+  downtime_days: number;
+  daily_value_krw: number;
+  brand_resale_signal: string;
+  condition_risks: string[];
+  source: string;
+};
+
+export type OwnershipCostLine = {
+  line_id: string;
+  label: string;
+  amount_krw: number;
+  explanation: string;
+};
+
+export type OwnershipCostScenario = {
+  scenario_id: string;
+  label: string;
+  resale_value_krw: number;
+  net_cost_krw: number;
+  monthly_cost_krw: number;
+  status: OpsStatus;
+};
+
+export type PublicOwnershipCostKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  priority: OpsStatus;
+  ownership_score: number;
+  expected_resale_value_krw: number;
+  net_cost_krw: number;
+  monthly_cost_krw: number;
+  headline: string;
+  summary: string;
+  cost_lines: OwnershipCostLine[];
+  scenarios: OwnershipCostScenario[];
+  risk_flags: string[];
+  seller_questions: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

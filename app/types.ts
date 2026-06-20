@@ -506,6 +506,65 @@ export type PricingOpsBundle = {
   created_intent?: SubscriptionIntent | null;
 };
 
+export type MarketReportPick = {
+  category: Category;
+  product_id: string;
+  model_name: string;
+  role_label: string;
+  effective_price_krw: number;
+  target_price_krw: number;
+  price_band: string;
+  stock_status: string;
+  source_type: string;
+  benchmark_summary: string;
+  risk_status: OpsStatus;
+  fit_tags: string[];
+  reasons: string[];
+  watchouts: string[];
+};
+
+export type MarketPriceSegment = {
+  category: Category;
+  label: string;
+  min_price_krw: number;
+  max_price_krw: number;
+  recommended_budget_krw: number;
+  summary: string;
+  representative_product_ids: string[];
+};
+
+export type MarketRiskSignal = {
+  title: string;
+  status: OpsStatus;
+  affected_product_ids: string[];
+  evidence: string;
+  action: string;
+};
+
+export type MarketTrendCard = {
+  title: string;
+  category: Category | null;
+  signal: string;
+  evidence: string;
+  recommendation: string;
+};
+
+export type CategoryMarketReport = {
+  workspace_id: string;
+  generated_at: string;
+  report_month: string;
+  category_filter: Category | null;
+  headline: string;
+  summary: string;
+  total_candidates: number;
+  picks: MarketReportPick[];
+  price_segments: MarketPriceSegment[];
+  risk_signals: MarketRiskSignal[];
+  trend_cards: MarketTrendCard[];
+  workspace_signals: Record<string, number | string>;
+  publishing_checklist: string[];
+};
+
 export type ReportAdvisorQuestionRequest = {
   report_id: string;
   question: string;

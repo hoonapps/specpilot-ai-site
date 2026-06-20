@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {
   Activity,
+  BarChart3,
   Bell,
   CheckCircle2,
   ClipboardCheck,
@@ -47,6 +48,7 @@ import type {
   OpsLearningDashboard,
   OpsStatus,
   PricingOpsBundle,
+  CategoryMarketReport,
   PurchaseDecisionBoard,
   PurchaseLink,
   PurchaseLinkGovernance,
@@ -359,6 +361,14 @@ export default function Home() {
   const [latestIntent, setLatestIntent] = useState<SubscriptionIntent | null>(null);
   const [latestPricingBundle, setLatestPricingBundle] =
     useState<PricingOpsBundle | null>(null);
+  const [marketReportCategory, setMarketReportCategory] = useState<
+    Category | "all"
+  >("all");
+  const [marketReportStatus, setMarketReportStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestMarketReport, setLatestMarketReport] =
+    useState<CategoryMarketReport | null>(null);
   const [launchStatus, setLaunchStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -487,6 +497,8 @@ export default function Home() {
     setPricingStatus("idle");
     setLatestIntent(null);
     setLatestPricingBundle(null);
+    setMarketReportStatus("idle");
+    setLatestMarketReport(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -1575,6 +1587,31 @@ export default function Home() {
     }
   }
 
+  async function loadMarketReport() {
+    setMarketReportStatus("sending");
+    try {
+      const query =
+        marketReportCategory === "all"
+          ? ""
+          : `?category=${encodeURIComponent(marketReportCategory)}`;
+      const response = await fetch(`/api/specpilot/market-reports${query}`);
+      if (!response.ok) {
+        throw new Error(`market report ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        report?: CategoryMarketReport;
+      };
+      if (!payload.ok || !payload.report) {
+        throw new Error("market report rejected");
+      }
+      setLatestMarketReport(payload.report);
+      setMarketReportStatus("sent");
+    } catch {
+      setMarketReportStatus("error");
+    }
+  }
+
   async function loadLaunchReadiness() {
     setLaunchStatus("sending");
 
@@ -1756,6 +1793,7 @@ export default function Home() {
           <a href="#data-governance">프라이버시</a>
           <a href="#beta-ops">베타 운영</a>
           <a href="#launch-readiness">출시 게이트</a>
+          <a href="#market-reports">시장 리포트</a>
           <a href="#pricing-ops">수익화</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
@@ -5305,6 +5343,190 @@ export default function Home() {
                   <h4>{check.label}</h4>
                   <p>{check.metric}</p>
                   <p>{check.recommendation}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="marketReportPanel" id="market-reports">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <BarChart3 size={16} />
+            월간 카테고리 리포트
+          </div>
+          <h2>이번 달 PC와 노트북 구매 구간을 리포트로 정리합니다</h2>
+          <p>
+            데스크톱 PC와 노트북 후보를 가격대, 추천 역할, 재고/리뷰 리스크,
+            워크스페이스 구매 신호로 묶어 공개용 월간 리포트로 보여줍니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestMarketReport ? gateTone(latestMarketReport.risk_signals[0]?.status) : "warn"
+              }`}
+            >
+              {latestMarketReport
+                ? `${latestMarketReport.report_month} · ${latestMarketReport.total_candidates}개`
+                : "시장 리포트 미조회"}
+            </span>
+            <span className="pill muted">카테고리 리포트</span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <label>
+            카테고리
+            <select
+              value={marketReportCategory}
+              onChange={(event) =>
+                setMarketReportCategory(event.target.value as Category | "all")
+              }
+            >
+              <option value="all">전체</option>
+              <option value="desktop_pc">데스크톱 PC</option>
+              <option value="laptop">노트북</option>
+            </select>
+          </label>
+          <button
+            type="button"
+            disabled={marketReportStatus === "sending"}
+            onClick={loadMarketReport}
+          >
+            {marketReportStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <BarChart3 size={18} />
+            )}
+            시장 리포트 조회
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              marketReportStatus,
+              "월간 카테고리 리포트를 불러왔습니다.",
+              "월간 카테고리 리포트 조회에 실패했습니다.",
+            ) || "공개 콘텐츠와 수익화 검증에 사용할 카테고리별 리포트입니다."}
+          </p>
+        </div>
+
+        {latestMarketReport ? (
+          <div className="marketReportResult">
+            <div className="answerHeader">
+              <span className="pill ok">{latestMarketReport.report_month}</span>
+              <span className="pill muted">
+                Workspace {latestMarketReport.workspace_id}
+              </span>
+              <span className="pill muted">
+                {latestMarketReport.category_filter || "all"}
+              </span>
+            </div>
+            <h3>{latestMarketReport.headline}</h3>
+            <p>{latestMarketReport.summary}</p>
+
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>후보</dt>
+                <dd>{latestMarketReport.total_candidates}개</dd>
+              </div>
+              <div>
+                <dt>분석</dt>
+                <dd>{latestMarketReport.workspace_signals.analysis_runs}</dd>
+              </div>
+              <div>
+                <dt>구매 결과</dt>
+                <dd>{latestMarketReport.workspace_signals.purchase_outcomes}</dd>
+              </div>
+              <div>
+                <dt>구매 의향</dt>
+                <dd>
+                  {percent(Number(latestMarketReport.workspace_signals.purchase_intent_rate))}
+                </dd>
+              </div>
+            </dl>
+
+            <div className="marketReportGrid">
+              {latestMarketReport.picks.slice(0, 6).map((pick) => (
+                <article className="marketReportCard" key={pick.product_id}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(pick.risk_status)}`}>
+                      {pick.role_label}
+                    </span>
+                    <span className="pill muted">{pick.price_band}</span>
+                  </div>
+                  <h4>{pick.model_name}</h4>
+                  <p>{pick.benchmark_summary}</p>
+                  <dl className="sourceMetricGrid">
+                    <div>
+                      <dt>실구매가</dt>
+                      <dd>{won(pick.effective_price_krw)}</dd>
+                    </div>
+                    <div>
+                      <dt>목표가</dt>
+                      <dd>{won(pick.target_price_krw)}</dd>
+                    </div>
+                  </dl>
+                  <ul>
+                    {pick.reasons.slice(0, 2).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                    {pick.watchouts.slice(0, 1).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>가격 구간</strong>
+                <ul>
+                  {latestMarketReport.price_segments.slice(0, 5).map((segment) => (
+                    <li key={`${segment.category}-${segment.label}`}>
+                      {segment.label}: {won(segment.min_price_krw)}-
+                      {won(segment.max_price_krw)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>공개 체크리스트</strong>
+                <ul>
+                  {latestMarketReport.publishing_checklist.slice(0, 5).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestMarketReport.risk_signals.map((signal) => (
+                <article className="gateCheckCard" key={signal.title}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(signal.status)}`}>
+                      {signal.status}
+                    </span>
+                    <span className="pill muted">
+                      {signal.affected_product_ids.length}개 영향
+                    </span>
+                  </div>
+                  <h4>{signal.title}</h4>
+                  <p>{signal.evidence}</p>
+                  <p>{signal.action}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestMarketReport.trend_cards.map((trend) => (
+                <article className="gateCheckCard" key={trend.title}>
+                  <div className="answerHeader">
+                    <span className="pill ok">{trend.category || "workspace"}</span>
+                  </div>
+                  <h4>{trend.title}</h4>
+                  <p>{trend.signal}</p>
+                  <p>{trend.recommendation}</p>
                 </article>
               ))}
             </div>

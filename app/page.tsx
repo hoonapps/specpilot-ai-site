@@ -44,6 +44,7 @@ import type {
   ObservabilityOpsBundle,
   OpsLearningDashboard,
   OpsStatus,
+  PricingOpsBundle,
   PurchaseLink,
   PurchaseLinkGovernance,
   PurchaseOutcome,
@@ -326,6 +327,8 @@ export default function Home() {
     "idle" | "sending" | "sent" | "error"
   >("idle");
   const [latestIntent, setLatestIntent] = useState<SubscriptionIntent | null>(null);
+  const [latestPricingBundle, setLatestPricingBundle] =
+    useState<PricingOpsBundle | null>(null);
   const [launchStatus, setLaunchStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -445,6 +448,9 @@ export default function Home() {
     setLatestLaunchDashboard(null);
     setBetaOpsStatus("idle");
     setLatestBetaOpsBundle(null);
+    setPricingStatus("idle");
+    setLatestIntent(null);
+    setLatestPricingBundle(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -1331,7 +1337,7 @@ export default function Home() {
     setLatestIntent(null);
 
     try {
-      const response = await fetch("/api/specpilot/subscription-intents", {
+      const response = await fetch("/api/specpilot/pricing-ops", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -1347,6 +1353,7 @@ export default function Home() {
           purchase_timing: result.report.purchase_timing,
           contact_consent: pricingIntent.contactConsent,
           source: "specpilot-ai-site",
+          limit: 20,
         }),
       });
       if (!response.ok) {
@@ -1354,14 +1361,36 @@ export default function Home() {
       }
       const payload = (await response.json()) as {
         ok: boolean;
-        intent?: SubscriptionIntent;
+        bundle?: PricingOpsBundle;
       };
-      if (!payload.ok || !payload.intent) {
+      if (!payload.ok || !payload.bundle || !payload.bundle.created_intent) {
         throw new Error("pricing rejected");
       }
-      setLatestIntent(payload.intent);
+      setLatestIntent(payload.bundle.created_intent);
+      setLatestPricingBundle(payload.bundle);
       setPricingStatus("sent");
       await loadLaunchReadiness();
+    } catch {
+      setPricingStatus("error");
+    }
+  }
+
+  async function loadPricingOps() {
+    setPricingStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/pricing-ops?limit=20");
+      if (!response.ok) {
+        throw new Error(`pricing ops ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: PricingOpsBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("pricing ops rejected");
+      }
+      setLatestPricingBundle(payload.bundle);
+      setPricingStatus("sent");
     } catch {
       setPricingStatus("error");
     }
@@ -1545,6 +1574,7 @@ export default function Home() {
           <a href="#integrations">외부 연동</a>
           <a href="#beta-ops">베타 운영</a>
           <a href="#launch-readiness">출시 게이트</a>
+          <a href="#pricing-ops">수익화</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
         </nav>
@@ -4427,6 +4457,162 @@ export default function Home() {
                   <p>{check.recommendation}</p>
                 </article>
               ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="pricingOpsPanel" id="pricing-ops">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <CreditCard size={16} />
+            수익화 준비도
+          </div>
+          <h2>요금제 관심을 예상 MRR과 전환 액션으로 관리합니다</h2>
+          <p>
+            Premium/Team 관심 등록, 평균 예산, 상위 요금제, 최근 intent를 묶어
+            결제 연동 전 유료 수요와 다음 실험을 판단합니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestPricingBundle
+                  ? gateTone(latestPricingBundle.dashboard.readiness_status)
+                  : "warn"
+              }`}
+            >
+              {latestPricingBundle
+                ? `${latestPricingBundle.dashboard.intent_count}건 · MRR ${won(
+                    latestPricingBundle.dashboard.estimated_mrr_krw,
+                  )}`
+                : "수익화 준비도 미조회"}
+            </span>
+            <span className="pill muted">pricing-dashboard</span>
+          </div>
+        </div>
+
+        <div className="pricingOpsControl">
+          <button
+            type="button"
+            disabled={pricingStatus === "sending"}
+            onClick={loadPricingOps}
+          >
+            {pricingStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <CreditCard size={18} />
+            )}
+            수익화 대시보드 조회
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              pricingStatus,
+              "수익화 준비도를 갱신했습니다.",
+              "수익화 준비도 조회에 실패했습니다.",
+            ) || "아래 요금제 관심 등록을 제출하면 대시보드가 함께 갱신됩니다."}
+          </p>
+        </div>
+
+        {latestPricingBundle ? (
+          <div className="pricingOpsResult">
+            <div className="answerHeader">
+              <span
+                className={`pill ${gateTone(
+                  latestPricingBundle.dashboard.readiness_status,
+                )}`}
+              >
+                {latestPricingBundle.dashboard.readiness_status}
+              </span>
+              <span className="pill muted">
+                top {latestPricingBundle.dashboard.top_plan_name || "미정"}
+              </span>
+              {latestPricingBundle.created_intent ? (
+                <span className="pill ok">
+                  new {latestPricingBundle.created_intent.plan_name}
+                </span>
+              ) : null}
+            </div>
+            <h3>{latestPricingBundle.dashboard.summary}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>예상 MRR</dt>
+                <dd>{won(latestPricingBundle.dashboard.estimated_mrr_krw)}</dd>
+              </div>
+              <div>
+                <dt>연환산 매출</dt>
+                <dd>{won(latestPricingBundle.dashboard.annualized_revenue_krw)}</dd>
+              </div>
+              <div>
+                <dt>Premium</dt>
+                <dd>{latestPricingBundle.dashboard.premium_intent_count}건</dd>
+              </div>
+              <div>
+                <dt>Team</dt>
+                <dd>{latestPricingBundle.dashboard.team_intent_count}건</dd>
+              </div>
+            </dl>
+
+            <div className="sourceMonitorGrid">
+              <article>
+                <h3>요금제</h3>
+                <div className="reviewQueueList">
+                  {latestPricingBundle.plans.map((plan) => (
+                    <div key={plan.plan_id}>
+                      <strong>{plan.name}</strong>
+                      <span>
+                        {plan.audience} · 월 {won(plan.monthly_price_krw)} · 연{" "}
+                        {won(plan.annual_price_krw)}
+                      </span>
+                      <span>{plan.recommended_for.slice(0, 3).join(", ")}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article>
+                <h3>최근 관심 등록</h3>
+                {latestPricingBundle.intents.length ? (
+                  <div className="reviewQueueList">
+                    {latestPricingBundle.intents.slice(0, 6).map((intent) => (
+                      <div key={intent.intent_id}>
+                        <strong>{intent.plan_name}</strong>
+                        <span>
+                          {intent.email_masked} · {intent.billing_cycle} · team{" "}
+                          {intent.team_size}
+                        </span>
+                        <span>
+                          MRR {won(intent.estimated_mrr_krw)} ·{" "}
+                          {intent.recommendation}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>아직 요금제 관심 등록이 없습니다.</p>
+                )}
+              </article>
+            </div>
+
+            <div className="advisorLists">
+              <div>
+                <strong>다음 액션</strong>
+                <ul>
+                  {latestPricingBundle.dashboard.next_actions.slice(0, 5).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <strong>예산 신호</strong>
+                <ul>
+                  <li>
+                    평균 월 예산{" "}
+                    {won(Math.round(latestPricingBundle.dashboard.average_budget_krw))}
+                  </li>
+                  <li>전체 관심 {latestPricingBundle.dashboard.intent_count}건</li>
+                  <li>Workspace {latestPricingBundle.dashboard.workspace_id}</li>
+                </ul>
+              </div>
             </div>
           </div>
         ) : null}

@@ -425,6 +425,42 @@ export type SubscriptionIntent = {
   created_at: string;
 };
 
+export type PricingPlan = {
+  plan_id: string;
+  name: string;
+  audience: string;
+  monthly_price_krw: number;
+  annual_price_krw: number;
+  features: string[];
+  recommended_for: string[];
+  cta_label: string;
+};
+
+export type PricingDashboard = {
+  workspace_id: string;
+  generated_at: string;
+  intent_count: number;
+  premium_intent_count: number;
+  team_intent_count: number;
+  estimated_mrr_krw: number;
+  annualized_revenue_krw: number;
+  average_budget_krw: number;
+  top_plan_id: string | null;
+  top_plan_name: string | null;
+  readiness_status: OpsStatus;
+  summary: string;
+  next_actions: string[];
+  plans: PricingPlan[];
+  recent_intents: SubscriptionIntent[];
+};
+
+export type PricingOpsBundle = {
+  dashboard: PricingDashboard;
+  plans: PricingPlan[];
+  intents: SubscriptionIntent[];
+  created_intent?: SubscriptionIntent | null;
+};
+
 export type ReportAdvisorQuestionRequest = {
   report_id: string;
   question: string;

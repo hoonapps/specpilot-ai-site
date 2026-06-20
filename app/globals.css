@@ -620,6 +620,7 @@ ul {
 .observabilityPanel,
 .integrationPanel,
 .betaOpsPanel,
+.pricingOpsPanel,
 .launchPanel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
@@ -669,6 +670,7 @@ ul {
 .observabilityResult,
 .integrationResult,
 .betaOpsResult,
+.pricingOpsResult,
 .launchResult {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);
@@ -694,6 +696,12 @@ ul {
 }
 
 .betaOpsForm {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.pricingOpsControl {
   display: grid;
   align-content: start;
   gap: 12px;
@@ -753,6 +761,24 @@ ul {
   background: var(--teal);
   color: white;
   font-weight: 950;
+}
+
+.pricingOpsControl button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: white;
+  font-weight: 950;
+}
+
+.pricingOpsControl button:disabled {
+  cursor: progress;
+  opacity: 0.68;
 }
 
 .betaOpsForm button.secondaryButton,
@@ -1312,6 +1338,7 @@ ul {
   .observabilityPanel,
   .integrationPanel,
   .betaOpsPanel,
+  .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
     grid-template-columns: 1fr;
@@ -1358,6 +1385,7 @@ ul {
   .observabilityPanel,
   .integrationPanel,
   .betaOpsPanel,
+  .pricingOpsPanel,
   .launchPanel,
   .conversionPanel {
     padding-right: 14px;

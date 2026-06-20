@@ -21,6 +21,7 @@ import type {
   PublicSocialProofWall,
   PublicSpecRiskScanner,
 } from "../types";
+import { LaunchActionRouterPanel } from "./LaunchActionRouterPanel";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
@@ -1044,6 +1045,8 @@ export default async function LaunchPage() {
       <LaunchObjectionKitPanel />
 
       <LaunchSharePackPanel />
+
+      <LaunchActionRouterPanel />
 
       <LaunchProofHubPanel />
 

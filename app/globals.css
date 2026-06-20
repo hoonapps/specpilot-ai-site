@@ -3951,6 +3951,147 @@ ul {
   margin-bottom: 10px;
 }
 
+.launchActionRouter {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(229, 244, 239, 0.78)),
+    #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchActionRouterStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchActionRouterStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchActionRouterBody {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.55fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.launchActionRouterList {
+  display: grid;
+  gap: 10px;
+}
+
+.launchActionRouterList button {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--ink);
+  padding: 14px;
+  text-align: left;
+}
+
+.launchActionRouterList button.active,
+.launchActionRouterList button:hover,
+.launchActionRouterList button:focus-visible {
+  border-color: rgba(12, 116, 108, 0.46);
+  background: var(--teal-soft);
+  outline: none;
+}
+
+.launchActionRouterList strong,
+.launchActionRouterList small,
+.launchActionRouterDetail h3,
+.launchActionRouterDetail p,
+.launchActionRouterDetail li,
+.launchActionRouterDetail span,
+.launchActionRouterFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchActionRouterList strong {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.launchActionRouterList small,
+.launchActionRouterDetail p,
+.launchActionRouterDetail li,
+.launchActionRouterDetail span,
+.launchActionRouterFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchActionRouterDetail,
+.launchActionRouterFooter > div {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 12px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 18px;
+}
+
+.launchActionRouterDetail > div:first-child,
+.launchActionRouterCtaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchActionRouterDetail h3 {
+  font-size: clamp(22px, 2.4vw, 34px);
+  line-height: 1.12;
+}
+
+.launchActionRouterDetail ul,
+.launchActionRouterFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchActionRouterCtaRow {
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.launchActionRouterCtaRow span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.launchActionRouterFooter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.7fr);
+  gap: 12px;
+}
+
+.launchActionRouterFooter strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 950;
+}
+
 .launchReadinessGate {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -5752,6 +5893,8 @@ ul {
   .launchObjectionFooter,
   .launchSharePackHero,
   .launchSharePackFooter,
+  .launchActionRouterBody,
+  .launchActionRouterFooter,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -6077,6 +6220,8 @@ ul {
   .launchSharePackHero,
   .launchSharePackGrid,
   .launchSharePackFooter,
+  .launchActionRouterBody,
+  .launchActionRouterFooter,
   .launchReadinessMetricGrid,
   .launchReadinessCheckGrid,
   .launchReadinessFooter,

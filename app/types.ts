@@ -1645,6 +1645,36 @@ export type PublicLaunchSharePack = {
   next_actions: string[];
 };
 
+export type PublicLaunchActionRoute = {
+  key: string;
+  persona: string;
+  trigger: string;
+  recommended_action: string;
+  cta_label: string;
+  cta_path: string;
+  priority_score: number;
+  status: OpsStatus;
+  why_now: string;
+  proof_points: string[];
+  fallback_action: string;
+  tracking_event: string;
+};
+
+export type PublicLaunchActionRouter = {
+  router_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  routing_score: number;
+  headline: string;
+  summary: string;
+  default_route_key: string;
+  routes: PublicLaunchActionRoute[];
+  quick_filters: string[];
+  measurement_events: string[];
+  next_actions: string[];
+};
+
 export type PublicProofEvidence = {
   title: string;
   status: OpsStatus;

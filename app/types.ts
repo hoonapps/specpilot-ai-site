@@ -916,6 +916,59 @@ export type PublicBuyerChecklist = {
   next_actions: string[];
 };
 
+export type BuyerPersonaQuizOption = {
+  option_id: string;
+  label: string;
+  description: string;
+};
+
+export type BuyerPersonaQuizQuestion = {
+  question_id: string;
+  title: string;
+  helper: string;
+  options: BuyerPersonaQuizOption[];
+};
+
+export type PublicBuyerPersonaQuiz = {
+  quiz_version: string;
+  generated_at: string;
+  headline: string;
+  summary: string;
+  questions: BuyerPersonaQuizQuestion[];
+  result_endpoint: string;
+  next_actions: string[];
+};
+
+export type BuyerPersonaQuizAnswer = {
+  question_id: string;
+  option_id: string;
+};
+
+export type BuyerPersonaQuizRequest = {
+  answers: BuyerPersonaQuizAnswer[];
+  source: string;
+};
+
+export type BuyerPersonaQuizResult = {
+  result_version: string;
+  generated_at: string;
+  persona_id: string;
+  persona_label: string;
+  category: Category;
+  recommended_plan_id: string;
+  recommended_budget_krw: number;
+  confidence_score: number;
+  headline: string;
+  summary: string;
+  analysis_prefill: string;
+  checklist_path: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  proof_points: string[];
+  share_copy: string;
+  next_actions: string[];
+};
+
 export type StartConciergeMilestone = {
   step: string;
   title: string;

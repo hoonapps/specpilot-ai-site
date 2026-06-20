@@ -1761,6 +1761,203 @@ ul {
   font-weight: 950;
 }
 
+.launchPersonaQuiz {
+  gap: 18px;
+  border: 1px solid rgba(49, 95, 140, 0.16);
+  background: #f7fbff;
+}
+
+.launchPersonaLoading,
+.launchPersonaError {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.launchPersonaLoading svg,
+.spinIcon {
+  animation: spin 900ms linear infinite;
+}
+
+.launchPersonaError {
+  color: var(--red);
+}
+
+.launchPersonaQuizBody {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.launchPersonaQuestionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchPersonaQuestion {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(49, 95, 140, 0.16);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchPersonaQuestion > span,
+.launchPersonaPrefill span,
+.launchPersonaResultGrid span {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchPersonaQuestion p,
+.launchPersonaPrefill p,
+.launchPersonaResult p,
+.launchPersonaColumns li,
+.launchPersonaActionRow small {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.launchPersonaOptions {
+  display: grid;
+  gap: 8px;
+}
+
+.launchPersonaOptions button {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 11px;
+  text-align: left;
+}
+
+.launchPersonaOptions button.active,
+.launchPersonaOptions button:hover,
+.launchPersonaOptions button:focus-visible {
+  border-color: var(--blue);
+  background: #eef6ff;
+}
+
+.launchPersonaOptions strong,
+.launchPersonaOptions small {
+  overflow-wrap: anywhere;
+}
+
+.launchPersonaOptions small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.launchPersonaActionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.launchPersonaActionRow .primaryButton {
+  border: 0;
+}
+
+.launchPersonaActionRow .primaryButton:disabled {
+  opacity: 0.66;
+}
+
+.launchPersonaResult {
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: clamp(16px, 3vw, 22px);
+  box-shadow: 0 18px 42px rgba(24, 32, 29, 0.08);
+}
+
+.launchPersonaResult h3 {
+  margin: 10px 0 8px;
+  font-size: clamp(22px, 2.6vw, 30px);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.launchPersonaResultGrid,
+.launchPersonaColumns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchPersonaColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchPersonaResultGrid article,
+.launchPersonaPrefill,
+.launchPersonaColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fffb;
+  padding: 13px;
+}
+
+.launchPersonaResultGrid strong,
+.launchPersonaColumns strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchPersonaColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchPersonaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.launchPersonaActions .miniCta,
+.launchPersonaActions button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+.launchPersonaActions .miniCta.secondary,
+.launchPersonaActions button {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  padding: 0 12px;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -2847,6 +3044,8 @@ ul {
   .publicConversionPanel,
   .launchPublicMetrics,
   .launchBuyerChecklistFooter,
+  .launchPersonaResultGrid,
+  .launchPersonaColumns,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchPublicGrid.three,
@@ -2907,6 +3106,7 @@ ul {
   .marketReportGrid,
   .growthStepGrid,
   .launchBuyerChecklistGrid,
+  .launchPersonaQuestionGrid,
   .launchDistributionSlotGrid,
   .conciergeResultGrid,
   .launchSocialProofGrid {
@@ -3072,6 +3272,9 @@ ul {
   .launchPublicMetrics,
   .launchBuyerChecklistGrid,
   .launchBuyerChecklistFooter,
+  .launchPersonaQuestionGrid,
+  .launchPersonaResultGrid,
+  .launchPersonaColumns,
   .launchSocialProofMetrics,
   .launchSocialProofGrid,
   .launchSocialProofFooter,

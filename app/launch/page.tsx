@@ -17,6 +17,7 @@ import type {
   PublicLaunchRoom,
   PublicSocialProofWall,
 } from "../types";
+import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 
 export const dynamic = "force-dynamic";
@@ -415,7 +416,7 @@ export default async function LaunchPage() {
         </article>
       </section>
 
-      <section className="launchPublicSection launchBuyerChecklist">
+      <section className="launchPublicSection launchBuyerChecklist" id="buyer-checklist">
         <div className="sectionHeader">
           <div>
             <div className="sectionLabel">
@@ -478,6 +479,8 @@ export default async function LaunchPage() {
           </div>
         </div>
       </section>
+
+      <BuyerPersonaQuizPanel />
 
       <section className="launchPublicSection launchSocialProofWall">
         <div className="sectionHeader">

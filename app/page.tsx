@@ -30,6 +30,7 @@ import type {
   Category,
   CheckoutReview,
   FeedbackRecord,
+  LaunchReadinessBundle,
   OpsLearningDashboard,
   OpsStatus,
   PurchaseOutcome,
@@ -97,6 +98,13 @@ function percent(value: number) {
 
 function statusTone(status: OpsStatus) {
   return status === "ok" ? "ok" : "warn";
+}
+
+function gateTone(status: OpsStatus) {
+  if (status === "ok") {
+    return "ok";
+  }
+  return status === "blocker" ? "danger" : "warn";
 }
 
 export default function Home() {
@@ -224,6 +232,11 @@ export default function Home() {
     "idle" | "sending" | "sent" | "error"
   >("idle");
   const [latestIntent, setLatestIntent] = useState<SubscriptionIntent | null>(null);
+  const [launchStatus, setLaunchStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestLaunchDashboard, setLatestLaunchDashboard] =
+    useState<LaunchReadinessBundle | null>(null);
 
   const top = result.report.top_recommendations[0];
   const dealWindow = result.report.deal_windows[0];
@@ -262,6 +275,8 @@ export default function Home() {
     setLatestPurchaseOutcome(null);
     setLearningStatus("idle");
     setLatestLearningDashboard(null);
+    setLaunchStatus("idle");
+    setLatestLaunchDashboard(null);
     setFeedbackStatus("idle");
     try {
       const response = await fetch("/api/specpilot/analyze", {
@@ -324,6 +339,7 @@ export default function Home() {
       setLatestCheckoutReview(null);
       setLatestPurchaseOutcome(null);
       setLatestLearningDashboard(null);
+      setLatestLaunchDashboard(null);
       setConnectionWarning(
         error instanceof Error
           ? error.message
@@ -641,6 +657,7 @@ export default function Home() {
         throw new Error("feedback rejected");
       }
       setFeedbackStatus("sent");
+      await loadLaunchReadiness();
     } catch {
       setFeedbackStatus("error");
     }
@@ -674,6 +691,7 @@ export default function Home() {
         throw new Error("beta rejected");
       }
       setBetaStatus("sent");
+      await loadLaunchReadiness();
     } catch {
       setBetaStatus("error");
     }
@@ -715,8 +733,33 @@ export default function Home() {
       }
       setLatestIntent(payload.intent);
       setPricingStatus("sent");
+      await loadLaunchReadiness();
     } catch {
       setPricingStatus("error");
+    }
+  }
+
+  async function loadLaunchReadiness() {
+    setLaunchStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/launch-readiness", {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error(`launch ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        dashboard?: LaunchReadinessBundle;
+      };
+      if (!payload.ok || !payload.dashboard) {
+        throw new Error("launch readiness rejected");
+      }
+      setLatestLaunchDashboard(payload.dashboard);
+      setLaunchStatus("sent");
+    } catch {
+      setLaunchStatus("error");
     }
   }
 
@@ -741,6 +784,7 @@ export default function Home() {
           <a href="#purchase-outcome">구매 결과</a>
           <a href="#learning-insights">학습 인사이트</a>
           <a href="#advisor">구매 상담</a>
+          <a href="#launch-readiness">출시 게이트</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
         </nav>
@@ -1930,6 +1974,133 @@ export default function Home() {
                   ))}
                 </ul>
               </div>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="launchPanel" id="launch-readiness">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Activity size={16} />
+            출시 게이트
+          </div>
+          <h2>공개 확대 전에 go/no-go를 한 화면에서 판단합니다</h2>
+          <p>
+            분석 실행, 공유 조회, 가격 알림, 피드백, 베타 리드, 구매 전환,
+            학습 인사이트, 개선 백로그, 외부 연동 준비도를 묶어 공개 확대
+            상태와 필수 액션을 보여줍니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestLaunchDashboard
+                  ? gateTone(latestLaunchDashboard.launch_gate.status)
+                  : "warn"
+              }`}
+            >
+              {latestLaunchDashboard
+                ? `${latestLaunchDashboard.launch_gate.decision} · ${Math.round(
+                    latestLaunchDashboard.launch_gate.launch_readiness_score,
+                  )}점`
+                : "출시 상태 미조회"}
+            </span>
+            <span className="pill muted">readiness + launch gate + backlog SLA</span>
+          </div>
+        </div>
+
+        <div className="learningControl">
+          <button
+            type="button"
+            disabled={launchStatus === "sending"}
+            onClick={loadLaunchReadiness}
+          >
+            {launchStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <Activity size={18} />
+            )}
+            출시 준비도 새로고침
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              launchStatus,
+              "출시 게이트를 불러왔습니다.",
+              "출시 게이트 조회에 실패했습니다.",
+            ) || "피드백, 베타 신청, 요금제 관심 등록 뒤 자동으로 갱신됩니다."}
+          </p>
+        </div>
+
+        {latestLaunchDashboard ? (
+          <div className="launchResult">
+            <div className="answerHeader">
+              <span className={`pill ${gateTone(latestLaunchDashboard.launch_gate.status)}`}>
+                {latestLaunchDashboard.launch_gate.decision}
+              </span>
+              <span className="pill muted">
+                {latestLaunchDashboard.readiness.readiness_label}
+              </span>
+              <span className="pill muted">
+                Workspace {latestLaunchDashboard.launch_gate.workspace_id}
+              </span>
+            </div>
+            <h3>{latestLaunchDashboard.launch_gate.summary}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>준비도</dt>
+                <dd>
+                  {Math.round(latestLaunchDashboard.readiness.launch_readiness_score)}점
+                </dd>
+              </div>
+              <div>
+                <dt>공개 조회</dt>
+                <dd>{latestLaunchDashboard.readiness.public_share_views}</dd>
+              </div>
+              <div>
+                <dt>구매 의향</dt>
+                <dd>{percent(latestLaunchDashboard.readiness.purchase_intent_rate)}</dd>
+              </div>
+              <div>
+                <dt>열린 백로그</dt>
+                <dd>{latestLaunchDashboard.backlog_summary.open_count}</dd>
+              </div>
+            </dl>
+
+            <div className="advisorLists">
+              <div>
+                <strong>필수 액션</strong>
+                <ul>
+                  {latestLaunchDashboard.launch_gate.required_actions
+                    .slice(0, 5)
+                    .map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                </ul>
+              </div>
+              <div>
+                <strong>다음 개선 백로그</strong>
+                <ul>
+                  {latestLaunchDashboard.backlog_summary.next_actions
+                    .slice(0, 5)
+                    .map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestLaunchDashboard.launch_gate.checks.slice(0, 8).map((check) => (
+                <article className="gateCheckCard" key={`${check.area}-${check.label}`}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(check.status)}`}>{check.status}</span>
+                    <span className="pill muted">{check.area}</span>
+                  </div>
+                  <h4>{check.label}</h4>
+                  <p>{check.metric}</p>
+                  <p>{check.recommendation}</p>
+                </article>
+              ))}
             </div>
           </div>
         ) : null}

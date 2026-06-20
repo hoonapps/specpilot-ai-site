@@ -481,3 +481,72 @@ export type OpsLearningDashboard = {
   top_actions: string[];
   insights: OpsLearningInsight[];
 };
+
+export type BetaReadinessCheck = {
+  area: string;
+  label: string;
+  status: OpsStatus;
+  metric: string;
+  recommendation: string;
+};
+
+export type BetaReadinessDashboard = {
+  workspace_id: string;
+  launch_readiness_score: number;
+  readiness_label: string;
+  analysis_runs: number;
+  saved_reports: number;
+  shared_reports: number;
+  public_share_views: number;
+  alert_subscriptions: number;
+  feedback_count: number;
+  beta_leads: number;
+  average_quality_score: number;
+  blocker_count: number;
+  average_satisfaction: number;
+  purchase_intent_rate: number;
+  conversion_ready_rate: number;
+  checks: BetaReadinessCheck[];
+  next_actions: string[];
+};
+
+export type LaunchGateCheck = {
+  area: string;
+  label: string;
+  status: OpsStatus;
+  metric: string;
+  recommendation: string;
+};
+
+export type LaunchGateDashboard = {
+  workspace_id: string;
+  generated_at: string;
+  decision: "go" | "limited_beta" | "hold" | "blocked" | string;
+  status: OpsStatus;
+  launch_readiness_score: number;
+  readiness_label: string;
+  summary: string;
+  required_actions: string[];
+  checks: LaunchGateCheck[];
+  metric_cards: Record<string, number | string>;
+};
+
+export type BetaBacklogSummary = {
+  workspace_id: string;
+  total_count: number;
+  open_count: number;
+  in_progress_count: number;
+  done_count: number;
+  dismissed_count: number;
+  overdue_count: number;
+  due_soon_count: number;
+  blocker_count: number;
+  completion_summaries: string[];
+  next_actions: string[];
+};
+
+export type LaunchReadinessBundle = {
+  readiness: BetaReadinessDashboard;
+  launch_gate: LaunchGateDashboard;
+  backlog_summary: BetaBacklogSummary;
+};

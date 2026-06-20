@@ -518,7 +518,8 @@ ul {
 .alertPanel,
 .checkoutPanel,
 .outcomePanel,
-.learningPanel {
+.learningPanel,
+.launchPanel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.56fr);
   gap: 18px;
@@ -560,7 +561,8 @@ ul {
 .alertResult,
 .checkoutResult,
 .outcomeResult,
-.learningResult {
+.learningResult,
+.launchResult {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);
   padding-top: 18px;
@@ -624,6 +626,33 @@ ul {
   padding: 5px 9px;
   font-size: 12px;
   font-weight: 900;
+}
+
+.gateCheckGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.gateCheckCard {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 14px;
+}
+
+.gateCheckCard h4 {
+  margin: 10px 0 8px;
+  font-size: 17px;
+  line-height: 1.25;
+  word-break: keep-all;
+}
+
+.gateCheckCard p {
+  margin-bottom: 8px;
+  font-size: 13px;
 }
 
 .publicReport {
@@ -902,6 +931,7 @@ ul {
   .checkoutPanel,
   .outcomePanel,
   .learningPanel,
+  .launchPanel,
   .conversionPanel {
     grid-template-columns: 1fr;
   }
@@ -941,6 +971,7 @@ ul {
   .checkoutPanel,
   .outcomePanel,
   .learningPanel,
+  .launchPanel,
   .conversionPanel {
     padding-right: 14px;
     padding-left: 14px;
@@ -960,6 +991,7 @@ ul {
   .advisorLists,
   .alertActionGrid,
   .insightGrid,
+  .gateCheckGrid,
   .sourceMetricGrid,
   .metricRow {
     grid-template-columns: 1fr;

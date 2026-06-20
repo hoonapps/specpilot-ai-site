@@ -7,7 +7,7 @@ import type {
   SaveReportResponse,
   ShareReportResponse,
 } from "../../../types";
-import { postJson, productPublicUrl } from "../_client";
+import { postJson } from "../_client";
 
 function reportTitle(analysis: AnalyzeResponse) {
   const top = analysis.report.top_recommendations[0];
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     const share = await postJson<ShareReportResponse>(
       `/reports/${savedReport.report_id}/share`,
     );
-    const publicUrl = productPublicUrl(share.public_path);
+    const publicUrl = new URL(share.public_path, request.url).toString();
 
     return NextResponse.json<AnalyzeAndShareResponse>({
       analysis,

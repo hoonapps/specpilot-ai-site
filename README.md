@@ -2,7 +2,7 @@
 
 SpecPilot AI 제품 API를 공개 사용자에게 보여주는 Next.js 웹사이트입니다.
 
-이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 구매 조건을 입력하고, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 구매 타이밍, 공유 브리프, 가격 알림, 상품 페이지 근거 검수, 결제 전 검수, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
+이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 구매 조건을 입력하고, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 가격 알림, 상품 페이지 근거 검수, 결제 전 검수, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
 
 ## 실행
 
@@ -38,6 +38,12 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/checkout-review`: 제품 API의 `/reports/{report_id}/checkout-review`로 최종 결제 금액, 판매자 답변, 리스크 승인 상태 검수
 - `/api/specpilot/purchase-outcomes`: 제품 API의 `/reports/{report_id}/purchase-outcomes`로 실제 구매, 지연, 이탈, 반품/취소 결과와 최종가 차이 저장
 - `/api/specpilot/learning-insights`: 제품 API의 `/ops/learning-insights`로 구매 결과, 결제 검수, 피드백 기반 제품별 개선 액션 조회
+
+공개 페이지:
+
+- `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
+- 공개 리포트는 구매 판정, 최종 후보, TOP 3 비교, 공유 브리프, 구매 타이밍, 구매 실행 체크리스트, 제휴/비제휴 구매 링크를 한 화면에 표시
+- 구매 링크는 제품 API의 `/buy/{link_id}` 추적 redirect를 사용해 공개 클릭 지표를 유지
 
 ## Docker 실행
 
@@ -88,6 +94,6 @@ docker build -t specpilot-ai-site:local .
 - `POST /feedback`
 - `POST /beta/leads`
 - `POST /billing/subscription-intents`
-- 공개 리포트 페이지(`/r/{share_token}`)
+- 공개 리포트 페이지(`/r/{share_token}`): Next.js 웹사이트에서 직접 렌더링
 
 API가 꺼져 있으면 웹사이트는 내장 데모 리포트를 표시해 첫 화면 품질을 유지합니다.

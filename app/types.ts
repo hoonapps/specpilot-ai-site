@@ -25,6 +25,24 @@ export type Recommendation = {
     compatibility: number;
   };
   fit_summary: string;
+  risks?: string[];
+  purchase_checklist?: string[];
+};
+
+export type ExcludedProduct = {
+  product_id: string;
+  model_name: string;
+  reason: string;
+};
+
+export type ComparisonRow = {
+  product_id: string;
+  model_name: string;
+  effective_price_krw: number;
+  total_score: number;
+  compatibility_score: number;
+  review_risk: string;
+  purchase_timing: string;
 };
 
 export type DealWindow = {
@@ -67,9 +85,29 @@ export type AnalyzeResponse = {
     share_brief: {
       headline: string;
       verdict_label: string;
+      final_pick_id?: string | null;
+      final_pick_model?: string | null;
+      effective_price_krw?: number | null;
+      confidence?: number;
       key_reasons: string[];
       watchouts: string[];
+      reviewer_questions?: string[];
       copy_text: string;
+    };
+    excluded_products?: ExcludedProduct[];
+    comparison_table?: ComparisonRow[];
+    verification_flags?: string[];
+    citations?: string[];
+    execution_plan?: {
+      product_id: string | null;
+      model_name: string | null;
+      headline: string;
+      primary_action: string;
+      urgency: string;
+      price_recheck_required: boolean;
+      checkout_steps: string[];
+      seller_questions: string[];
+      share_message: string;
     };
     price_alerts: PriceAlertPlan[];
     deal_windows: DealWindow[];
@@ -93,6 +131,40 @@ export type ShareReportResponse = {
   is_public: boolean;
   share_token: string;
   public_path: string;
+  shared_at?: string | null;
+  share_views?: number;
+};
+
+export type PurchaseLink = {
+  link_id: string;
+  report_id: string;
+  product_id: string;
+  model_name: string;
+  seller_name: string;
+  is_affiliate: boolean;
+  affiliate_network: string;
+  price_krw: number | null;
+  shipping_fee_krw: number;
+  coupon_krw: number;
+  effective_price_krw: number | null;
+  rank: number;
+  active: boolean;
+  status: OpsStatus;
+  disclosure: string;
+  policy_warnings: string[];
+  click_path: string;
+  click_count: number;
+};
+
+export type PublicReport = {
+  report_id: string;
+  title: string;
+  top_model_name: string | null;
+  final_pick_id: string | null;
+  shared_at: string;
+  share_views: number;
+  response: AnalyzeResponse;
+  purchase_links: PurchaseLink[];
 };
 
 export type AnalyzeAndShareResponse = {

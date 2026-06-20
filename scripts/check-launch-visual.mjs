@@ -31,7 +31,14 @@ function createChromeProcess() {
   const args = [
     "--headless=new",
     "--disable-gpu",
+    "--disable-dev-shm-usage",
+    "--disable-extensions",
+    "--disable-background-networking",
+    "--disable-crash-reporter",
+    "--disable-setuid-sandbox",
     "--hide-scrollbars",
+    "--no-first-run",
+    "--no-sandbox",
     "--remote-debugging-port=0",
     `--user-data-dir=${userDataDir}`,
     "about:blank",
@@ -39,7 +46,7 @@ function createChromeProcess() {
 
   for (const candidate of chromeCandidates) {
     try {
-      const child = spawn(candidate, args, { stdio: ["ignore", "ignore", "pipe"] });
+      const child = spawn(candidate, args, { stdio: ["ignore", "pipe", "pipe"] });
       return { child, userDataDir };
     } catch {
       // Try the next candidate.
@@ -53,19 +60,22 @@ function createChromeProcess() {
 
 function waitForBrowserWebSocket(child) {
   return new Promise((resolve, reject) => {
-    let stderr = "";
+    let output = "";
     const timeout = setTimeout(() => {
-      reject(new Error(`Timed out waiting for Chrome DevTools. stderr:\n${stderr}`));
-    }, 15_000);
+      reject(new Error(`Timed out waiting for Chrome DevTools. output:\n${output}`));
+    }, 45_000);
 
-    child.stderr.on("data", (chunk) => {
-      stderr += chunk.toString();
-      const match = stderr.match(/DevTools listening on (ws:\/\/[^\s]+)/);
+    function capture(chunk) {
+      output += chunk.toString();
+      const match = output.match(/DevTools listening on (ws:\/\/[^\s]+)/);
       if (match) {
         clearTimeout(timeout);
         resolve(match[1]);
       }
-    });
+    }
+
+    child.stdout.on("data", capture);
+    child.stderr.on("data", capture);
 
     child.on("error", (error) => {
       clearTimeout(timeout);

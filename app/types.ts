@@ -480,6 +480,75 @@ export type WaitlistReferralDashboard = {
   next_actions: string[];
 };
 
+export type SourceTrustAssessment = {
+  source_type: string;
+  source_name: string;
+  kind: "price" | "review" | "benchmark" | "official";
+  trust_grade: "high" | "medium" | "review_required";
+  confidence: number;
+  freshness_minutes: number;
+  cache_ttl_minutes: number;
+  evidence_count: number;
+  requires_human_review: boolean;
+  policy_notes: string[];
+};
+
+export type TrustPolicySummary = {
+  cache_policy: string;
+  stale_price_action: string;
+  affiliate_disclosure: string;
+  fairness_rules: string[];
+  review_rules: string[];
+  source_assessments: SourceTrustAssessment[];
+};
+
+export type PrivacyDataCategory = {
+  category: string;
+  label: string;
+  stored_fields: string[];
+  masking: string;
+  retention: string;
+  user_control: string;
+};
+
+export type PrivacyPolicySummary = {
+  policy_version: string;
+  headline: string;
+  data_minimization: string;
+  public_report_policy: string;
+  contact_policy: string;
+  retention_policy: string;
+  user_controls: string[];
+  prohibited_data: string[];
+  data_categories: PrivacyDataCategory[];
+};
+
+export type TrustCenterGate = {
+  area: string;
+  label: string;
+  status: OpsStatus;
+  public_message: string;
+  evidence: string[];
+  buyer_impact: string;
+  next_action: string;
+};
+
+export type TrustCenterDashboard = {
+  policy_version: string;
+  generated_at: string;
+  headline: string;
+  public_summary: string;
+  overall_status: OpsStatus;
+  trust_policy: TrustPolicySummary;
+  privacy_policy: PrivacyPolicySummary;
+  public_commitments: string[];
+  buyer_rights: string[];
+  operational_gates: TrustCenterGate[];
+  risk_disclosures: string[];
+  escalation_paths: string[];
+  next_actions: string[];
+};
+
 export type SubscriptionIntentRequest = {
   email: string;
   plan_id: "premium" | "team";

@@ -63,6 +63,7 @@ import type {
   SourceCandidate,
   SourceMonitorOpsBundle,
   SubscriptionIntent,
+  TrustCenterDashboard,
   WaitlistReferral,
   WaitlistReferralDashboard,
 } from "./types";
@@ -341,6 +342,11 @@ export default function Home() {
   >("idle");
   const [latestDataGovernanceBundle, setLatestDataGovernanceBundle] =
     useState<DataGovernanceBundle | null>(null);
+  const [trustCenterStatus, setTrustCenterStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestTrustCenter, setLatestTrustCenter] =
+    useState<TrustCenterDashboard | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -563,6 +569,8 @@ export default function Home() {
     setLatestIntegrationProvider(null);
     setDataGovernanceStatus("idle");
     setLatestDataGovernanceBundle(null);
+    setTrustCenterStatus("idle");
+    setLatestTrustCenter(null);
     setLaunchStatus("idle");
     setLatestLaunchDashboard(null);
     setBetaOpsStatus("idle");
@@ -1594,6 +1602,27 @@ export default function Home() {
     }
   }
 
+  async function loadTrustCenter() {
+    setTrustCenterStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/trust-center");
+      if (!response.ok) {
+        throw new Error(`trust center ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        dashboard?: TrustCenterDashboard;
+      };
+      if (!payload.ok || !payload.dashboard) {
+        throw new Error("trust center rejected");
+      }
+      setLatestTrustCenter(payload.dashboard);
+      setTrustCenterStatus("sent");
+    } catch {
+      setTrustCenterStatus("error");
+    }
+  }
+
   async function submitFeedback(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFeedbackStatus("sending");
@@ -2032,6 +2061,7 @@ export default function Home() {
           <a href="#pricing-ops">수익화</a>
           <a href="#conversion">피드백</a>
           <a href="#trust">신뢰 정책</a>
+          <a href="#trust-center">Trust Center</a>
         </nav>
       </header>
 
@@ -3551,6 +3581,107 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="trustCenterPanel" id="trust-center">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <ShieldCheck size={16} />
+            공개 Trust Center
+          </div>
+          <h2>추천 기준과 개인정보 기준을 구매자에게 먼저 공개합니다</h2>
+          <p>
+            가격 캐시, 제휴 고지, 비제휴 대안, 공개 리포트 개인정보 노출 범위,
+            사람 검수 기준을 하나의 공개 신뢰 대시보드로 묶습니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestTrustCenter ? gateTone(latestTrustCenter.overall_status) : "warn"
+              }`}
+            >
+              {latestTrustCenter ? latestTrustCenter.overall_status : "미조회"}
+            </span>
+            <span className="pill muted">policy + privacy + review gate</span>
+          </div>
+        </div>
+
+        <div className="learningControl">
+          <button
+            type="button"
+            disabled={trustCenterStatus === "sending"}
+            onClick={loadTrustCenter}
+          >
+            {trustCenterStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <ShieldCheck size={18} />
+            )}
+            Trust Center 조회
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              trustCenterStatus,
+              "Trust Center 기준을 불러왔습니다.",
+              "Trust Center 조회에 실패했습니다.",
+            ) || "공개 추천 전에 사용자에게 보여줄 신뢰 기준입니다."}
+          </p>
+        </div>
+
+        {latestTrustCenter ? (
+          <div className="trustCenterResult">
+            <div>
+              <h3>{latestTrustCenter.headline}</h3>
+              <p>{latestTrustCenter.public_summary}</p>
+            </div>
+            <div className="miniMetricGrid">
+              <div>
+                <span>정책 버전</span>
+                <strong>{latestTrustCenter.policy_version}</strong>
+              </div>
+              <div>
+                <span>출처 정책</span>
+                <strong>{latestTrustCenter.trust_policy.source_assessments.length}개</strong>
+              </div>
+            </div>
+            <div className="trustCenterColumns">
+              <article>
+                <strong>공개 약속</strong>
+                <ul>
+                  {latestTrustCenter.public_commitments.slice(0, 4).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+              <article>
+                <strong>구매자 권리</strong>
+                <ul>
+                  {latestTrustCenter.buyer_rights.slice(0, 4).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            </div>
+            <div className="gateCheckGrid">
+              {latestTrustCenter.operational_gates.slice(0, 4).map((gate) => (
+                <article className="gateCheckCard" key={gate.area}>
+                  <span className={`pill ${gateTone(gate.status)}`}>{gate.status}</span>
+                  <h4>{gate.label}</h4>
+                  <p>{gate.public_message}</p>
+                  <small>{gate.buyer_impact}</small>
+                </article>
+              ))}
+            </div>
+            <div className="referralBox mutedBox">
+              <span>위험 고지</span>
+              <ul>
+                {latestTrustCenter.risk_disclosures.slice(0, 3).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : null}
       </section>
 
       <section className="sourceCheckPanel" id="source-check">

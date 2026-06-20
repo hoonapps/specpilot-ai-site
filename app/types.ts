@@ -434,6 +434,52 @@ export type BetaLead = {
   created_at: string;
 };
 
+export type WaitlistReferralRequest = {
+  email: string;
+  persona: string;
+  use_case: string;
+  referred_by_code: string;
+  source: string;
+  contact_consent: boolean;
+};
+
+export type WaitlistReferral = {
+  referral_id: string;
+  workspace_id: string;
+  email_masked: string;
+  persona: string;
+  use_case: string;
+  referral_code: string;
+  referred_by_code: string;
+  referral_url: string;
+  referred_signup_count: number;
+  priority_score: number;
+  contact_consent: boolean;
+  source: string;
+  created_at: string;
+};
+
+export type ReferralLeaderboardItem = {
+  referral_code: string;
+  email_masked: string;
+  persona: string;
+  referred_signup_count: number;
+  priority_score: number;
+  referral_url: string;
+};
+
+export type WaitlistReferralDashboard = {
+  workspace_id: string;
+  generated_at: string;
+  total_referrals: number;
+  referred_signup_count: number;
+  share_rate_hint: number;
+  summary: string;
+  top_referrers: ReferralLeaderboardItem[];
+  latest_referrals: WaitlistReferral[];
+  next_actions: string[];
+};
+
 export type SubscriptionIntentRequest = {
   email: string;
   plan_id: "premium" | "team";

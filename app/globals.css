@@ -1536,7 +1536,7 @@ ul {
 
 .conversionPanel {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
   padding: 0 24px 44px;
 }
@@ -1552,6 +1552,54 @@ ul {
 
 .pricingCard {
   border-color: rgba(49, 95, 140, 0.28);
+}
+
+.referralCard {
+  border-color: rgba(184, 119, 33, 0.35);
+}
+
+.referralBox {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  border: 1px solid rgba(184, 119, 33, 0.24);
+  border-radius: 8px;
+  background: #fffaf1;
+  padding: 12px;
+}
+
+.referralBox span,
+.referralBox small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.referralBox strong,
+.referralBox p,
+.referralBox li {
+  overflow-wrap: anywhere;
+}
+
+.referralBox strong {
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.referralBox p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.referralBox ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.mutedBox {
+  border-color: var(--line);
+  background: #fbfcf9;
 }
 
 .conversionForm {
@@ -1776,6 +1824,12 @@ ul {
 
   .workspace {
     padding-top: 14px;
+  }
+
+  .onboardingPanel {
+    width: calc(100% - 28px);
+    margin-right: 14px;
+    margin-left: 14px;
   }
 
   .sectionHeader {

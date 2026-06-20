@@ -63,6 +63,8 @@ import type {
   SourceCandidate,
   SourceMonitorOpsBundle,
   SubscriptionIntent,
+  WaitlistReferral,
+  WaitlistReferralDashboard,
 } from "./types";
 
 const starterPayload: AnalyzePayload = {
@@ -358,6 +360,19 @@ export default function Home() {
   const [betaStatus, setBetaStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
+  const [referralLead, setReferralLead] = useState({
+    email: "",
+    persona: "creator",
+    useCase: "친구에게 공유할 PC/노트북 구매 비교 링크가 필요합니다.",
+    referredByCode: "",
+    contactConsent: true,
+  });
+  const [referralStatus, setReferralStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestReferral, setLatestReferral] = useState<WaitlistReferral | null>(null);
+  const [latestReferralDashboard, setLatestReferralDashboard] =
+    useState<WaitlistReferralDashboard | null>(null);
   const [pricingIntent, setPricingIntent] = useState({
     email: "",
     planId: "premium" as "premium" | "team",
@@ -1647,6 +1662,69 @@ export default function Home() {
       await loadLaunchReadiness();
     } catch {
       setBetaStatus("error");
+    }
+  }
+
+  async function submitReferralLead(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setReferralStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/referrals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: referralLead.email,
+          persona: referralLead.persona,
+          use_case: referralLead.useCase,
+          referred_by_code: referralLead.referredByCode,
+          contact_consent: referralLead.contactConsent,
+          source: "specpilot-ai-site",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`referral ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        referral?: WaitlistReferral;
+        dashboard?: WaitlistReferralDashboard;
+      };
+      if (!payload.ok || !payload.referral || !payload.dashboard) {
+        throw new Error("referral rejected");
+      }
+      setLatestReferral(payload.referral);
+      setLatestReferralDashboard(payload.dashboard);
+      setReferralLead((current) => ({
+        ...current,
+        referredByCode: payload.referral?.referral_code || current.referredByCode,
+      }));
+      setReferralStatus("sent");
+      await recordGrowthEvent("share_cta", "추천 대기열 초대 링크 생성", "referral");
+      await loadLaunchReadiness();
+    } catch {
+      setReferralStatus("error");
+    }
+  }
+
+  async function loadReferralDashboard() {
+    setReferralStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/referrals?limit=20");
+      if (!response.ok) {
+        throw new Error(`referral dashboard ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        dashboard?: WaitlistReferralDashboard;
+      };
+      if (!payload.ok || !payload.dashboard) {
+        throw new Error("referral dashboard rejected");
+      }
+      setLatestReferralDashboard(payload.dashboard);
+      setReferralStatus("sent");
+    } catch {
+      setReferralStatus("error");
     }
   }
 
@@ -6359,6 +6437,147 @@ export default function Home() {
               )}
             </p>
           </form>
+        </article>
+
+        <article className="conversionCard referralCard">
+          <div className="sectionLabel">
+            <Send size={16} />
+            추천 대기열
+          </div>
+          <h2>초대 링크로 공개 전 반응을 증폭합니다</h2>
+          <p>
+            가입자마다 추천 코드를 발급하고 친구가 코드로 들어오면 우선순위와
+            리더보드가 올라갑니다. 공개 전 공유 루프를 바로 검증합니다.
+          </p>
+          <form className="conversionForm" onSubmit={submitReferralLead}>
+            <label>
+              이메일
+              <input
+                required
+                type="email"
+                placeholder="creator@example.com"
+                value={referralLead.email}
+                onChange={(event) =>
+                  setReferralLead((current) => ({
+                    ...current,
+                    email: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <div className="fieldGrid">
+              <label>
+                사용자군
+                <select
+                  value={referralLead.persona}
+                  onChange={(event) =>
+                    setReferralLead((current) => ({
+                      ...current,
+                      persona: event.target.value,
+                    }))
+                  }
+                >
+                  <option value="creator">크리에이터</option>
+                  <option value="gamer">게이머</option>
+                  <option value="team_buyer">팀 구매 담당자</option>
+                  <option value="developer">개발자</option>
+                </select>
+              </label>
+              <label>
+                추천 코드
+                <input
+                  placeholder="선택 입력"
+                  value={referralLead.referredByCode}
+                  onChange={(event) =>
+                    setReferralLead((current) => ({
+                      ...current,
+                      referredByCode: event.target.value.toUpperCase(),
+                    }))
+                  }
+                />
+              </label>
+            </div>
+            <label>
+              공유할 구매 상황
+              <textarea
+                value={referralLead.useCase}
+                onChange={(event) =>
+                  setReferralLead((current) => ({
+                    ...current,
+                    useCase: event.target.value,
+                  }))
+                }
+              />
+            </label>
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={referralLead.contactConsent}
+                onChange={(event) =>
+                  setReferralLead((current) => ({
+                    ...current,
+                    contactConsent: event.target.checked,
+                  }))
+                }
+              />
+              우선 초대와 추천 리더보드 연락에 동의
+            </label>
+            <button
+              type="submit"
+              disabled={referralStatus === "sending" || !referralLead.contactConsent}
+            >
+              {referralStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Send size={18} />
+              )}
+              초대 링크 만들기
+            </button>
+            <button
+              className="secondaryButton"
+              type="button"
+              onClick={loadReferralDashboard}
+              disabled={referralStatus === "sending"}
+            >
+              리더보드 보기
+            </button>
+            <p className="formStatus">
+              {statusMessage(
+                referralStatus,
+                "추천 대기열 링크가 생성됐습니다.",
+                "추천 대기열 저장에 실패했습니다.",
+              )}
+            </p>
+          </form>
+          {latestReferral ? (
+            <div className="referralBox">
+              <span>내 추천 링크</span>
+              <strong>{latestReferral.referral_code}</strong>
+              <p>{latestReferral.referral_url}</p>
+              <small>
+                추천 {latestReferral.referred_signup_count}명 · 우선순위{" "}
+                {latestReferral.priority_score}점
+              </small>
+            </div>
+          ) : null}
+          {latestReferralDashboard ? (
+            <div className="referralBox mutedBox">
+              <span>추천 대기열</span>
+              <strong>
+                {latestReferralDashboard.total_referrals}명 · 공유 유입{" "}
+                {latestReferralDashboard.referred_signup_count}명
+              </strong>
+              <p>{latestReferralDashboard.summary}</p>
+              <ul>
+                {latestReferralDashboard.top_referrers.slice(0, 3).map((item) => (
+                  <li key={item.referral_code}>
+                    {item.referral_code} · 추천 {item.referred_signup_count}명 ·{" "}
+                    {item.priority_score}점
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </article>
 
         <article className="conversionCard pricingCard">

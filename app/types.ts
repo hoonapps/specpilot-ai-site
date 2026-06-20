@@ -689,7 +689,7 @@ export type AlertSubscription = {
   target_price_krw: number;
   current_price_krw: number;
   channels: string[];
-  contact: string;
+  contact_masked: string;
   owner_label: string;
   status: string;
   created_at: string;
@@ -1153,6 +1153,36 @@ export type LaunchReadinessBundle = {
   readiness: BetaReadinessDashboard;
   launch_gate: LaunchGateDashboard;
   backlog_summary: BetaBacklogSummary;
+  data_governance: DataGovernanceDashboard;
+};
+
+export type DataInventoryItem = {
+  table_name: string;
+  label: string;
+  record_count: number;
+  pii_scope: string;
+  retention_days: number;
+  earliest_created_at: string | null;
+  latest_created_at: string | null;
+  status: OpsStatus;
+  recommendation: string;
+};
+
+export type DataGovernanceDashboard = {
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  summary: string;
+  total_records: number;
+  raw_contact_surfaces: number;
+  masked_contact_surfaces: number;
+  retention_actions: string[];
+  deletion_controls: string[];
+  inventory: DataInventoryItem[];
+};
+
+export type DataGovernanceBundle = {
+  dashboard: DataGovernanceDashboard;
 };
 
 export type BetaOpsBundle = {

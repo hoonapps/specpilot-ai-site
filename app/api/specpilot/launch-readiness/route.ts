@@ -3,16 +3,18 @@ import { getJson } from "../_client";
 import type {
   BetaBacklogSummary,
   BetaReadinessDashboard,
+  DataGovernanceDashboard,
   LaunchGateDashboard,
   LaunchReadinessBundle,
 } from "../../../types";
 
 export async function GET() {
   try {
-    const [readiness, launchGate, backlogSummary] = await Promise.all([
+    const [readiness, launchGate, backlogSummary, dataGovernance] = await Promise.all([
       getJson<BetaReadinessDashboard>("/beta/readiness"),
       getJson<LaunchGateDashboard>("/beta/launch-gate"),
       getJson<BetaBacklogSummary>("/beta/backlog/summary"),
+      getJson<DataGovernanceDashboard>("/ops/data-governance"),
     ]);
 
     return NextResponse.json<{
@@ -24,6 +26,7 @@ export async function GET() {
         readiness,
         launch_gate: launchGate,
         backlog_summary: backlogSummary,
+        data_governance: dataGovernance,
       },
     });
   } catch (error) {

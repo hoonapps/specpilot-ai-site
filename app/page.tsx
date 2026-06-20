@@ -35,6 +35,7 @@ import type {
   Category,
   CheckoutReview,
   CompletionReportWorkflowResponse,
+  DataGovernanceBundle,
   FeedbackRecord,
   IntakeDiagnosisResponse,
   IntegrationCategory,
@@ -314,6 +315,11 @@ export default function Home() {
     useState<IntegrationReadinessDashboard | null>(null);
   const [latestIntegrationProvider, setLatestIntegrationProvider] =
     useState<IntegrationProvider | null>(null);
+  const [dataGovernanceStatus, setDataGovernanceStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestDataGovernanceBundle, setLatestDataGovernanceBundle] =
+    useState<DataGovernanceBundle | null>(null);
   const [feedback, setFeedback] = useState({
     rating: "5",
     purchaseIntent: true,
@@ -464,6 +470,8 @@ export default function Home() {
     setIntegrationStatus("idle");
     setLatestIntegrationDashboard(null);
     setLatestIntegrationProvider(null);
+    setDataGovernanceStatus("idle");
+    setLatestDataGovernanceBundle(null);
     setLaunchStatus("idle");
     setLatestLaunchDashboard(null);
     setBetaOpsStatus("idle");
@@ -1374,6 +1382,27 @@ export default function Home() {
     }
   }
 
+  async function loadDataGovernance() {
+    setDataGovernanceStatus("sending");
+    try {
+      const response = await fetch("/api/specpilot/data-governance");
+      if (!response.ok) {
+        throw new Error(`data governance ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        bundle?: DataGovernanceBundle;
+      };
+      if (!payload.ok || !payload.bundle) {
+        throw new Error("data governance rejected");
+      }
+      setLatestDataGovernanceBundle(payload.bundle);
+      setDataGovernanceStatus("sent");
+    } catch {
+      setDataGovernanceStatus("error");
+    }
+  }
+
   async function submitFeedback(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFeedbackStatus("sending");
@@ -1687,6 +1716,7 @@ export default function Home() {
           <a href="#advisor">구매 상담</a>
           <a href="#observability">품질 회귀</a>
           <a href="#integrations">외부 연동</a>
+          <a href="#data-governance">프라이버시</a>
           <a href="#beta-ops">베타 운영</a>
           <a href="#launch-readiness">출시 게이트</a>
           <a href="#pricing-ops">수익화</a>
@@ -2280,7 +2310,7 @@ export default function Home() {
                   <li>
                     연락처{" "}
                     {latestAlertEvaluation?.events[0]?.contact_masked ||
-                      latestAlertSubscription?.contact ||
+                      latestAlertSubscription?.contact_masked ||
                       priceAlert.contact}
                   </li>
                 </ul>
@@ -4515,6 +4545,134 @@ export default function Home() {
         ) : null}
       </section>
 
+      <section className="dataGovernancePanel" id="data-governance">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <ShieldCheck size={16} />
+            프라이버시 운영
+          </div>
+          <h2>마스킹, 보존 기간, 공개 리포트 노출 범위를 출시 전에 확인합니다</h2>
+          <p>
+            워크스페이스별 저장 데이터 인벤토리와 원문 연락처 표면, 보존 기간
+            초과 항목을 확인해 공개 출시 전 신뢰 리스크를 줄입니다.
+          </p>
+          <div className="advisorMeta">
+            <span
+              className={`pill ${
+                latestDataGovernanceBundle
+                  ? gateTone(latestDataGovernanceBundle.dashboard.status)
+                  : "warn"
+              }`}
+            >
+              {latestDataGovernanceBundle
+                ? latestDataGovernanceBundle.dashboard.status
+                : "데이터 상태 미조회"}
+            </span>
+            <span className="pill muted">privacy + retention</span>
+          </div>
+        </div>
+
+        <div className="learningControl">
+          <button
+            type="button"
+            disabled={dataGovernanceStatus === "sending"}
+            onClick={loadDataGovernance}
+          >
+            {dataGovernanceStatus === "sending" ? (
+              <Loader2 className="spin" size={18} />
+            ) : (
+              <ShieldCheck size={18} />
+            )}
+            데이터 거버넌스 조회
+          </button>
+          <p className="formStatus">
+            {statusMessage(
+              dataGovernanceStatus,
+              "데이터 거버넌스 상태를 갱신했습니다.",
+              "데이터 거버넌스 조회에 실패했습니다.",
+            ) || "출시 게이트에는 데이터 거버넌스 상태가 자동으로 포함됩니다."}
+          </p>
+        </div>
+
+        {latestDataGovernanceBundle ? (
+          <div className="integrationResult">
+            <div className="answerHeader">
+              <span
+                className={`pill ${gateTone(
+                  latestDataGovernanceBundle.dashboard.status,
+                )}`}
+              >
+                {latestDataGovernanceBundle.dashboard.status}
+              </span>
+              <span className="pill muted">
+                Workspace {latestDataGovernanceBundle.dashboard.workspace_id}
+              </span>
+            </div>
+            <h3>{latestDataGovernanceBundle.dashboard.summary}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>저장 항목</dt>
+                <dd>{latestDataGovernanceBundle.dashboard.total_records}</dd>
+              </div>
+              <div>
+                <dt>원문 표면</dt>
+                <dd>{latestDataGovernanceBundle.dashboard.raw_contact_surfaces}</dd>
+              </div>
+              <div>
+                <dt>마스킹 표면</dt>
+                <dd>{latestDataGovernanceBundle.dashboard.masked_contact_surfaces}</dd>
+              </div>
+              <div>
+                <dt>인벤토리</dt>
+                <dd>{latestDataGovernanceBundle.dashboard.inventory.length}</dd>
+              </div>
+            </dl>
+
+            <div className="advisorLists">
+              <div>
+                <strong>보존/삭제 액션</strong>
+                <ul>
+                  {(latestDataGovernanceBundle.dashboard.retention_actions.length
+                    ? latestDataGovernanceBundle.dashboard.retention_actions
+                    : ["현재 보존/마스킹 기준을 유지하세요."]
+                  )
+                    .slice(0, 5)
+                    .map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                </ul>
+              </div>
+              <div>
+                <strong>사용자 제어</strong>
+                <ul>
+                  {latestDataGovernanceBundle.dashboard.deletion_controls
+                    .slice(0, 5)
+                    .map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="gateCheckGrid">
+              {latestDataGovernanceBundle.dashboard.inventory.slice(0, 8).map((item) => (
+                <article className="gateCheckCard" key={item.table_name}>
+                  <div className="answerHeader">
+                    <span className={`pill ${gateTone(item.status)}`}>{item.status}</span>
+                    <span className="pill muted">{item.pii_scope}</span>
+                  </div>
+                  <h4>{item.label}</h4>
+                  <p>
+                    {item.record_count}건 · 보존 {item.retention_days}일
+                  </p>
+                  <p>{item.recommendation}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
       <section className="betaOpsPanel" id="beta-ops">
         <div className="advisorIntro">
           <div className="sectionLabel">
@@ -4846,8 +5004,8 @@ export default function Home() {
           <h2>공개 확대 전에 go/no-go를 한 화면에서 판단합니다</h2>
           <p>
             분석 실행, 공유 조회, 가격 알림, 피드백, 베타 리드, 구매 전환,
-            학습 인사이트, 개선 백로그, 외부 연동 준비도를 묶어 공개 확대
-            상태와 필수 액션을 보여줍니다.
+            학습 인사이트, 개선 백로그, 외부 연동, 데이터 거버넌스를 묶어
+            공개 확대 상태와 필수 액션을 보여줍니다.
           </p>
           <div className="advisorMeta">
             <span
@@ -4922,6 +5080,10 @@ export default function Home() {
                 <dt>열린 백로그</dt>
                 <dd>{latestLaunchDashboard.backlog_summary.open_count}</dd>
               </div>
+              <div>
+                <dt>데이터 상태</dt>
+                <dd>{latestLaunchDashboard.data_governance.status}</dd>
+              </div>
             </dl>
 
             <div className="advisorLists">
@@ -4948,7 +5110,7 @@ export default function Home() {
             </div>
 
             <div className="gateCheckGrid">
-              {latestLaunchDashboard.launch_gate.checks.slice(0, 8).map((check) => (
+              {latestLaunchDashboard.launch_gate.checks.slice(0, 10).map((check) => (
                 <article className="gateCheckCard" key={`${check.area}-${check.label}`}>
                   <div className="answerHeader">
                     <span className={`pill ${gateTone(check.status)}`}>{check.status}</span>

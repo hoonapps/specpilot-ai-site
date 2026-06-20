@@ -1477,6 +1477,205 @@ ul {
   padding: 0;
 }
 
+.launchPublicPage {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding-bottom: 28px;
+}
+
+.launchPublicTopbar {
+  border-right: 1px solid rgba(217, 223, 216, 0.86);
+  border-left: 1px solid rgba(217, 223, 216, 0.86);
+}
+
+.launchPublicHero {
+  position: relative;
+  display: grid;
+  min-height: min(560px, calc(100vh - 84px));
+  align-items: end;
+  overflow: hidden;
+  margin: 18px 24px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(244, 246, 242, 0.96) 0%,
+      rgba(244, 246, 242, 0.9) 42%,
+      rgba(244, 246, 242, 0.46) 100%
+    ),
+    url("/product-workbench.png") center right / cover no-repeat;
+  box-shadow: var(--shadow);
+}
+
+.launchPublicHeroContent {
+  display: grid;
+  max-width: 900px;
+  gap: 18px;
+  padding: clamp(28px, 5vw, 64px);
+}
+
+.launchPublicHeroContent h1 {
+  max-width: 860px;
+  margin-bottom: 0;
+}
+
+.launchPublicHeroContent p {
+  max-width: 740px;
+  margin: 0;
+  color: #394540;
+  font-size: 18px;
+}
+
+.launchPublicActions,
+.launchPublicPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.secondaryLaunchButton {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(12, 116, 108, 0.28);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--teal);
+  padding: 0 16px;
+  font-weight: 950;
+}
+
+.launchPublicMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 14px 24px 34px;
+}
+
+.launchPublicMetrics article,
+.launchPublicCard,
+.launchMarketCard,
+.launchSharePanel {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.launchPublicMetrics article {
+  padding: 16px;
+}
+
+.launchPublicMetrics span,
+.launchMarketCard > span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchPublicMetrics strong {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.1;
+}
+
+.launchPublicMetrics p {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+
+.launchPublicSection {
+  display: grid;
+  gap: 16px;
+  margin: 0 24px 34px;
+}
+
+.launchPublicGrid,
+.launchMarketGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.launchPublicGrid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPublicCard,
+.launchMarketCard {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px;
+}
+
+.launchPublicCard h3,
+.launchMarketCard h3 {
+  margin: 0;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.launchPublicCard p,
+.launchMarketCard p {
+  margin: 0;
+}
+
+.launchPublicCard strong {
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.launchMarketCard:hover {
+  border-color: rgba(12, 116, 108, 0.36);
+  background: #fbfffc;
+}
+
+.launchMarketCard dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin: 4px 0 0;
+}
+
+.launchMarketCard dt {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchMarketCard dd {
+  margin: 3px 0 0;
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.launchSharePanel {
+  grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.55fr);
+  gap: 18px;
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.launchSharePanel ul {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.launchSharePanel strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 18px;
+}
+
 .purchaseLinkGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1939,6 +2138,9 @@ ul {
   .summaryPanel,
   .publicHero,
   .publicGrid,
+  .launchPublicMetrics,
+  .launchPublicGrid.three,
+  .launchSharePanel,
   .purchaseLinkGrid,
   .trustPanel,
   .advisorPanel,
@@ -2022,6 +2224,7 @@ ul {
   .workspace,
   .onboardingPanel,
   .publicReport,
+  .launchPublicPage,
   .signalStrip,
   .trustPanel,
   .advisorPanel,
@@ -2095,6 +2298,8 @@ ul {
   .decisionBoard,
   .publicHero > div,
   .publicHeroCard,
+  .launchPublicHero,
+  .launchPublicHeroContent,
   .card,
   .scenarioCard,
   .stressCard,
@@ -2139,6 +2344,11 @@ ul {
   .signalStrip,
   .publicHero,
   .publicGrid,
+  .launchPublicMetrics,
+  .launchPublicGrid,
+  .launchPublicGrid.three,
+  .launchMarketGrid,
+  .launchSharePanel,
   .purchaseLinkGrid,
   .sourceMonitorGrid,
   .sourceMonitorActions,
@@ -2159,5 +2369,32 @@ ul {
 
   .visualPanel {
     min-height: 220px;
+  }
+
+  .launchPublicHero {
+    min-height: auto;
+    margin-right: 14px;
+    margin-left: 14px;
+    background:
+      linear-gradient(rgba(244, 246, 242, 0.92), rgba(244, 246, 242, 0.96)),
+      url("/product-workbench.png") center top / cover no-repeat;
+  }
+
+  .launchPublicHeroContent {
+    padding: 24px 18px;
+  }
+
+  .launchPublicHeroContent p {
+    font-size: 16px;
+  }
+
+  .launchPublicMetrics,
+  .launchPublicSection {
+    margin-right: 14px;
+    margin-left: 14px;
+  }
+
+  .launchMarketCard dl {
+    grid-template-columns: 1fr;
   }
 }

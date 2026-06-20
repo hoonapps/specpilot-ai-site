@@ -17,11 +17,13 @@ import type {
   PublicBuyerChecklist,
   PublicLaunchRoom,
   PublicSocialProofWall,
+  PublicSpecRiskScanner,
 } from "../types";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
+import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -357,6 +359,37 @@ const fallbackBuyerChallengeKit: PublicBuyerChallengeKit = {
   ],
 };
 
+const fallbackSpecRiskScanner: PublicSpecRiskScanner = {
+  scanner_version: "specpilot.public_spec_risk_scanner.fallback",
+  generated_at: new Date(0).toISOString(),
+  headline: "결제 직전 옵션명과 사양을 30초 안에 대조합니다.",
+  summary:
+    "판매 페이지 제목, 장바구니 옵션명, 최종 결제 금액을 붙여 넣으면 예산 초과, CPU/GPU/RAM/SSD/OS 불일치, 캡처해야 할 증거 누락을 결제 가능·확인 필요·보류로 판정합니다.",
+  default_category: "desktop_pc",
+  default_budget_krw: 2_200_000,
+  result_endpoint: "/public/spec-risk-scanner/result",
+  example_request: {
+    category: "desktop_pc",
+    product_title: "Creator RTX 4070 SUPER Build",
+    budget_krw: 2_200_000,
+    cart_total_krw: 2_185_000,
+    expected_cpu: "Ryzen 7 7800X3D",
+    expected_gpu: "RTX 4070 SUPER",
+    expected_ram_gb: 32,
+    expected_storage_gb: 1000,
+  },
+  required_evidence: [
+    "판매 페이지 모델명과 장바구니 옵션명",
+    "최종 결제 금액, 배송비, 쿠폰, 카드 할인",
+    "RAM/SSD/GPU/패널/OS 옵션 선택 상태",
+    "배송 예정일, 반품, AS, 판매자 답변",
+  ],
+  next_actions: [
+    "blocker가 있으면 바로 결제하지 말고 옵션명과 최종가 캡처를 먼저 확보하세요.",
+    "warning만 남으면 분석 prefill로 SpecPilot AI 리포트를 만들어 대체 후보와 비교하세요.",
+  ],
+};
+
 async function loadLaunchRoom(): Promise<{
   room: PublicLaunchRoom;
   isFallback: boolean;
@@ -411,6 +444,20 @@ async function loadBuyerChallengeKit(): Promise<{
   }
 }
 
+async function loadSpecRiskScanner(): Promise<{
+  scanner: PublicSpecRiskScanner;
+  isFallback: boolean;
+}> {
+  try {
+    const scanner = await getJson<PublicSpecRiskScanner>(
+      "/public/spec-risk-scanner",
+    );
+    return { scanner, isFallback: false };
+  } catch {
+    return { scanner: fallbackSpecRiskScanner, isFallback: true };
+  }
+}
+
 function tone(status: PublicLaunchRoom["status"] | PublicSocialProofWall["status"]) {
   if (status === "ok") {
     return "ok";
@@ -431,11 +478,13 @@ export default async function LaunchPage() {
     { wall, isFallback: proofFallback },
     { checklist, isFallback: checklistFallback },
     { kit: challengeKit, isFallback: challengeFallback },
+    { scanner: specScanner, isFallback: scannerFallback },
   ] = await Promise.all([
     loadLaunchRoom(),
     loadSocialProofWall(),
     loadBuyerChecklist(),
     loadBuyerChallengeKit(),
+    loadSpecRiskScanner(),
   ]);
   const heroPills = room.proof_strip.slice(0, 3);
   const proofMetricCards = [
@@ -586,6 +635,11 @@ export default async function LaunchPage() {
       <BuyerChallengeKitPanel
         kit={challengeKit}
         isFallback={challengeFallback}
+      />
+
+      <SpecRiskScannerPanel
+        scanner={specScanner}
+        isFallback={scannerFallback}
       />
 
       <section className="launchPublicSection launchSocialProofWall">

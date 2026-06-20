@@ -2252,6 +2252,181 @@ ul {
   padding-left: 18px;
 }
 
+.launchSpecScanner {
+  gap: 18px;
+  border: 1px solid rgba(15, 44, 44, 0.16);
+  background: #fbfdf8;
+}
+
+.launchSpecScannerGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 14px;
+}
+
+.launchSpecScannerForm,
+.launchSpecScannerResult,
+.launchSpecScannerChecks div,
+.launchSpecScannerPrefill {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(15, 44, 44, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: clamp(14px, 2.6vw, 18px);
+}
+
+.launchSpecScannerControls {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchSpecScannerControls.dense {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchSpecScannerForm label {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchSpecScannerForm input,
+.launchSpecScannerForm select,
+.launchSpecScannerForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 14px;
+}
+
+.launchSpecScannerForm textarea {
+  min-height: 96px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.launchSpecScannerForm .primaryButton {
+  width: fit-content;
+}
+
+.launchSpecScannerResult {
+  align-content: start;
+  background: #f7fffb;
+}
+
+.launchSpecScannerResult h3,
+.launchSpecScannerResult p,
+.launchSpecScannerResult li,
+.launchSpecScannerChecks p,
+.launchSpecScannerPrefill p {
+  margin: 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.launchSpecScannerResult h3 {
+  color: var(--ink);
+  font-size: clamp(24px, 3.2vw, 34px);
+  line-height: 1.15;
+}
+
+.launchSpecScannerResult ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchSpecScannerNumbers,
+.launchSpecScannerChecks {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+.launchSpecScannerNumbers {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchSpecScannerNumbers div {
+  display: grid;
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px;
+}
+
+.launchSpecScannerNumbers span,
+.launchSpecScannerChecks span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchSpecScannerNumbers strong,
+.launchSpecScannerChecks strong {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.launchSpecScannerChecks div {
+  padding: 12px;
+}
+
+.launchSpecScannerChecks div.ok {
+  border-color: rgba(12, 116, 108, 0.2);
+}
+
+.launchSpecScannerChecks div.warning {
+  border-color: rgba(176, 112, 0, 0.24);
+  background: #fffaf0;
+}
+
+.launchSpecScannerChecks div.blocker {
+  border-color: rgba(170, 45, 45, 0.24);
+  background: #fff5f3;
+}
+
+.launchSpecScannerChecks span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.launchSpecScannerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.launchSpecScannerActions button {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 0 10px;
+  font-weight: 900;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -3406,6 +3581,10 @@ ul {
   .launchBuyerChallengeSteps,
   .launchBuyerChallengeShareGrid,
   .launchBuyerChallengeProof,
+  .launchSpecScannerGrid,
+  .launchSpecScannerControls,
+  .launchSpecScannerControls.dense,
+  .launchSpecScannerNumbers,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
@@ -3577,6 +3756,10 @@ ul {
   .launchBuyerChallengeSteps,
   .launchBuyerChallengeShareGrid,
   .launchBuyerChallengeProof,
+  .launchSpecScannerGrid,
+  .launchSpecScannerControls,
+  .launchSpecScannerControls.dense,
+  .launchSpecScannerNumbers,
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,

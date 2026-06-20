@@ -1064,6 +1064,65 @@ export type PublicBuyerChallengeKit = {
   next_actions: string[];
 };
 
+export type PublicSpecRiskScanner = {
+  scanner_version: string;
+  generated_at: string;
+  headline: string;
+  summary: string;
+  default_category: Category;
+  default_budget_krw: number;
+  result_endpoint: string;
+  example_request: Record<string, string | number>;
+  required_evidence: string[];
+  next_actions: string[];
+};
+
+export type SpecRiskScannerRequest = {
+  category: Category;
+  product_title: string;
+  option_text: string;
+  cart_total_krw: number | null;
+  budget_krw: number;
+  expected_cpu: string;
+  expected_gpu: string;
+  expected_ram_gb: number | null;
+  expected_storage_gb: number | null;
+  expected_os: string;
+  evidence_text: string;
+  source: string;
+};
+
+export type SpecRiskCheck = {
+  check_id: string;
+  label: string;
+  status: OpsStatus;
+  expected: string;
+  observed: string;
+  recommendation: string;
+};
+
+export type SpecRiskScannerResult = {
+  result_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  budget_krw: number;
+  cart_total_krw: number | null;
+  verdict: "ready" | "verify" | "hold" | string;
+  readiness_score: number;
+  headline: string;
+  summary: string;
+  checks: SpecRiskCheck[];
+  blocker_count: number;
+  warning_count: number;
+  missing_evidence: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type StartConciergeMilestone = {
   step: string;
   title: string;

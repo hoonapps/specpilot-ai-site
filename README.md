@@ -2,7 +2,7 @@
 
 SpecPilot AI 제품 API를 공개 사용자에게 보여주는 Next.js 웹사이트입니다.
 
-이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 공개 구매 온보딩 플레이북과 첫 구매 진단 콘시어지로 시작 질문을 고르고, 구매 조건을 입력하고, 분석 전 조건 진단, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 대안 시나리오, 조건 충족 매트릭스, 스트레스 테스트, 구매 실행 패키지, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 채널별 공유 자산, 가격 알림, 알림 발송 운영, 구매 링크 거버넌스, 완료 리포트 batch 발송, 상품 페이지 근거 검수, URL 모니터 운영, 결제 전 검수, 구매 의사결정 보드, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 품질 회귀와 observability export, 외부 연동 준비도, 프라이버시/데이터 거버넌스, 공개 Trust Center, 베타 cohort와 개선 백로그 운영, 월간 카테고리 리포트, 공개 카테고리 리포트, 성장 퍼널, 추천 대기열, 구매 챌린지 공유 키트, 추천 초대 공유 키트, 출시 배포 플랜, 수익화 준비도, 출시 게이트, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
+이 레포는 제품 API 레포(`specpilot-ai`)와 분리된 웹 프론트입니다. 사용자는 공개 구매 온보딩 플레이북과 첫 구매 진단 콘시어지로 시작 질문을 고르고, 구매 조건을 입력하고, 분석 전 조건 진단, 데스크톱 PC 또는 노트북 추천 결과, 구매 판정, 대안 시나리오, 조건 충족 매트릭스, 스트레스 테스트, 구매 실행 패키지, 구매 타이밍, 공유 브리프, 공개 공유 리포트, 채널별 공유 자산, 가격 알림, 알림 발송 운영, 구매 링크 거버넌스, 완료 리포트 batch 발송, 상품 페이지 근거 검수, URL 모니터 운영, 결제 전 검수, 구매 의사결정 보드, 실제 구매 결과 학습, 제품별 학습 인사이트, 저장 리포트 기반 구매 상담, 품질 회귀와 observability export, 외부 연동 준비도, 프라이버시/데이터 거버넌스, 공개 Trust Center, 베타 cohort와 개선 백로그 운영, 월간 카테고리 리포트, 공개 카테고리 리포트, 성장 퍼널, 추천 대기열, 구매 챌린지 공유 키트, 옵션/사양 빠른 검수기, 추천 초대 공유 키트, 출시 배포 플랜, 수익화 준비도, 출시 게이트, 피드백, 베타 신청, 요금제 관심 등록을 한 화면에서 처리합니다.
 
 ## 실행
 
@@ -58,6 +58,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/buyer-persona-quiz`: 제품 API의 `/public/buyer-persona-quiz`, `/public/buyer-persona-quiz/result`로 30초 구매 성향 진단 질문과 persona별 추천 카테고리/예산, 분석 prefill, 공유 문구 조회
 - `/api/specpilot/mistake-cost-calculator`: 제품 API의 `/public/mistake-cost-calculator`, `/public/mistake-cost-calculator/result`로 예산/수량/위험 유형별 예상 구매 실패 비용, 방지 플랜, 분석 prefill 조회
 - `/api/specpilot/buyer-challenge-kit`: 제품 API의 `/public/buyer-challenge-kit`로 성향 진단, 실패 비용 계산, 체크리스트를 3단계 구매 챌린지와 채널별 복사 문구로 패키징
+- `/api/specpilot/spec-risk-scanner`: 제품 API의 `/public/spec-risk-scanner`, `/public/spec-risk-scanner/result`로 장바구니 옵션명, 최종가, 기대 사양, 배송/반품/AS 증거를 결제 전 blocker/warning으로 검수
 - `/api/specpilot/start-concierge`: 제품 API의 `/public/start-concierge`로 현재 입력 진단, 맞춤 플레이북, 시작 마일스톤, 빠른 CTA 조회
 - `/api/specpilot/growth-funnel`: 제품 API의 `/growth/events`, `/growth/funnel`로 분석 결과 조회, 추천/대안 카드, 공유/알림/구독 CTA 반응 이벤트와 전환율 조회
 - `/api/specpilot/acquisition-hub`: 제품 API의 `/growth/acquisition-hub`로 공개 데모, SEO 페이지, 공유 리포트, 추천 대기열, Trust Center, 요금제 관심 표면 준비도 조회
@@ -76,7 +77,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 
 공개 페이지:
 
-- `/launch`: 제품 API의 `/public/launch-room`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/mistake-cost-calculator`, `/public/buyer-challenge-kit`, `/public/social-proof-wall`을 읽어 공개 데모, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 구매 실패 비용 계산기, 구매 챌린지 공유 키트, 실제 반응 proof, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
+- `/launch`: 제품 API의 `/public/launch-room`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/mistake-cost-calculator`, `/public/buyer-challenge-kit`, `/public/spec-risk-scanner`, `/public/social-proof-wall`을 읽어 공개 데모, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 구매 실패 비용 계산기, 구매 챌린지 공유 키트, 옵션/사양 빠른 검수기, 실제 반응 proof, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
 - 첫 화면 공개 데모 갤러리는 데스크톱/노트북/팀 구매 preset을 분석 폼에 즉시 적용해 빈 폼 이탈을 줄임
@@ -129,6 +130,8 @@ docker build -t specpilot-ai-site:local .
 - `GET /public/mistake-cost-calculator`
 - `POST /public/mistake-cost-calculator/result`
 - `GET /public/buyer-challenge-kit`
+- `GET /public/spec-risk-scanner`
+- `POST /public/spec-risk-scanner/result`
 - `GET /demo/scenarios`
 - `GET /growth/acquisition-hub`
 - `GET /growth/public-conversion-board`

@@ -61,6 +61,7 @@ import { OwnershipCostPanel } from "./OwnershipCostPanel";
 import { PriceBreakdownPanel } from "./PriceBreakdownPanel";
 import { PurchaseApprovalBriefPanel } from "./PurchaseApprovalBriefPanel";
 import { PurchaseAftercarePanel } from "./PurchaseAftercarePanel";
+import { PurchaseExecutionPanel } from "./PurchaseExecutionPanel";
 import { SellerEvidencePanel } from "./SellerEvidencePanel";
 import { ShoppingCartIntakePanel } from "./ShoppingCartIntakePanel";
 import { SetupCompatibilityPanel } from "./SetupCompatibilityPanel";
@@ -1413,6 +1414,8 @@ export default async function LaunchPage() {
       <WarrantyReturnPanel />
 
       <PriceBreakdownPanel />
+
+      <PurchaseExecutionPanel />
 
       <ShoppingCartIntakePanel />
 

@@ -1751,6 +1751,75 @@ export type PublicPriceBreakdownKit = {
   next_actions: string[];
 };
 
+export type PurchaseExecutionKitRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  verdict: string;
+  final_price_krw: number | null;
+  budget_krw: number | null;
+  blocker_count: number;
+  warning_count: number;
+  missing_evidence: string[];
+  seller_questions: string[];
+  evidence_ready: string[];
+  decision_deadline: string;
+  payment_method: string;
+  share_audience: string;
+  source: string;
+};
+
+export type PurchaseExecutionStep = {
+  step_id: string;
+  label: string;
+  status: OpsStatus;
+  owner: string;
+  timing: string;
+  instruction: string;
+  evidence_required: string;
+  fail_condition: string;
+};
+
+export type PurchaseExecutionGate = {
+  gate_id: string;
+  label: string;
+  status: OpsStatus;
+  pass_rule: string;
+  block_rule: string;
+};
+
+export type PurchaseExecutionShareMessage = {
+  channel: string;
+  label: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicPurchaseExecutionKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  priority: OpsStatus;
+  execution_score: number;
+  headline: string;
+  summary: string;
+  primary_action: string;
+  decision_checkpoint: string;
+  price_delta_krw: number | null;
+  checkout_steps: PurchaseExecutionStep[];
+  evidence_gates: PurchaseExecutionGate[];
+  seller_questions: string[];
+  stop_conditions: string[];
+  share_messages: PurchaseExecutionShareMessage[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

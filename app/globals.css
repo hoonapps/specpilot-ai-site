@@ -5559,6 +5559,205 @@ ul {
   padding-left: 18px;
 }
 
+.launchExecution {
+  background: #fffaf5;
+}
+
+.launchExecutionGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchExecutionForm,
+.launchExecutionResult,
+.launchExecutionScore,
+.launchExecutionMetrics article,
+.launchExecutionCheckpoint,
+.launchExecutionSteps article,
+.launchExecutionColumns > div,
+.launchExecutionQuestions {
+  border: 1px solid rgba(180, 83, 9, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(180, 83, 9, 0.07);
+}
+
+.launchExecutionForm,
+.launchExecutionResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchExecutionControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchExecutionControls.dense {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchExecutionForm label {
+  display: grid;
+  gap: 7px;
+  color: #92400e;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchExecutionForm input,
+.launchExecutionForm select,
+.launchExecutionForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(180, 83, 9, 0.18);
+  border-radius: 8px;
+  background: #fffaf5;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchExecutionForm textarea {
+  resize: vertical;
+}
+
+.launchExecutionForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchExecutionResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchExecutionResult p,
+.launchExecutionResult li,
+.launchExecutionResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchExecutionScore,
+.launchExecutionCheckpoint,
+.launchExecutionQuestions {
+  display: grid;
+  gap: 7px;
+  padding: 14px;
+}
+
+.launchExecutionScore strong {
+  color: #92400e;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.launchExecutionScore span,
+.launchExecutionMetrics span {
+  color: #92400e;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchExecutionMetrics,
+.launchExecutionSteps,
+.launchExecutionColumns,
+.launchExecutionShare,
+.launchExecutionActions {
+  display: grid;
+  gap: 10px;
+}
+
+.launchExecutionMetrics {
+  grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.35fr);
+}
+
+.launchExecutionMetrics article,
+.launchExecutionSteps article,
+.launchExecutionColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchExecutionSteps {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchExecutionSteps article.ok,
+.launchExecutionSteps article.warn {
+  background: #fffbeb;
+}
+
+.launchExecutionSteps article.danger {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: #fef2f2;
+}
+
+.launchExecutionColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchExecutionColumns ul,
+.launchExecutionQuestions ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchExecutionShare {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchExecutionActions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchExecutionShare button,
+.launchExecutionActions button {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(180, 83, 9, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #92400e;
+  padding: 10px 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.launchExecutionShare button span,
+.launchExecutionActions button span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchExecutionEmpty {
+  display: grid;
+  min-height: 260px;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -9411,6 +9610,7 @@ ul {
   .launchOwnershipGrid,
   .launchWarrantyGrid,
   .launchPriceBreakdownGrid,
+  .launchExecutionGrid,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
   .launchObjectionHero,
@@ -9586,6 +9786,13 @@ ul {
   .launchPriceBreakdownMetrics,
   .launchPriceBreakdownLineGrid,
   .launchPriceBreakdownColumns,
+  .launchExecutionControls,
+  .launchExecutionControls.dense,
+  .launchExecutionMetrics,
+  .launchExecutionSteps,
+  .launchExecutionColumns,
+  .launchExecutionShare,
+  .launchExecutionActions,
   .launchPersonaQuestionGrid,
   .launchMistakeControls,
   .launchDistributionSlotGrid,
@@ -9914,6 +10121,14 @@ ul {
   .launchPriceBreakdownMetrics,
   .launchPriceBreakdownLineGrid,
   .launchPriceBreakdownColumns,
+  .launchExecutionGrid,
+  .launchExecutionControls,
+  .launchExecutionControls.dense,
+  .launchExecutionMetrics,
+  .launchExecutionSteps,
+  .launchExecutionColumns,
+  .launchExecutionShare,
+  .launchExecutionActions,
   .launchPersonaQuestionGrid,
   .launchPersonaResultGrid,
   .launchPersonaColumns,

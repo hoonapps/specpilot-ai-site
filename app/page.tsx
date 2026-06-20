@@ -15,6 +15,7 @@ import {
   Link2,
   Loader2,
   Monitor,
+  Send,
   ShieldCheck,
   Sparkles,
   TimerReset,
@@ -30,6 +31,7 @@ import type {
   BetaLead,
   Category,
   CheckoutReview,
+  CompletionReportWorkflowResponse,
   FeedbackRecord,
   IntakeDiagnosisResponse,
   IntegrationCategory,
@@ -200,6 +202,24 @@ export default function Home() {
     useState<PurchaseLink | null>(null);
   const [latestPurchaseLinkGovernance, setLatestPurchaseLinkGovernance] =
     useState<PurchaseLinkGovernance | null>(null);
+  const [completionReport, setCompletionReport] = useState({
+    channel: "email",
+    templateName: "구매 완료 리포트",
+    subject: "[SpecPilot] {title}",
+    body:
+      "{title}\n추천 1순위: {top_model_name}\n공개 리포트: {public_path}\n결제 전 옵션명, 배송비, 카드 혜택을 다시 확인해 주세요.",
+    groupName: "운영 수신자",
+    recipients: "ops@example.com, buyer@example.com",
+    unsubscribed: "buyer@example.com",
+    respectUnsubscribe: true,
+    dryRun: false,
+    note: "웹사이트 완료 리포트 batch 발송",
+  });
+  const [completionStatus, setCompletionStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [latestCompletionWorkflow, setLatestCompletionWorkflow] =
+    useState<CompletionReportWorkflowResponse | null>(null);
   const [checkoutReview, setCheckoutReview] = useState({
     confirmedPrice: "",
     sellerAnswer: "판매 페이지 옵션명, 배송비, 카드 혜택, 반품 조건 확인 완료",
@@ -362,6 +382,8 @@ export default function Home() {
     setPurchaseLinkStatus("idle");
     setLatestPurchaseLink(null);
     setLatestPurchaseLinkGovernance(null);
+    setCompletionStatus("idle");
+    setLatestCompletionWorkflow(null);
     setCheckoutStatus("idle");
     setLatestCheckoutReview(null);
     setOutcomeStatus("idle");
@@ -675,6 +697,134 @@ export default function Home() {
       setPurchaseLinkStatus("sent");
     } catch {
       setPurchaseLinkStatus("error");
+    }
+  }
+
+  async function sendCompletionReport(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setCompletionStatus("sending");
+
+    try {
+      if (!savedReportId) {
+        throw new Error("missing report");
+      }
+      const response = await fetch("/api/specpilot/completion-reports", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          report_id: savedReportId,
+          channel: completionReport.channel,
+          template_name: completionReport.templateName,
+          subject: completionReport.subject,
+          body: completionReport.body,
+          recipient_group_name: completionReport.groupName,
+          recipients: splitList(completionReport.recipients),
+          unsubscribed_recipients: splitList(completionReport.unsubscribed),
+          respect_unsubscribe: completionReport.respectUnsubscribe,
+          dry_run: completionReport.dryRun,
+          note: completionReport.note,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`completion ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        workflow?: CompletionReportWorkflowResponse;
+      };
+      if (!payload.ok || !payload.workflow) {
+        throw new Error("completion rejected");
+      }
+      setLatestCompletionWorkflow(payload.workflow);
+      setCompletionStatus("sent");
+    } catch {
+      setCompletionStatus("error");
+    }
+  }
+
+  async function loadCompletionBatches() {
+    setCompletionStatus("sending");
+
+    try {
+      const response = await fetch("/api/specpilot/completion-reports", {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error(`completion ${response.status}`);
+      }
+      const payload = (await response.json()) as {
+        ok: boolean;
+        batches?: CompletionReportWorkflowResponse["recent_batches"];
+      };
+      if (!payload.ok || !payload.batches) {
+        throw new Error("completion batches rejected");
+      }
+      const batches = payload.batches;
+      setLatestCompletionWorkflow((current) => ({
+        template:
+          current?.template || {
+            template_id: "",
+            workspace_id: "",
+            name: "",
+            channel: completionReport.channel,
+            subject: completionReport.subject,
+            body: completionReport.body,
+            enabled: true,
+            created_at: "",
+            updated_at: "",
+          },
+        recipient_group:
+          current?.recipient_group || {
+            group_id: "",
+            workspace_id: "",
+            name: "",
+            channel: completionReport.channel,
+            recipients_masked: [],
+            recipient_count: 0,
+            unsubscribed_count: 0,
+            unsubscribe_policy: "exclude_unsubscribed",
+            enabled: true,
+            description: "",
+            created_at: "",
+            updated_at: "",
+          },
+        preview:
+          current?.preview || {
+            workspace_id: "",
+            report_id: savedReportId || "",
+            template_id: null,
+            recipient_group_id: null,
+            channel: completionReport.channel,
+            subject: "",
+            body: "",
+            targets_masked: [],
+            excluded_targets_masked: [],
+            target_count: 0,
+            excluded_count: 0,
+            public_path: "",
+            preview_generated_at: "",
+          },
+        batch:
+          current?.batch || batches[0] || {
+            batch_id: "",
+            workspace_id: "",
+            status: "empty",
+            template_id: null,
+            recipient_group_id: null,
+            target_count: 0,
+            selected_count: 0,
+            sent_count: 0,
+            failed_count: 0,
+            dry_run: false,
+            note: "",
+            created_at: "",
+            deliveries: [],
+          },
+        recent_batches: batches,
+      }));
+      setCompletionStatus("sent");
+    } catch {
+      setCompletionStatus("error");
     }
   }
 
@@ -1021,6 +1171,7 @@ export default function Home() {
           <a href="#analysis">분석</a>
           <a href="#price-alert">가격 알림</a>
           <a href="#purchase-links">구매 링크</a>
+          <a href="#completion-reports">완료 리포트</a>
           <a href="#source-check">상품 검수</a>
           <a href="#checkout-review">결제 검수</a>
           <a href="#purchase-outcome">구매 결과</a>
@@ -1732,6 +1883,266 @@ export default function Home() {
                 최근 링크 {latestPurchaseLink.link_id} · 공개 경로{" "}
                 {latestPurchaseLink.click_path}
               </p>
+            ) : null}
+          </div>
+        ) : null}
+      </section>
+
+      <section className="completionPanel" id="completion-reports">
+        <div className="advisorIntro">
+          <div className="sectionLabel">
+            <Send size={16} />
+            완료 리포트 발송
+          </div>
+          <h2>저장 리포트를 운영 채널 outbox로 전달합니다</h2>
+          <p>
+            템플릿과 수신자 그룹으로 발송 전 미리보기를 만들고, unsubscribe
+            제외, delivery 상태, 추적 픽셀과 클릭 경로를 함께 확인합니다.
+          </p>
+          <div className="advisorMeta">
+            <span className={savedReportId ? "pill ok" : "pill warn"}>
+              {savedReportId ? savedReportId : "라이브 분석 필요"}
+            </span>
+            <span className="pill muted">template + recipient group + batch</span>
+          </div>
+        </div>
+
+        <form className="completionForm" onSubmit={sendCompletionReport}>
+          <div className="fieldGrid">
+            <label>
+              채널
+              <select
+                value={completionReport.channel}
+                onChange={(event) =>
+                  setCompletionReport((current) => ({
+                    ...current,
+                    channel: event.target.value,
+                  }))
+                }
+              >
+                <option value="email">이메일</option>
+                <option value="webhook">웹훅</option>
+                <option value="sms">SMS</option>
+              </select>
+            </label>
+            <label>
+              템플릿 이름
+              <input
+                value={completionReport.templateName}
+                onChange={(event) =>
+                  setCompletionReport((current) => ({
+                    ...current,
+                    templateName: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <label>
+            제목
+            <input
+              value={completionReport.subject}
+              onChange={(event) =>
+                setCompletionReport((current) => ({
+                  ...current,
+                  subject: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            본문 템플릿
+            <textarea
+              value={completionReport.body}
+              onChange={(event) =>
+                setCompletionReport((current) => ({
+                  ...current,
+                  body: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            수신자 그룹
+            <input
+              value={completionReport.groupName}
+              onChange={(event) =>
+                setCompletionReport((current) => ({
+                  ...current,
+                  groupName: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            수신자
+            <input
+              value={completionReport.recipients}
+              onChange={(event) =>
+                setCompletionReport((current) => ({
+                  ...current,
+                  recipients: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <label>
+            수신 제외
+            <input
+              value={completionReport.unsubscribed}
+              onChange={(event) =>
+                setCompletionReport((current) => ({
+                  ...current,
+                  unsubscribed: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <div className="fieldGrid">
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={completionReport.respectUnsubscribe}
+                onChange={(event) =>
+                  setCompletionReport((current) => ({
+                    ...current,
+                    respectUnsubscribe: event.target.checked,
+                  }))
+                }
+              />
+              unsubscribe 제외
+            </label>
+            <label className="toggleLabel">
+              <input
+                type="checkbox"
+                checked={completionReport.dryRun}
+                onChange={(event) =>
+                  setCompletionReport((current) => ({
+                    ...current,
+                    dryRun: event.target.checked,
+                  }))
+                }
+              />
+              dry-run
+            </label>
+          </div>
+          <label>
+            운영 메모
+            <input
+              value={completionReport.note}
+              onChange={(event) =>
+                setCompletionReport((current) => ({
+                  ...current,
+                  note: event.target.value,
+                }))
+              }
+            />
+          </label>
+          <div className="alertActionGrid">
+            <button
+              type="submit"
+              disabled={completionStatus === "sending" || !savedReportId}
+            >
+              {completionStatus === "sending" ? (
+                <Loader2 className="spin" size={18} />
+              ) : (
+                <Send size={18} />
+              )}
+              미리보기 후 batch 발송
+            </button>
+            <button
+              type="button"
+              className="secondaryButton"
+              disabled={completionStatus === "sending"}
+              onClick={loadCompletionBatches}
+            >
+              <Activity size={18} />
+              최근 batch 조회
+            </button>
+          </div>
+          <p className="formStatus">
+            {savedReportId
+              ? statusMessage(
+                  completionStatus,
+                  "완료 리포트 batch를 처리했습니다.",
+                  "완료 리포트 batch 처리에 실패했습니다.",
+                ) || "저장 리포트를 선택한 운영 채널 outbox로 보낼 수 있습니다."
+              : "제품 API 연결 후 분석을 실행하면 저장 리포트 기준으로 완료 리포트를 발송할 수 있습니다."}
+          </p>
+        </form>
+
+        {latestCompletionWorkflow ? (
+          <div className="completionResult">
+            <div className="answerHeader">
+              <span className={`pill ${latestCompletionWorkflow.batch.failed_count ? "warn" : "ok"}`}>
+                {latestCompletionWorkflow.batch.status}
+              </span>
+              <span className="pill muted">
+                선택 {latestCompletionWorkflow.batch.selected_count}
+              </span>
+              <span className="pill muted">
+                발송 {latestCompletionWorkflow.batch.sent_count}
+              </span>
+              <span className="pill muted">
+                실패 {latestCompletionWorkflow.batch.failed_count}
+              </span>
+            </div>
+            <h3>{latestCompletionWorkflow.preview.subject || "최근 완료 리포트 batch"}</h3>
+            <dl className="sourceMetricGrid">
+              <div>
+                <dt>수신 대상</dt>
+                <dd>{latestCompletionWorkflow.preview.target_count}</dd>
+              </div>
+              <div>
+                <dt>제외 대상</dt>
+                <dd>{latestCompletionWorkflow.preview.excluded_count}</dd>
+              </div>
+              <div>
+                <dt>최근 batch</dt>
+                <dd>{latestCompletionWorkflow.recent_batches.length}</dd>
+              </div>
+            </dl>
+            <div className="advisorLists">
+              <div>
+                <strong>미리보기</strong>
+                <ul>
+                  <li>{latestCompletionWorkflow.preview.public_path || "공개 경로 없음"}</li>
+                  <li>
+                    대상{" "}
+                    {latestCompletionWorkflow.preview.targets_masked.join(", ") ||
+                      "미리보기 대상 없음"}
+                  </li>
+                  <li>
+                    제외{" "}
+                    {latestCompletionWorkflow.preview.excluded_targets_masked.join(", ") ||
+                      "없음"}
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <strong>Delivery</strong>
+                <ul>
+                  {latestCompletionWorkflow.batch.deliveries.slice(0, 5).map((delivery) => (
+                    <li key={delivery.delivery_id}>
+                      {delivery.status} · {delivery.target_masked} · open{" "}
+                      {delivery.open_count} / click {delivery.click_count}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            {latestCompletionWorkflow.batch.deliveries[0] ? (
+              <div className="trackingBox">
+                <strong>추적 경로</strong>
+                <span>
+                  {latestCompletionWorkflow.batch.deliveries[0].tracking_pixel_path ||
+                    "pixel 없음"}
+                </span>
+                <span>
+                  {latestCompletionWorkflow.batch.deliveries[0].tracking_click_path ||
+                    "click 없음"}
+                </span>
+              </div>
             ) : null}
           </div>
         ) : null}

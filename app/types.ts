@@ -212,6 +212,125 @@ export type PurchaseLinkGovernance = {
   links: PurchaseLink[];
 };
 
+export type CompletionReportTemplateRequest = {
+  name: string;
+  channel: string;
+  subject: string;
+  body: string;
+  enabled: boolean;
+};
+
+export type CompletionReportTemplate = CompletionReportTemplateRequest & {
+  template_id: string;
+  workspace_id: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CompletionRecipientGroupRequest = {
+  name: string;
+  channel: string;
+  recipients: string[];
+  unsubscribed_recipients: string[];
+  unsubscribe_policy: string;
+  enabled: boolean;
+  description: string;
+};
+
+export type CompletionRecipientGroup = {
+  group_id: string;
+  workspace_id: string;
+  name: string;
+  channel: string;
+  recipients_masked: string[];
+  recipient_count: number;
+  unsubscribed_count: number;
+  unsubscribe_policy: string;
+  enabled: boolean;
+  description: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CompletionReportPreview = {
+  workspace_id: string;
+  report_id: string;
+  template_id: string | null;
+  recipient_group_id: string | null;
+  channel: string;
+  subject: string;
+  body: string;
+  targets_masked: string[];
+  excluded_targets_masked: string[];
+  target_count: number;
+  excluded_count: number;
+  public_path: string;
+  preview_generated_at: string;
+};
+
+export type CompletionReportDelivery = {
+  delivery_id: string;
+  batch_id: string;
+  report_id: string;
+  workspace_id: string;
+  channel: string;
+  target_masked: string;
+  template_id: string | null;
+  recipient_group_id: string | null;
+  subject: string;
+  status: string;
+  provider_message: string;
+  retry_count: number;
+  next_retry_at: string | null;
+  sent_at: string | null;
+  engagement_count: number;
+  open_count: number;
+  click_count: number;
+  last_engaged_at: string | null;
+  tracking_token: string;
+  tracking_pixel_path: string;
+  tracking_click_path: string;
+  created_at: string;
+};
+
+export type CompletionReportBatch = {
+  batch_id: string;
+  workspace_id: string;
+  status: string;
+  template_id: string | null;
+  recipient_group_id: string | null;
+  target_count: number;
+  selected_count: number;
+  sent_count: number;
+  failed_count: number;
+  dry_run: boolean;
+  note: string;
+  created_at: string;
+  deliveries: CompletionReportDelivery[];
+};
+
+export type CompletionReportWorkflowRequest = {
+  report_id: string;
+  channel: string;
+  template_name: string;
+  subject: string;
+  body: string;
+  recipient_group_name: string;
+  recipients: string[];
+  unsubscribed_recipients: string[];
+  respect_unsubscribe: boolean;
+  dry_run: boolean;
+  note: string;
+};
+
+export type CompletionReportWorkflowResponse = {
+  template: CompletionReportTemplate;
+  recipient_group: CompletionRecipientGroup;
+  preview: CompletionReportPreview;
+  batch: CompletionReportBatch;
+  recent_batches: CompletionReportBatch[];
+};
+
 export type PublicReport = {
   report_id: string;
   title: string;

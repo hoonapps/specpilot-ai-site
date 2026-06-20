@@ -612,6 +612,7 @@ ul {
 .sourceCheckPanel,
 .alertPanel,
 .purchaseLinkPanel,
+.completionPanel,
 .checkoutPanel,
 .outcomePanel,
 .learningPanel,
@@ -657,6 +658,7 @@ ul {
 .sourceResult,
 .alertResult,
 .purchaseLinkResult,
+.completionResult,
 .checkoutResult,
 .outcomeResult,
 .learningResult,
@@ -671,6 +673,57 @@ ul {
   display: grid;
   align-content: start;
   gap: 12px;
+}
+
+.completionForm {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.completionForm textarea {
+  min-height: 128px;
+}
+
+.completionForm button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: white;
+  font-weight: 950;
+}
+
+.completionForm button.secondaryButton {
+  border: 1px solid rgba(12, 116, 108, 0.28);
+  background: #f5fbf8;
+  color: var(--teal);
+}
+
+.completionForm button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.trackingBox {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 14px;
+}
+
+.trackingBox span {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .integrationForm textarea {
@@ -1062,6 +1115,7 @@ ul {
   .sourceCheckPanel,
   .alertPanel,
   .purchaseLinkPanel,
+  .completionPanel,
   .checkoutPanel,
   .outcomePanel,
   .learningPanel,
@@ -1104,6 +1158,7 @@ ul {
   .sourceCheckPanel,
   .alertPanel,
   .purchaseLinkPanel,
+  .completionPanel,
   .checkoutPanel,
   .outcomePanel,
   .learningPanel,

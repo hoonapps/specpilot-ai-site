@@ -14,7 +14,7 @@ const fallbackActivationOffer: LaunchActivationOfferDashboard = {
   activation_score: 58,
   headline: "첫 방문자를 분석 시작, 추천 대기열, 요금제 관심으로 분기합니다.",
   summary:
-    "전환 보드, 미디어 키트, 커뮤니티 답변, 요금제 의향을 묶어 런칭 방문자의 다음 행동을 고릅니다.",
+    "전환 보드, 공개 라우팅, 미디어/커뮤니티 신호, 요금제 의향을 묶어 런칭 방문자의 다음 행동을 고릅니다.",
   metric_cards: {
     activation_score: 58,
     conversion_score: 52,

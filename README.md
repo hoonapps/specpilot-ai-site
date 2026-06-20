@@ -73,7 +73,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/launch-week-recap`: 제품 API의 `/growth/launch-week-recap`으로 첫 주 성장 이벤트, 공유 조회, 추천 대기열, 요금제 관심, CTA 실험, 리텐션, 품질 리스크를 합성한 D+7 런칭 리포트 조회
 - `/api/specpilot/launch-community-kit`: 제품 API의 `/growth/launch-community-kit`으로 D+7 리포트, 반박 FAQ, 공유 확산팩, 액션 라우터를 합성한 커뮤니티 고정 댓글/반복 질문 답변/운영 리스크 조회
 - `/api/specpilot/launch-media-kit`: 제품 API의 `/growth/launch-media-kit`으로 런칭룸, 공개 proof, 소셜 proof, D+7 리포트, 커뮤니티 대응 키트 기반 대표 자산과 외부 소개 피치 조회
-- `/api/specpilot/launch-activation-offer`: 제품 API의 `/growth/launch-activation-offer`로 공개 전환 보드, 추천 대기열, 요금제 의향, Team 상담, 미디어/커뮤니티 키트 기반 첫 CTA와 전환 오퍼 조회
+- `/api/specpilot/launch-activation-offer`: 제품 API의 `/growth/launch-activation-offer`로 공개 전환 보드, 추천 대기열, 요금제 의향, Team 상담, 공개 라우팅 기반 미디어/커뮤니티 신호의 첫 CTA와 전환 오퍼 조회
 - `/api/specpilot/launch-experiments`: 제품 API의 `/growth/launch-experiments`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-experiment-dashboard`로 CTA 실험 생성, 노출/전환 기록, 승자 후보 조회
 - `/api/specpilot/launch-kit`: 제품 API의 `/growth/launch-kit`으로 커뮤니티/검색/추천 채널별 공개 베타 카피, CTA 실험, 출시 체크리스트, 측정 계획 조회
 - `/api/specpilot/launch-distribution-plan`: 제품 API의 `/growth/launch-distribution-plan`으로 첫 주 채널 배포 슬롯, 복사 문구, 측정 이벤트, 위험 통제 조회

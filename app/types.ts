@@ -1543,6 +1543,41 @@ export type LaunchWarRoomDashboard = {
   next_actions: string[];
 };
 
+export type LaunchIncidentSignal = {
+  key: string;
+  label: string;
+  status: OpsStatus;
+  owner: string;
+  metric: string;
+  impact: string;
+  first_response: string;
+};
+
+export type LaunchIncidentRunbookStep = {
+  step: string;
+  owner: string;
+  trigger: string;
+  action: string;
+  success_signal: string;
+};
+
+export type LaunchIncidentCenter = {
+  center_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  incident_level: string;
+  incident_score: number;
+  commander_brief: string;
+  summary: string;
+  metric_cards: Record<string, number | string>;
+  signals: LaunchIncidentSignal[];
+  runbook: LaunchIncidentRunbookStep[];
+  escalation_paths: string[];
+  tracking_events: string[];
+  next_actions: string[];
+};
+
 export type LaunchWeekRecapWin = {
   key: string;
   label: string;

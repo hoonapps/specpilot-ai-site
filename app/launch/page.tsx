@@ -33,6 +33,7 @@ import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { LaunchCommunityKitPanel } from "./LaunchCommunityKitPanel";
 import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
+import { LaunchIncidentCenterPanel } from "./LaunchIncidentCenterPanel";
 import { LaunchMediaKitPanel } from "./LaunchMediaKitPanel";
 import { LaunchObjectionKitPanel } from "./LaunchObjectionKitPanel";
 import { LaunchProofHubPanel } from "./LaunchProofHubPanel";
@@ -1119,6 +1120,8 @@ export default async function LaunchPage() {
       <LaunchSmokePanel />
 
       <LaunchWarRoomPanel />
+
+      <LaunchIncidentCenterPanel />
 
       <LaunchWeekRecapPanel />
 

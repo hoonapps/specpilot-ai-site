@@ -4447,6 +4447,134 @@ ul {
   padding-left: 18px;
 }
 
+.launchIncidentCenter {
+  border: 1px solid rgba(167, 75, 66, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchIncidentStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchIncidentStatus small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchIncidentMetricGrid,
+.launchIncidentGrid,
+.launchIncidentFooter {
+  display: grid;
+  gap: 12px;
+}
+
+.launchIncidentMetricGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchIncidentGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchIncidentFooter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchIncidentMetricGrid article,
+.launchIncidentSignal,
+.launchIncidentFooter > div,
+.launchIncidentRunbook {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(167, 75, 66, 0.14);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchIncidentMetricGrid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchIncidentMetricGrid strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.launchIncidentSignal > div,
+.launchIncidentFooter strong,
+.launchIncidentEvents {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchIncidentSignal h3,
+.launchIncidentSignal p,
+.launchIncidentSignal small,
+.launchIncidentSignal strong,
+.launchIncidentRunbook h3,
+.launchIncidentRunbook p,
+.launchIncidentRunbook small,
+.launchIncidentRunbook strong,
+.launchIncidentFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchIncidentSignal h3,
+.launchIncidentRunbook h3 {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.launchIncidentSignal p,
+.launchIncidentSignal small,
+.launchIncidentSignal strong,
+.launchIncidentRunbook p,
+.launchIncidentRunbook small,
+.launchIncidentRunbook strong,
+.launchIncidentFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchIncidentFooter > div {
+  background: #fffafa;
+}
+
+.launchIncidentFooter strong {
+  color: var(--ink);
+}
+
+.launchIncidentFooter ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchWeekRecap {
   border: 1px solid rgba(42, 67, 88, 0.18);
   border-radius: 8px;
@@ -6787,6 +6915,9 @@ ul {
   .launchWarRoomSignalGrid,
   .launchWarRoomPlayGrid,
   .launchWarRoomFooter,
+  .launchIncidentMetricGrid,
+  .launchIncidentGrid,
+  .launchIncidentFooter,
   .launchWeekRecapMetricGrid,
   .launchWeekRecapGrid,
   .launchWeekRecapFooter,
@@ -7137,6 +7268,9 @@ ul {
   .launchWarRoomSignalGrid,
   .launchWarRoomPlayGrid,
   .launchWarRoomFooter,
+  .launchIncidentMetricGrid,
+  .launchIncidentGrid,
+  .launchIncidentFooter,
   .launchWeekRecapMetricGrid,
   .launchWeekRecapGrid,
   .launchWeekRecapFooter,

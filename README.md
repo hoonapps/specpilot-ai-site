@@ -74,13 +74,14 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/launch-distribution-plan`: 제품 API의 `/growth/launch-distribution-plan`으로 첫 주 채널 배포 슬롯, 복사 문구, 측정 이벤트, 위험 통제 조회
 - `/api/specpilot/proof-hub`: 제품 API의 `/public/proof-hub`로 Trust Center, 시장 리포트, 공유 조회, 피드백, CTA 실험, 공개 유입 표면 기반 proof 카드, 출시 proof strip, evidence kit 조회
 - `/api/specpilot/social-proof-wall`: 제품 API의 `/public/social-proof-wall`로 마스킹 피드백, 실구매 결과, 추천 유입 리더보드를 공개 랜딩용 반응 카드와 신뢰 고지로 조회
+- `/api/specpilot/launch-objection-kit`: 제품 API의 `/public/launch-objection-kit`으로 최저가 비교 사이트와의 차이, 제휴 편향, 가격 최신성, 개인정보, 초보자 난이도, 팀 구매 질문을 공개 반박 FAQ와 비교표로 조회
 - `/api/specpilot/launch-room`: 제품 API의 `/public/launch-room`으로 공개 데모, 시장 리포트, proof strip, 유입/반응/추천/수익화 CTA, 채널 공유 문구를 외부 공유용 런칭룸으로 조회
 - `/api/specpilot/pricing-ops`: 제품 API의 `/pricing/plans`, `/billing/subscription-intents`, `/ops/pricing-dashboard`, `/ops/team-purchase-consult-kit`으로 요금제별 수요, 예상 MRR, Team 상담 키트, 최근 intent 관리
 - `/api/specpilot/team-consult-kit`: 제품 API의 `/ops/team-purchase-consult-kit`으로 Team 관심 리드의 상담 브리프, 안건, ROI 포인트, 제안 메일 조회
 
 공개 페이지:
 
-- `/launch`: 제품 API의 `/public/launch-room`, `/public/start-concierge`, `/growth/launch-experiment-dashboard`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-distribution-plan`, `/growth/retention-hub`, `/growth/referral-launch-kit`, `/growth/acquisition-hub`, `/growth/public-conversion-board`, `/growth/launch-pulse`, `/ops/team-purchase-consult-kit`, `/beta/readiness`, `/beta/launch-gate`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/mistake-cost-calculator`, `/public/buyer-challenge-kit`, `/public/spec-risk-scanner`, `/public/candidate-compare`, `/public/deal-timing-window`, `/public/social-proof-wall`, `/public/proof-hub`, `/pricing/plans`를 읽어 공개 데모, 첫 구매 진단 콘시어지, CTA 실험 스트립, 첫 주 채널 배포 플랜, 구매 후속 리텐션 루프, 가입 전 추천 확산 키트, 공개 반응 운영 패널, Team 구매 표준안 프리뷰, 공개 출시 게이트, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 구매 실패 비용 계산기, 구매 챌린지 공유 키트, 옵션/사양 빠른 검수기, 공개 후보 비교 스냅샷, 공개 구매 타이밍 윈도우, 공개 검증 허브 evidence kit, Free/Premium/Team 요금제 비교 카드, 실제 반응 proof, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 각 분석 CTA는 세션 handoff로 메인 분석 폼을 자동 채우며, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
+- `/launch`: 제품 API의 `/public/launch-room`, `/public/start-concierge`, `/growth/launch-experiment-dashboard`, `/growth/launch-experiments/{experiment_id}/events`, `/growth/launch-distribution-plan`, `/growth/retention-hub`, `/growth/referral-launch-kit`, `/growth/acquisition-hub`, `/growth/public-conversion-board`, `/growth/launch-pulse`, `/ops/team-purchase-consult-kit`, `/beta/readiness`, `/beta/launch-gate`, `/public/buyer-checklist`, `/public/buyer-persona-quiz`, `/public/mistake-cost-calculator`, `/public/buyer-challenge-kit`, `/public/spec-risk-scanner`, `/public/candidate-compare`, `/public/deal-timing-window`, `/public/social-proof-wall`, `/public/launch-objection-kit`, `/public/proof-hub`, `/pricing/plans`를 읽어 공개 데모, 첫 구매 진단 콘시어지, CTA 실험 스트립, 첫 주 채널 배포 플랜, 구매 후속 리텐션 루프, 가입 전 추천 확산 키트, 공개 반응 운영 패널, 런칭 반박 FAQ, Team 구매 표준안 프리뷰, 공개 출시 게이트, 구매 실패 방지 체크리스트, 30초 구매 성향 진단 퀴즈, 구매 실패 비용 계산기, 구매 챌린지 공유 키트, 옵션/사양 빠른 검수기, 공개 후보 비교 스냅샷, 공개 구매 타이밍 윈도우, 공개 검증 허브 evidence kit, Free/Premium/Team 요금제 비교 카드, 실제 반응 proof, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 각 분석 CTA는 세션 handoff로 메인 분석 폼을 자동 채우며, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
 - 첫 화면 공개 데모 갤러리는 데스크톱/노트북/팀 구매 preset을 분석 폼에 즉시 적용해 빈 폼 이탈을 줄임
@@ -151,6 +152,7 @@ docker build -t specpilot-ai-site:local .
 - `GET /growth/launch-distribution-plan`
 - `GET /public/proof-hub`
 - `GET /public/social-proof-wall`
+- `GET /public/launch-objection-kit`
 - `GET /public/launch-room`
 - `POST /growth/launch-experiments`
 - `POST /growth/launch-experiments/{experiment_id}/events`

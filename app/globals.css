@@ -3587,6 +3587,200 @@ ul {
   align-items: center;
 }
 
+.launchObjectionKit {
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(229, 244, 239, 0.82), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.launchObjectionScore {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.launchObjectionScore small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.launchObjectionHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 18px;
+}
+
+.launchObjectionHero strong,
+.launchObjectionCompareHeader strong,
+.launchObjectionFooter strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.launchObjectionHero p {
+  max-width: 860px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.launchObjectionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchObjectionCard {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 12px;
+  border: 1px solid rgba(12, 116, 108, 0.16);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 16px;
+}
+
+.launchObjectionCard > div:first-child,
+.launchObjectionLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.launchObjectionCard h3,
+.launchObjectionCard p,
+.launchObjectionCard li,
+.launchObjectionLinks a,
+.launchObjectionCompareRows p,
+.launchObjectionCompareRows small,
+.launchObjectionFooter li {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchObjectionCard h3 {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.launchObjectionCard p,
+.launchObjectionCard li,
+.launchObjectionCompareRows p,
+.launchObjectionCompareRows small,
+.launchObjectionFooter li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.launchObjectionCard ul,
+.launchObjectionFooter ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchObjectionLinks {
+  margin-top: auto;
+}
+
+.launchObjectionLinks a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.launchObjectionCompare {
+  display: grid;
+  gap: 12px;
+}
+
+.launchObjectionCompareHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.launchObjectionCompareHeader span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.launchObjectionCompareRows {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.launchObjectionCompareRows article {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 14px;
+}
+
+.launchObjectionCompareRows article > strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.launchObjectionCompareRows span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchObjectionFooter {
+  display: grid;
+  grid-template-columns: minmax(0, 0.74fr) minmax(320px, 1fr);
+  gap: 12px;
+}
+
+.launchObjectionFooter > div {
+  min-width: 0;
+  border: 1px solid rgba(12, 116, 108, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 16px;
+}
+
+.launchObjectionFooter strong {
+  margin-bottom: 10px;
+}
+
 .launchReadinessGate {
   border: 1px solid rgba(12, 116, 108, 0.18);
   border-radius: 8px;
@@ -5384,6 +5578,8 @@ ul {
   .launchDealTimingGrid,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
+  .launchObjectionHero,
+  .launchObjectionFooter,
   .launchPublicGrid.three,
   .launchConversionGrid,
   .joinPublicHero,
@@ -5473,6 +5669,8 @@ ul {
   .launchReferralMomentumMetrics,
   .launchReferralMomentumGrid,
   .launchReferralSharePreview,
+  .launchObjectionGrid,
+  .launchObjectionCompareRows,
   .launchPublicOpsScoreGrid,
   .launchPublicOpsMetricGrid,
   .launchPublicOpsStageGrid,
@@ -5699,6 +5897,10 @@ ul {
   .launchProofHubMetricGrid,
   .launchProofHubEvidenceGrid,
   .launchProofHubFooter,
+  .launchObjectionHero,
+  .launchObjectionGrid,
+  .launchObjectionCompareRows,
+  .launchObjectionFooter,
   .launchReadinessMetricGrid,
   .launchReadinessCheckGrid,
   .launchReadinessFooter,

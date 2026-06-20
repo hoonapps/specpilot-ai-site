@@ -29,6 +29,7 @@ import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { LaunchDistributionPlanPanel } from "./LaunchDistributionPlanPanel";
 import { LaunchExperimentStrip } from "./LaunchExperimentStrip";
+import { LaunchObjectionKitPanel } from "./LaunchObjectionKitPanel";
 import { LaunchProofHubPanel } from "./LaunchProofHubPanel";
 import { LaunchPublicOpsPanel } from "./LaunchPublicOpsPanel";
 import { LaunchReadinessGatePanel } from "./LaunchReadinessGatePanel";
@@ -1038,6 +1039,8 @@ export default async function LaunchPage() {
           </ul>
         </div>
       </section>
+
+      <LaunchObjectionKitPanel />
 
       <LaunchProofHubPanel />
 

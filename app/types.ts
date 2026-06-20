@@ -1579,6 +1579,41 @@ export type PublicObjectionAnswer = {
   evidence: string[];
 };
 
+export type PublicObjectionCard = {
+  key: string;
+  question: string;
+  status: OpsStatus;
+  short_answer: string;
+  proof_points: string[];
+  evidence_paths: string[];
+  cta_label: string;
+  cta_path: string;
+};
+
+export type PublicObjectionComparison = {
+  criterion: string;
+  price_comparison_sites: string;
+  specpilot_ai: string;
+  why_it_matters: string;
+};
+
+export type PublicLaunchObjectionKit = {
+  kit_version: string;
+  workspace_id: string;
+  generated_at: string;
+  status: OpsStatus;
+  objection_score: number;
+  headline: string;
+  summary: string;
+  primary_cta: string;
+  primary_cta_path: string;
+  objections: PublicObjectionCard[];
+  comparisons: PublicObjectionComparison[];
+  trust_badges: string[];
+  channel_replies: string[];
+  next_actions: string[];
+};
+
 export type PublicProofEvidence = {
   title: string;
   status: OpsStatus;

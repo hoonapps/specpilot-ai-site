@@ -281,6 +281,21 @@ export type PurchaseLink = {
   updated_at?: string;
 };
 
+export type PublicReportConversionCta = {
+  cta_version: string;
+  headline: string;
+  body: string;
+  primary_label: string;
+  primary_path: string;
+  secondary_label: string;
+  secondary_path: string;
+  source: string;
+  surface: string;
+  report_ref: string;
+  proof_points: string[];
+  next_actions: string[];
+};
+
 export type PurchaseLinkRequest = {
   product_id: string | null;
   seller_name: string;
@@ -436,6 +451,7 @@ export type PublicReport = {
   share_views: number;
   response: AnalyzeResponse;
   purchase_links: PurchaseLink[];
+  conversion_cta: PublicReportConversionCta;
 };
 
 export type AnalyzeAndShareResponse = {

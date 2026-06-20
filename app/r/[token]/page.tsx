@@ -63,6 +63,7 @@ export default async function PublicReportPage({ params }: PageProps) {
   const decision = purchase.purchase_decision;
   const shareBrief = purchase.share_brief;
   const execution = purchase.execution_plan;
+  const conversion = report.conversion_cta;
   const top = purchase.top_recommendations[0];
   const dealWindow =
     purchase.deal_windows.find((item) => item.product_id === purchase.final_pick_id) ||
@@ -95,6 +96,14 @@ export default async function PublicReportPage({ params }: PageProps) {
             </span>
             <span className="pill muted">{report.shared_at.slice(0, 10)}</span>
           </div>
+          <div className="publicHeroActions">
+            <a className="primaryButton" href={conversion.primary_path}>
+              {conversion.primary_label}
+            </a>
+            <a className="secondaryLaunchButton" href={conversion.secondary_path}>
+              {conversion.secondary_label}
+            </a>
+          </div>
         </div>
         <aside className="publicHeroCard">
           <span>최종 후보</span>
@@ -106,6 +115,45 @@ export default async function PublicReportPage({ params }: PageProps) {
           </div>
         </aside>
       </header>
+
+      <section className="publicConversionPanel">
+        <div>
+          <p className="sectionLabel">Public report conversion</p>
+          <h2>{conversion.headline}</h2>
+          <p>{conversion.body}</p>
+          <div className="statusRow">
+            <span className="pill ok">Ref {conversion.report_ref}</span>
+            <span className="pill muted">{conversion.source}</span>
+            <span className="pill muted">{conversion.surface}</span>
+          </div>
+          <div className="publicHeroActions">
+            <a className="primaryButton" href={conversion.primary_path}>
+              {conversion.primary_label}
+            </a>
+            <a className="secondaryLaunchButton" href={conversion.secondary_path}>
+              {conversion.secondary_label}
+            </a>
+          </div>
+        </div>
+        <div className="publicConversionLists">
+          <div>
+            <strong>다음 액션</strong>
+            <ul>
+              {conversion.next_actions.slice(0, 3).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <strong>전환 근거</strong>
+            <ul>
+              {conversion.proof_points.slice(0, 3).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
 
       <section className="publicGrid">
         <article className="publicPanel">

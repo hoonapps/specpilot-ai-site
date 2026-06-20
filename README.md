@@ -69,10 +69,10 @@ SPECPILOT_API_KEY=specpilot-site-demo
 공개 페이지:
 
 - `/launch`: 제품 API의 `/public/launch-room`을 서버에서 읽어 공개 데모, proof strip, 시장 리포트, 출시 CTA, 공유 문구를 한 화면에 보여주고, 추천 대기열과 요금제 관심 등록을 제품 API에 바로 저장하는 외부 공유용 런칭룸
-- `/join?ref={referral_code}`: 제품 API가 발급한 추천 URL을 받아 초대 코드가 미리 채워진 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
+- `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링
 - 첫 화면 공개 데모 갤러리는 데스크톱/노트북/팀 구매 preset을 분석 폼에 즉시 적용해 빈 폼 이탈을 줄임
-- 공개 리포트는 구매 판정, 최종 후보, TOP 3 비교, 공유 브리프, 대안 시나리오, 조건 충족 매트릭스, 예산/조건 스트레스 테스트, 구매 타이밍, 구매 실행 체크리스트, 제휴/비제휴 구매 링크를 한 화면에 표시
+- 공개 리포트는 구매 판정, 최종 후보, TOP 3 비교, 공유 브리프, 대안 시나리오, 조건 충족 매트릭스, 예산/조건 스트레스 테스트, 구매 타이밍, 구매 실행 체크리스트, 제휴/비제휴 구매 링크, 새 분석/대기열 전환 CTA를 한 화면에 표시
 - 구매 링크는 제품 API의 `/buy/{link_id}` 추적 redirect를 사용해 공개 클릭 지표를 유지
 - `/market/desktop-pc`, `/market/laptop`: 제품 API의 `/public/market/category-reports/{category}`를 읽어 SEO 제목, 월간 추천 픽, 가격 구간, 리스크 신호, 공개 체크리스트, 분석 CTA를 보여주는 공개 카테고리 리포트
 

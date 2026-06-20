@@ -1647,6 +1647,223 @@ ul {
   font-size: 13px;
 }
 
+.launchStartConcierge {
+  gap: 18px;
+  border: 1px solid rgba(12, 116, 108, 0.18);
+  background: #f6fbf8;
+}
+
+.launchStartConciergeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 14px;
+}
+
+.launchStartConciergeForm,
+.launchStartConciergeResult {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+  border: 1px solid rgba(12, 116, 108, 0.16);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: clamp(14px, 2.4vw, 18px);
+}
+
+.launchStartConciergeForm label,
+.launchStartConciergeControls {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.launchStartConciergeControls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchStartConciergeForm label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchStartConciergeForm input,
+.launchStartConciergeForm select,
+.launchStartConciergeForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 14px;
+}
+
+.launchStartConciergeForm textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.launchStartConciergeControls textarea {
+  min-height: 84px;
+}
+
+.launchStartConciergeForm button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teal);
+  color: #fff;
+  padding: 0 14px;
+  font-weight: 950;
+}
+
+.launchStartConciergeForm button:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.launchStartConciergeError {
+  margin: 0;
+  border: 1px solid rgba(170, 45, 45, 0.18);
+  border-radius: 8px;
+  background: #fff5f3;
+  color: #9c2f24;
+  padding: 12px 14px;
+  font-weight: 850;
+}
+
+.launchStartConciergeResult {
+  align-content: start;
+  background: #fbfffd;
+}
+
+.launchStartConciergeResult h3,
+.launchStartConciergeResult p,
+.launchStartConciergeResult strong,
+.launchStartConciergeResult small,
+.launchStartConciergeProof span,
+.launchStartConciergeActions a {
+  overflow-wrap: anywhere;
+}
+
+.launchStartConciergeResult h3 {
+  margin: 10px 0 8px;
+  font-size: clamp(22px, 2.8vw, 32px);
+  line-height: 1.16;
+}
+
+.launchStartConciergeResult p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.launchStartConciergeResult strong {
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.launchStartConciergeMetrics,
+.launchStartConciergeMilestones,
+.launchStartConciergeActions {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+.launchStartConciergeMetrics {
+  grid-template-columns: 0.7fr 1.3fr;
+}
+
+.launchStartConciergeMetrics div,
+.launchStartConciergeMilestones div {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 12px;
+}
+
+.launchStartConciergeMetrics span,
+.launchStartConciergeMilestones small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchStartConciergeMetrics strong {
+  font-size: 18px;
+}
+
+.launchStartConciergeMilestones {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchStartConciergeProof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launchStartConciergeProof span {
+  border: 1px solid rgba(12, 116, 108, 0.16);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--teal);
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchStartConciergeActions a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 10px;
+  align-items: center;
+  border: 1px solid rgba(12, 116, 108, 0.16);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 12px;
+  text-decoration: none;
+}
+
+.launchStartConciergeActions a span {
+  font-weight: 950;
+}
+
+.launchStartConciergeActions a small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.launchStartConciergeActions a svg {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.launchStartConciergeEmpty {
+  display: grid;
+  min-height: 100%;
+  align-content: center;
+  justify-items: start;
+  gap: 10px;
+  border: 1px dashed rgba(12, 116, 108, 0.22);
+  border-radius: 8px;
+  background: #fff;
+  padding: clamp(18px, 3vw, 28px);
+}
+
 .launchBuyerChecklist {
   gap: 18px;
 }
@@ -4062,6 +4279,7 @@ ul {
   .publicGrid,
   .publicConversionPanel,
   .launchPublicMetrics,
+  .launchStartConciergeGrid,
   .launchBuyerChecklistFooter,
   .launchPersonaResultGrid,
   .launchPersonaColumns,
@@ -4139,6 +4357,9 @@ ul {
   .launchSpecScannerControls,
   .launchSpecScannerControls.dense,
   .launchSpecScannerNumbers,
+  .launchStartConciergeControls,
+  .launchStartConciergeMetrics,
+  .launchStartConciergeMilestones,
   .launchCandidateControls,
   .launchCandidateItems,
   .launchCandidateLeadStats,
@@ -4310,6 +4531,10 @@ ul {
   .publicGrid,
   .publicConversionPanel,
   .launchPublicMetrics,
+  .launchStartConciergeGrid,
+  .launchStartConciergeControls,
+  .launchStartConciergeMetrics,
+  .launchStartConciergeMilestones,
   .launchBuyerChecklistGrid,
   .launchBuyerChecklistFooter,
   .launchBuyerChallengeGrid,

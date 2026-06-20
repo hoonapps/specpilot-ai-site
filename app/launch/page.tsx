@@ -27,6 +27,7 @@ import { CandidateComparePanel } from "./CandidateComparePanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
+import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
 
 export const dynamic = "force-dynamic";
@@ -868,6 +869,8 @@ export default async function LaunchPage() {
           <p>커뮤니티와 지인 공유용</p>
         </article>
       </section>
+
+      <StartConciergePanel />
 
       <section className="launchPublicSection launchBuyerChecklist" id="buyer-checklist">
         <div className="sectionHeader">

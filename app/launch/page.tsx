@@ -32,6 +32,7 @@ import { LaunchActivationOfferPanel } from "./LaunchActivationOfferPanel";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
+import { CustomCandidateDecisionPanel } from "./CustomCandidateDecisionPanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { FirstBootSetupPanel } from "./FirstBootSetupPanel";
 import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
@@ -1438,6 +1439,8 @@ export default async function LaunchPage() {
         compare={candidateCompare}
         isFallback={compareFallback}
       />
+
+      <CustomCandidateDecisionPanel />
 
       <DealTimingWindowPanel
         timing={dealTiming}

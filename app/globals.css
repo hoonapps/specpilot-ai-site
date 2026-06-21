@@ -4570,6 +4570,206 @@ ul {
   font-weight: 900;
 }
 
+.launchCustomCandidate {
+  gap: 18px;
+  border: 1px solid rgba(49, 95, 140, 0.18);
+  background: #f7fbff;
+}
+
+.launchCustomCandidateGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 16px;
+}
+
+.launchCustomCandidateForm,
+.launchCustomCandidateResult,
+.launchCustomCandidateInputs article,
+.launchCustomCandidateRank article,
+.launchCustomCandidateColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(49, 95, 140, 0.15);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+  padding: clamp(14px, 2.4vw, 18px);
+}
+
+.launchCustomCandidateControls,
+.launchCustomCandidateMiniGrid,
+.launchCustomCandidateRank,
+.launchCustomCandidateColumns,
+.launchCustomCandidateActions {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+.launchCustomCandidateControls {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchCustomCandidateMiniGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchCustomCandidateForm label,
+.launchCustomCandidateInputs span {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchCustomCandidateForm input,
+.launchCustomCandidateForm select,
+.launchCustomCandidateForm textarea,
+.launchCustomCandidateInputs input,
+.launchCustomCandidateInputs textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+  padding: 10px 11px;
+}
+
+.launchCustomCandidateForm textarea,
+.launchCustomCandidateInputs textarea {
+  resize: vertical;
+}
+
+.launchCustomCandidateForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchCustomCandidateInputs {
+  display: grid;
+  gap: 12px;
+}
+
+.launchCustomCandidateInputs article {
+  box-shadow: none;
+  background: #fbfcff;
+}
+
+.launchCustomCandidateResult h3 {
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.1;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchCustomCandidateResult p,
+.launchCustomCandidateResult li,
+.launchCustomCandidateResult small {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchCustomCandidateScore {
+  align-items: end;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  padding: 18px;
+  background: linear-gradient(135deg, #102b2d, #315f8c);
+}
+
+.launchCustomCandidateScore strong {
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 0.95;
+}
+
+.launchCustomCandidateScore span {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  font-weight: 950;
+  padding-bottom: 5px;
+}
+
+.launchCustomCandidateRank {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchCustomCandidateRank article.ok {
+  border-color: rgba(22, 163, 74, 0.24);
+  background: #f0fdf4;
+}
+
+.launchCustomCandidateRank article.warn {
+  border-color: rgba(217, 119, 6, 0.28);
+  background: #fffbeb;
+}
+
+.launchCustomCandidateRank article.danger {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: #fef2f2;
+}
+
+.launchCustomCandidateRank span {
+  align-items: center;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 950;
+  gap: 6px;
+}
+
+.launchCustomCandidateRank strong,
+.launchCustomCandidateColumns strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchCustomCandidateColumns,
+.launchCustomCandidateActions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchCustomCandidateColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchCustomCandidateActions button {
+  align-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #e0f2fe;
+  color: #075985;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 900;
+  gap: 7px;
+  justify-content: center;
+  min-height: 42px;
+  padding: 11px 13px;
+}
+
+.launchCustomCandidateEmpty {
+  align-content: center;
+  display: grid;
+  gap: 10px;
+  min-height: 360px;
+  text-align: center;
+}
+
 .launchDealTiming {
   gap: 18px;
   border: 1px solid rgba(49, 95, 140, 0.2);
@@ -10009,6 +10209,12 @@ ul {
   .launchCandidateCompareGrid,
   .launchCandidateAxes,
   .launchCandidateScenarios,
+  .launchCustomCandidateGrid,
+  .launchCustomCandidateControls,
+  .launchCustomCandidateMiniGrid,
+  .launchCustomCandidateRank,
+  .launchCustomCandidateColumns,
+  .launchCustomCandidateActions,
   .launchDealTimingGrid,
   .launchDealWatch,
   .launchDealWatchGrid,
@@ -10172,6 +10378,12 @@ ul {
   .launchCandidateControls,
   .launchCandidateItems,
   .launchCandidateLeadStats,
+  .launchCustomCandidateGrid,
+  .launchCustomCandidateControls,
+  .launchCustomCandidateMiniGrid,
+  .launchCustomCandidateRank,
+  .launchCustomCandidateColumns,
+  .launchCustomCandidateActions,
   .launchDealTimingControls,
   .launchDealTimingMetrics,
   .launchDealWatch,
@@ -10514,6 +10726,12 @@ ul {
   .launchCandidateLeadStats,
   .launchCandidateAxes,
   .launchCandidateScenarios,
+  .launchCustomCandidateGrid,
+  .launchCustomCandidateControls,
+  .launchCustomCandidateMiniGrid,
+  .launchCustomCandidateRank,
+  .launchCustomCandidateColumns,
+  .launchCustomCandidateActions,
   .launchDealTimingGrid,
   .launchDealTimingControls,
   .launchDealTimingMetrics,

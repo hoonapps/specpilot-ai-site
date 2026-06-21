@@ -2085,6 +2085,62 @@ export type PublicCandidateCompare = {
   next_actions: string[];
 };
 
+export type CustomCandidateInput = {
+  candidate_id: string;
+  title: string;
+  seller_name: string;
+  url: string;
+  listed_price_krw: number;
+  shipping_fee_krw: number;
+  discount_krw: number;
+  assembly_fee_krw: number;
+  os_fee_krw: number;
+  cpu: string;
+  gpu: string;
+  ram_gb: number | null;
+  storage_gb: number | null;
+  os_name: string;
+  warranty_months: number | null;
+  return_window_days: number | null;
+  stock_status: string;
+  risk_terms: string[];
+  evidence_text: string;
+};
+
+export type CustomCandidateDecisionRequest = {
+  category: Category;
+  budget_krw: number;
+  purpose: string;
+  must_haves: string[];
+  candidates: CustomCandidateInput[];
+  source: string;
+};
+
+export type PublicCustomCandidateDecisionKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  budget_krw: number;
+  purpose: string;
+  decision: string;
+  winner_candidate_id: string | null;
+  winner_title: string | null;
+  confidence_score: number;
+  headline: string;
+  summary: string;
+  items: CandidateCompareItem[];
+  axes: CandidateCompareAxis[];
+  scenarios: CandidateCompareScenario[];
+  decision_rules: string[];
+  seller_questions: string[];
+  evidence_checklist: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type PublicDealTimingWindow = {
   timing_version: string;
   generated_at: string;

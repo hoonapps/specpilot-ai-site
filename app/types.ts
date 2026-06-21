@@ -2170,6 +2170,62 @@ export type PublicPurchaseExecutionKit = {
   next_actions: string[];
 };
 
+export type ReviewerQuickCardRequest = {
+  category: Category;
+  product_title: string;
+  buyer_decision: string;
+  final_price_krw: number | null;
+  budget_krw: number | null;
+  confidence_percent: number;
+  blocker_count: number;
+  warning_count: number;
+  key_reasons: string[];
+  watchouts: string[];
+  missing_evidence: string[];
+  reviewer_role: string;
+  review_deadline: string;
+  share_channel: string;
+  source: string;
+};
+
+export type ReviewerVoteOption = {
+  vote_id: string;
+  label: string;
+  status: OpsStatus;
+  description: string;
+  reply_text: string;
+};
+
+export type ReviewerRiskCheck = {
+  check_id: string;
+  label: string;
+  status: OpsStatus;
+  evidence: string;
+  reviewer_action: string;
+};
+
+export type PublicReviewerQuickCardKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  review_status: OpsStatus;
+  review_score: number;
+  headline: string;
+  buyer_summary: string;
+  reviewer_instruction: string;
+  vote_options: ReviewerVoteOption[];
+  risk_checks: ReviewerRiskCheck[];
+  reviewer_questions: string[];
+  required_evidence: string[];
+  reply_templates: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type CheckoutNudgeRequest = {
   category: Category;
   product_title: string;

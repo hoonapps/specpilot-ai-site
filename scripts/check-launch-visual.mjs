@@ -142,6 +142,27 @@ async function waitFor(send, expression, timeoutMs = 20_000) {
   throw new Error(`Timed out waiting for expression: ${expression}`);
 }
 
+async function exerciseFullPage(send) {
+  await send("Runtime.evaluate", {
+    awaitPromise: true,
+    expression: `new Promise((resolve) => {
+      let y = 0;
+      const step = Math.max(480, Math.floor(window.innerHeight * 0.72));
+      const tick = () => {
+        window.scrollTo(0, y);
+        y += step;
+        if (y <= document.documentElement.scrollHeight + step) {
+          setTimeout(tick, 90);
+          return;
+        }
+        window.scrollTo(0, 0);
+        setTimeout(resolve, 450);
+      };
+      tick();
+    })`,
+  });
+}
+
 async function openPageTarget(browserWsUrl) {
   const browser = connectCdp(browserWsUrl);
   await browser.ready;
@@ -175,6 +196,7 @@ async function checkViewport(pageWsUrl, viewport) {
   await waitFor(page.send, "document.readyState === 'complete'");
   await waitFor(page.send, "!!document.querySelector('.launchPublicHero')");
   await new Promise((resolve) => setTimeout(resolve, 500));
+  await exerciseFullPage(page.send);
 
   const audit = await page.send("Runtime.evaluate", {
     returnByValue: true,
@@ -190,6 +212,19 @@ async function checkViewport(pageWsUrl, viewport) {
       const shareLinks = [...document.querySelectorAll(".launchSharePackActions a")];
       const stickyBar = document.querySelector(".launchStickyConversionBar");
       const stickyLinks = [...document.querySelectorAll(".launchStickyConversionBar a")];
+      const requiredSections = [
+        "start-concierge",
+        "persona-quiz",
+        "setup-compatibility",
+        "review-risk",
+        "purchase-execution",
+        "final-decision",
+        "reviewer-quick-card",
+        "spec-risk-scanner",
+        "candidate-compare",
+        "launch-share-pack",
+        "launch-action-router",
+      ];
       const inspect = (el) => {
         if (!el) return null;
         const rect = el.getBoundingClientRect();
@@ -203,6 +238,28 @@ async function checkViewport(pageWsUrl, viewport) {
           scrollWidth: el.scrollWidth,
           visible: rect.width > 0 && rect.height > 0,
         };
+      };
+      const cssPath = (el) => {
+        const parts = [];
+        let node = el;
+        while (node && node.nodeType === 1 && parts.length < 4) {
+          const id = node.id ? "#" + node.id : "";
+          const className = typeof node.className === "string"
+            ? "." + node.className.trim().split(/\\s+/).filter(Boolean).slice(0, 3).join(".")
+            : "";
+          parts.unshift(node.tagName.toLowerCase() + id + className);
+          node = node.parentElement;
+        }
+        return parts.join(" > ");
+      };
+      const isVisible = (el) => {
+        const rect = el.getBoundingClientRect();
+        const style = window.getComputedStyle(el);
+        return rect.width > 0 &&
+          rect.height > 0 &&
+          style.visibility !== "hidden" &&
+          style.display !== "none" &&
+          Number(style.opacity || "1") > 0.01;
       };
       const heroNodes = [hero, title, primary, secondary, ...pills].filter(Boolean);
       const overflows = heroNodes
@@ -228,6 +285,42 @@ async function checkViewport(pageWsUrl, viewport) {
           item.right > viewportWidth + 1 ||
           item.scrollWidth > item.clientWidth + 1
         );
+      const publicSections = [...document.querySelectorAll(".launchPublicSection")].filter(isVisible);
+      const missingSections = requiredSections.filter((id) => !document.getElementById(id));
+      const sectionOverflows = publicSections
+        .map((el) => ({ path: cssPath(el), ...inspect(el) }))
+        .filter((item) => item.left < -1 || item.right > viewportWidth + 1)
+        .slice(0, 12);
+      const textNodes = [...document.querySelectorAll([
+        ".launchPublicSection h1",
+        ".launchPublicSection h2",
+        ".launchPublicSection h3",
+        ".launchPublicSection p",
+        ".launchPublicSection li",
+        ".launchPublicSection a",
+        ".launchPublicSection button",
+        ".launchPublicSection label",
+        ".launchPublicSection .pill",
+        ".launchStickyConversionBar a",
+      ].join(","))].filter(isVisible);
+      const formControls = [...document.querySelectorAll([
+        ".launchPublicSection input",
+        ".launchPublicSection select",
+        ".launchPublicSection textarea",
+      ].join(","))].filter(isVisible);
+      const textOverflows = textNodes
+        .map((el) => ({ path: cssPath(el), tag: el.tagName.toLowerCase(), ...inspect(el) }))
+        .filter((item) => item.scrollWidth > item.clientWidth + 2 || item.left < -1 || item.right > viewportWidth + 1)
+        .slice(0, 16);
+      const formControlOverflows = formControls
+        .map((el) => ({ path: cssPath(el), tag: el.tagName.toLowerCase(), ...inspect(el) }))
+        .filter((item) => item.left < -1 || item.right > viewportWidth + 1)
+        .slice(0, 16);
+      const fullPageOverflowNodes = [...document.body.querySelectorAll("*")]
+        .filter(isVisible)
+        .map((el) => ({ path: cssPath(el), tag: el.tagName.toLowerCase(), ...inspect(el) }))
+        .filter((item) => item.left < -3 || item.right > viewportWidth + 3)
+        .slice(0, 16);
       const failures = [];
       if (document.documentElement.scrollWidth > viewportWidth + 1) {
         failures.push("document-horizontal-overflow");
@@ -244,9 +337,16 @@ async function checkViewport(pageWsUrl, viewport) {
       if (!stickyBar || !inspect(stickyBar).visible) failures.push("missing-sticky-conversion");
       if (stickyLinks.length < 3) failures.push("missing-sticky-conversion-links");
       if (stickyOverflows.length > 0) failures.push("sticky-conversion-overflow");
+      if (publicSections.length < 35) failures.push("missing-public-sections");
+      if (missingSections.length > 0) failures.push("missing-required-sections");
+      if (sectionOverflows.length > 0) failures.push("public-section-overflow");
+      if (textOverflows.length > 0) failures.push("public-text-overflow");
+      if (formControlOverflows.length > 0) failures.push("public-form-control-overflow");
+      if (fullPageOverflowNodes.length > 0) failures.push("full-page-node-overflow");
       return {
         viewportWidth,
         documentScrollWidth: document.documentElement.scrollWidth,
+        documentScrollHeight: document.documentElement.scrollHeight,
         title: inspect(title),
         primary: inspect(primary),
         secondary: inspect(secondary),
@@ -257,6 +357,12 @@ async function checkViewport(pageWsUrl, viewport) {
         shareOverflows,
         stickyLinkCount: stickyLinks.length,
         stickyOverflows,
+        publicSectionCount: publicSections.length,
+        missingSections,
+        sectionOverflows,
+        textOverflows,
+        formControlOverflows,
+        fullPageOverflowNodes,
         failures,
       };
     })()`,

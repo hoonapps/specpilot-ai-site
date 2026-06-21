@@ -322,7 +322,7 @@ export function SpecRiskScannerPanel({
   }
 
   return (
-    <section className="launchPublicSection launchSpecScanner" id="spec-scanner">
+    <section className="launchPublicSection launchSpecScanner" id="spec-risk-scanner">
       <div className="sectionHeader">
         <div>
           <div className="sectionLabel">

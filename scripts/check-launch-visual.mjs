@@ -214,6 +214,7 @@ async function checkViewport(pageWsUrl, viewport) {
       const stickyLinks = [...document.querySelectorAll(".launchStickyConversionBar a")];
       const requiredSections = [
         "start-concierge",
+        "purchase-journey",
         "persona-quiz",
         "setup-compatibility",
         "review-risk",

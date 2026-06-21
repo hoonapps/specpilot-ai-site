@@ -8142,6 +8142,225 @@ ul {
   padding-left: 18px;
 }
 
+.launchPurchaseJourney {
+  background: #f7fbff;
+}
+
+.launchPurchaseJourneyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+  gap: 18px;
+}
+
+.launchPurchaseJourneyForm,
+.launchPurchaseJourneyResult,
+.launchPurchaseJourneyScore,
+.launchPurchaseJourneyPrimary,
+.launchPurchaseJourneySteps article,
+.launchPurchaseJourneyRoutes article,
+.launchPurchaseJourneyColumns > div {
+  border: 1px solid rgba(14, 116, 144, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(14, 116, 144, 0.06);
+}
+
+.launchPurchaseJourneyForm,
+.launchPurchaseJourneyResult {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchPurchaseJourneyControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchPurchaseJourneyControls.dense {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPurchaseJourneyForm label {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: #0e7490;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchPurchaseJourneyForm input,
+.launchPurchaseJourneyForm select,
+.launchPurchaseJourneyForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(14, 116, 144, 0.18);
+  border-radius: 8px;
+  background: #f7fbff;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchPurchaseJourneyForm textarea {
+  resize: vertical;
+}
+
+.launchPurchaseJourneyForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchPurchaseJourneyResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchPurchaseJourneyResult p,
+.launchPurchaseJourneyResult li,
+.launchPurchaseJourneyResult small,
+.launchPurchaseJourneyPrimary span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchPurchaseJourneyScore {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 4px 12px;
+  padding: 14px;
+}
+
+.launchPurchaseJourneyScore strong {
+  color: #0e7490;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 0.95;
+}
+
+.launchPurchaseJourneyScore span,
+.launchPurchaseJourneySteps span,
+.launchPurchaseJourneyRoutes span {
+  color: #0e7490;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchPurchaseJourneyScore small {
+  grid-column: 2;
+  color: #0e7490;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchPurchaseJourneyScore.ok strong {
+  color: #15803d;
+}
+
+.launchPurchaseJourneyScore.warn strong {
+  color: #b45309;
+}
+
+.launchPurchaseJourneyScore.danger strong {
+  color: #b91c1c;
+}
+
+.launchPurchaseJourneyPrimary {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.launchPurchaseJourneyPrimary strong,
+.launchPurchaseJourneySteps strong,
+.launchPurchaseJourneyRoutes strong,
+.launchPurchaseJourneyColumns strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchPurchaseJourneySteps,
+.launchPurchaseJourneyRoutes,
+.launchPurchaseJourneyColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchPurchaseJourneySteps {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.launchPurchaseJourneyRoutes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPurchaseJourneyColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchPurchaseJourneySteps article,
+.launchPurchaseJourneyRoutes article,
+.launchPurchaseJourneyColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchPurchaseJourneySteps article.ok,
+.launchPurchaseJourneyRoutes article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchPurchaseJourneySteps article.warn,
+.launchPurchaseJourneyRoutes article.warn {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchPurchaseJourneySteps article.danger,
+.launchPurchaseJourneyRoutes article.danger {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: #fff5f5;
+}
+
+.launchPurchaseJourneySteps span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+.launchPurchaseJourneyColumns ul,
+.launchPurchaseJourneyEmpty ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchPurchaseJourneyEmpty {
+  display: grid;
+  min-height: 420px;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
 .launchQuestionTriage {
   background: #f8fff9;
 }
@@ -13396,6 +13615,11 @@ ul {
   .launchSpecTermControls,
   .launchSpecTermExplanations,
   .launchSpecTermColumns,
+  .launchPurchaseJourneyControls,
+  .launchPurchaseJourneyControls.dense,
+  .launchPurchaseJourneySteps,
+  .launchPurchaseJourneyRoutes,
+  .launchPurchaseJourneyColumns,
   .launchQuestionTriageControls,
   .launchQuestionTriageSignals,
   .launchQuestionTriageColumns,
@@ -13848,6 +14072,12 @@ ul {
   .launchExecutionColumns,
   .launchExecutionShare,
   .launchExecutionActions,
+  .launchPurchaseJourneyGrid,
+  .launchPurchaseJourneyControls,
+  .launchPurchaseJourneyControls.dense,
+  .launchPurchaseJourneySteps,
+  .launchPurchaseJourneyRoutes,
+  .launchPurchaseJourneyColumns,
   .launchFinalDecisionGrid,
   .launchFinalDecisionControls,
   .launchFinalDecisionControls.dense,

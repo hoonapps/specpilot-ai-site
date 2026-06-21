@@ -2657,6 +2657,69 @@ export type PublicFinalDecisionKit = {
   next_actions: string[];
 };
 
+export type PurchaseJourneyKitRequest = {
+  category: Category;
+  buyer_question: string;
+  product_title: string;
+  seller_name: string;
+  listing_text: string;
+  review_snippets: string[];
+  budget_krw: number | null;
+  final_price_krw: number | null;
+  purchase_stage: string;
+  ready_evidence: string[];
+  missing_evidence: string[];
+  urgency: string;
+  share_audience: string;
+  source: string;
+};
+
+export type PurchaseJourneyStep = {
+  step_id: string;
+  order: number;
+  label: string;
+  status: OpsStatus;
+  objective: string;
+  user_action: string;
+  kit_path: string;
+  done_when: string;
+};
+
+export type PurchaseJourneyRouteCard = {
+  card_id: string;
+  label: string;
+  status: OpsStatus;
+  reason: string;
+  kit_path: string;
+  prefill_summary: string;
+};
+
+export type PublicPurchaseJourneyKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  journey_status: OpsStatus;
+  journey_score: number;
+  current_stage: string;
+  headline: string;
+  summary: string;
+  primary_action: string;
+  steps: PurchaseJourneyStep[];
+  route_cards: PurchaseJourneyRouteCard[];
+  required_inputs: string[];
+  safety_rules: string[];
+  triage_prefill: PurchaseQuestionTriageRequest;
+  review_risk_prefill: ReviewRiskRequest;
+  final_decision_prefill: FinalDecisionKitRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type ReviewerVoteOption = {
   vote_id: string;
   label: string;

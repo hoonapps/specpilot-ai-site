@@ -81,6 +81,7 @@ import { ShoppingCartIntakePanel } from "./ShoppingCartIntakePanel";
 import { SetupCompatibilityPanel } from "./SetupCompatibilityPanel";
 import { StartConciergePanel } from "./StartConciergePanel";
 import { SpecRiskScannerPanel } from "./SpecRiskScannerPanel";
+import { SpecTermDecoderPanel } from "./SpecTermDecoderPanel";
 import { UpgradeReadinessPanel } from "./UpgradeReadinessPanel";
 import { WarrantyReturnPanel } from "./WarrantyReturnPanel";
 
@@ -1450,6 +1451,8 @@ export default async function LaunchPage() {
       <SellerEvidencePanel />
 
       <SellerNegotiationPanel />
+
+      <SpecTermDecoderPanel />
 
       <SpecRiskScannerPanel
         scanner={specScanner}

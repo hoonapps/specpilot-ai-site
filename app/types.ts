@@ -1210,6 +1210,50 @@ export type PublicListingDecoderKit = {
   next_actions: string[];
 };
 
+export type SpecTermDecoderRequest = {
+  category: Category;
+  product_title: string;
+  listing_text: string;
+  terms: string[];
+  buyer_level: string;
+  primary_purpose: string;
+  budget_krw: number;
+  source: string;
+};
+
+export type SpecTermExplanation = {
+  term: string;
+  plain_meaning: string;
+  purchase_impact: string;
+  status: OpsStatus;
+  evidence: string;
+  seller_question: string;
+};
+
+export type PublicSpecTermDecoderKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  buyer_level: string;
+  primary_purpose: string;
+  decoder_status: OpsStatus;
+  clarity_score: number;
+  headline: string;
+  summary: string;
+  explanations: SpecTermExplanation[];
+  risk_terms: string[];
+  seller_questions: string[];
+  beginner_checklist: string[];
+  plain_language_brief: string;
+  scanner_prefill: SpecRiskScannerRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type ProductPageEvidenceRequest = {
   category: Category;
   url: string;

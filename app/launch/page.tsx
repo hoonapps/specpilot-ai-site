@@ -41,6 +41,7 @@ import { DealSanityPanel } from "./DealSanityPanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { DecisionDefensePanel } from "./DecisionDefensePanel";
 import { DefectClaimPanel } from "./DefectClaimPanel";
+import { FinalDecisionPanel } from "./FinalDecisionPanel";
 import { FirstBootSetupPanel } from "./FirstBootSetupPanel";
 import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
@@ -1447,6 +1448,8 @@ export default async function LaunchPage() {
       <BudgetStressPanel />
 
       <PurchaseExecutionPanel />
+
+      <FinalDecisionPanel />
 
       <ReviewerQuickCardPanel />
 

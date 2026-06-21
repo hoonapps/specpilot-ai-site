@@ -2565,6 +2565,34 @@ export type PublicPurchaseExecutionKit = {
   next_actions: string[];
 };
 
+export type FinalDecisionKitRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  budget_krw: number;
+  final_price_krw: number | null;
+  selected_reason: string;
+  price_status: OpsStatus;
+  compatibility_status: OpsStatus;
+  review_status: OpsStatus;
+  warranty_status: OpsStatus;
+  checkout_status: OpsStatus;
+  evidence_status: OpsStatus;
+  price_score: number;
+  compatibility_score: number;
+  review_score: number;
+  warranty_score: number;
+  checkout_score: number;
+  ready_evidence: string[];
+  missing_evidence: string[];
+  blocker_reasons: string[];
+  warning_reasons: string[];
+  seller_questions: string[];
+  decision_deadline: string;
+  share_audience: string;
+  source: string;
+};
+
 export type ReviewerQuickCardRequest = {
   category: Category;
   product_title: string;
@@ -2581,6 +2609,52 @@ export type ReviewerQuickCardRequest = {
   review_deadline: string;
   share_channel: string;
   source: string;
+};
+
+export type FinalDecisionSignal = {
+  signal_id: string;
+  label: string;
+  status: OpsStatus;
+  score: number;
+  weight: number;
+  evidence: string;
+  action: string;
+};
+
+export type FinalDecisionGate = {
+  gate_id: string;
+  label: string;
+  status: OpsStatus;
+  pass_rule: string;
+  fail_rule: string;
+};
+
+export type PublicFinalDecisionKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  final_decision: string;
+  decision_status: OpsStatus;
+  decision_score: number;
+  headline: string;
+  summary: string;
+  primary_action: string;
+  price_delta_krw: number | null;
+  signals: FinalDecisionSignal[];
+  decision_gates: FinalDecisionGate[];
+  blocker_reasons: string[];
+  warning_reasons: string[];
+  evidence_checklist: string[];
+  seller_questions: string[];
+  execution_prefill: PurchaseExecutionKitRequest;
+  reviewer_prefill: ReviewerQuickCardRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
 };
 
 export type ReviewerVoteOption = {

@@ -9052,6 +9052,214 @@ ul {
   padding-left: 18px;
 }
 
+.launchFinalDecision {
+  background: #fbfbf7;
+}
+
+.launchFinalDecisionGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
+  gap: 18px;
+}
+
+.launchFinalDecisionForm,
+.launchFinalDecisionResult,
+.launchFinalDecisionScore,
+.launchFinalDecisionPrimary,
+.launchFinalDecisionSignals article,
+.launchFinalDecisionColumns > div {
+  border: 1px solid rgba(71, 85, 105, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(71, 85, 105, 0.07);
+}
+
+.launchFinalDecisionForm,
+.launchFinalDecisionResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchFinalDecisionControls,
+.launchFinalDecisionStatusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchFinalDecisionControls.dense {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchFinalDecisionStatusPair {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(82px, 0.6fr);
+  gap: 8px;
+}
+
+.launchFinalDecisionForm label {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchFinalDecisionForm input,
+.launchFinalDecisionForm select,
+.launchFinalDecisionForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(71, 85, 105, 0.18);
+  border-radius: 8px;
+  background: #fbfbf7;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchFinalDecisionForm textarea {
+  resize: vertical;
+}
+
+.launchFinalDecisionForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchFinalDecisionResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchFinalDecisionResult p,
+.launchFinalDecisionResult li,
+.launchFinalDecisionResult small,
+.launchFinalDecisionPrimary span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchFinalDecisionScore {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.launchFinalDecisionScore strong {
+  color: #334155;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.launchFinalDecisionScore span,
+.launchFinalDecisionSignals span {
+  color: #475569;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchFinalDecisionScore.ok strong {
+  color: #15803d;
+}
+
+.launchFinalDecisionScore.warn strong {
+  color: #b45309;
+}
+
+.launchFinalDecisionScore.danger strong {
+  color: #b91c1c;
+}
+
+.launchFinalDecisionPrimary {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.launchFinalDecisionPrimary strong,
+.launchFinalDecisionColumns strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchFinalDecisionSignals,
+.launchFinalDecisionColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchFinalDecisionSignals {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchFinalDecisionColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchFinalDecisionSignals article,
+.launchFinalDecisionColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchFinalDecisionSignals article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchFinalDecisionSignals article.warn {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchFinalDecisionSignals article.danger {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: #fff5f5;
+}
+
+.launchFinalDecisionSignals span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+.launchFinalDecisionSignals strong {
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.launchFinalDecisionColumns ul,
+.launchFinalDecisionEmpty ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchFinalDecisionEmpty {
+  display: grid;
+  min-height: 420px;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
 .launchSocialProofWall {
   padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(12, 116, 108, 0.16);
@@ -13640,6 +13848,13 @@ ul {
   .launchExecutionColumns,
   .launchExecutionShare,
   .launchExecutionActions,
+  .launchFinalDecisionGrid,
+  .launchFinalDecisionControls,
+  .launchFinalDecisionControls.dense,
+  .launchFinalDecisionStatusGrid,
+  .launchFinalDecisionStatusPair,
+  .launchFinalDecisionSignals,
+  .launchFinalDecisionColumns,
   .launchReviewerQuickGrid,
   .launchReviewerQuickControls,
   .launchReviewerQuickControls.dense,

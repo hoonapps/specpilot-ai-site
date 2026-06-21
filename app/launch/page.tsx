@@ -35,6 +35,7 @@ import { BuildBlueprintPanel } from "./BuildBlueprintPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
 import { CheckoutLockPanel } from "./CheckoutLockPanel";
 import { CustomCandidateDecisionPanel } from "./CustomCandidateDecisionPanel";
+import { DealSanityPanel } from "./DealSanityPanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { DecisionDefensePanel } from "./DecisionDefensePanel";
 import { FirstBootSetupPanel } from "./FirstBootSetupPanel";
@@ -1425,6 +1426,8 @@ export default async function LaunchPage() {
       <WarrantyReturnPanel />
 
       <PriceBreakdownPanel />
+
+      <DealSanityPanel />
 
       <PurchaseExecutionPanel />
 

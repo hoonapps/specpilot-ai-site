@@ -1996,6 +1996,62 @@ export type PublicPriceBreakdownKit = {
   next_actions: string[];
 };
 
+export type DealSanityRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  listed_price_krw: number;
+  reference_price_krw: number | null;
+  lowest_seen_price_krw: number | null;
+  budget_krw: number | null;
+  shipping_fee_krw: number;
+  coupon_discount_krw: number;
+  card_discount_krw: number;
+  point_rebate_krw: number;
+  warranty_months: number | null;
+  return_window_days: number | null;
+  stock_count: number | null;
+  discount_expires_hours: number | null;
+  seller_rating_percent: number | null;
+  review_count: number | null;
+  risk_terms: string[];
+  evidence_text: string;
+  source: string;
+};
+
+export type DealSanityFlag = {
+  flag_id: string;
+  label: string;
+  status: OpsStatus;
+  evidence: string;
+  recommendation: string;
+};
+
+export type PublicDealSanityKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  deal_status: OpsStatus;
+  sanity_score: number;
+  effective_price_krw: number;
+  savings_krw: number | null;
+  savings_rate_percent: number | null;
+  headline: string;
+  summary: string;
+  sanity_flags: DealSanityFlag[];
+  seller_questions: string[];
+  evidence_checklist: string[];
+  checkout_stop_rules: string[];
+  price_prefill: PriceBreakdownRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type PurchaseExecutionKitRequest = {
   category: Category;
   product_title: string;

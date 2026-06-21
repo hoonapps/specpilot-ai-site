@@ -6899,6 +6899,180 @@ ul {
   padding-left: 18px;
 }
 
+.launchDealSanity {
+  background: #f8fbff;
+}
+
+.launchDealSanityGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.launchDealSanityForm,
+.launchDealSanityResult,
+.launchDealSanityScore,
+.launchDealSanityMetrics article,
+.launchDealSanityFlags article,
+.launchDealSanityColumns > div {
+  border: 1px solid rgba(30, 64, 175, 0.15);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(30, 64, 175, 0.07);
+}
+
+.launchDealSanityForm,
+.launchDealSanityResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchDealSanityControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchDealSanityControls.dense {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchDealSanityForm label {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: #1d4ed8;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchDealSanityForm input,
+.launchDealSanityForm select,
+.launchDealSanityForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(30, 64, 175, 0.18);
+  border-radius: 8px;
+  background: #f8fbff;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchDealSanityForm textarea {
+  resize: vertical;
+}
+
+.launchDealSanityForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchDealSanityResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchDealSanityResult p,
+.launchDealSanityResult li,
+.launchDealSanityResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchDealSanityScore {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.launchDealSanityScore strong {
+  color: #1d4ed8;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.launchDealSanityScore span,
+.launchDealSanityMetrics span,
+.launchDealSanityFlags span {
+  color: #1d4ed8;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchDealSanityMetrics,
+.launchDealSanityFlags,
+.launchDealSanityColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchDealSanityMetrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchDealSanityFlags {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchDealSanityMetrics article,
+.launchDealSanityFlags article,
+.launchDealSanityColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchDealSanityFlags span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+.launchDealSanityFlags article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchDealSanityFlags article.warn {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchDealSanityFlags article.danger {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: #fff5f5;
+}
+
+.launchDealSanityMetrics strong,
+.launchDealSanityColumns strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchDealSanityColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchDealSanityColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchExecution {
   background: #fffaf5;
 }
@@ -10977,6 +11151,7 @@ ul {
   .launchOwnershipGrid,
   .launchWarrantyGrid,
   .launchPriceBreakdownGrid,
+  .launchDealSanityGrid,
   .launchExecutionGrid,
   .launchSocialProofMetrics,
   .launchSocialProofFooter,
@@ -11195,6 +11370,11 @@ ul {
   .launchPriceBreakdownMetrics,
   .launchPriceBreakdownLineGrid,
   .launchPriceBreakdownColumns,
+  .launchDealSanityControls,
+  .launchDealSanityControls.dense,
+  .launchDealSanityMetrics,
+  .launchDealSanityFlags,
+  .launchDealSanityColumns,
   .launchExecutionControls,
   .launchExecutionControls.dense,
   .launchExecutionMetrics,
@@ -11572,6 +11752,12 @@ ul {
   .launchPriceBreakdownMetrics,
   .launchPriceBreakdownLineGrid,
   .launchPriceBreakdownColumns,
+  .launchDealSanityGrid,
+  .launchDealSanityControls,
+  .launchDealSanityControls.dense,
+  .launchDealSanityMetrics,
+  .launchDealSanityFlags,
+  .launchDealSanityColumns,
   .launchExecutionGrid,
   .launchExecutionControls,
   .launchExecutionControls.dense,

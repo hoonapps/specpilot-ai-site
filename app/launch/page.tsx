@@ -66,6 +66,7 @@ import { ProductPageEvidencePanel } from "./ProductPageEvidencePanel";
 import { PurchaseApprovalBriefPanel } from "./PurchaseApprovalBriefPanel";
 import { PurchaseAftercarePanel } from "./PurchaseAftercarePanel";
 import { PurchaseExecutionPanel } from "./PurchaseExecutionPanel";
+import { RequirementsConsensusPanel } from "./RequirementsConsensusPanel";
 import { SellerEvidencePanel } from "./SellerEvidencePanel";
 import { SellerNegotiationPanel } from "./SellerNegotiationPanel";
 import { ShoppingCartIntakePanel } from "./ShoppingCartIntakePanel";
@@ -1409,6 +1410,8 @@ export default async function LaunchPage() {
         kit={challengeKit}
         isFallback={challengeFallback}
       />
+
+      <RequirementsConsensusPanel />
 
       <SetupCompatibilityPanel />
 

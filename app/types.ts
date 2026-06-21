@@ -1425,6 +1425,71 @@ export type PublicPurchaseApprovalBriefKit = {
   next_actions: string[];
 };
 
+export type RequirementStakeholderInput = {
+  name: string;
+  role: string;
+  priority: string;
+  max_budget_krw: number | null;
+  use_cases: string[];
+  must_haves: string[];
+  nice_to_haves: string[];
+  deal_breakers: string[];
+  timeline: string;
+  risk_tolerance: string;
+};
+
+export type RequirementsConflict = {
+  conflict_id: string;
+  status: OpsStatus;
+  owners: string[];
+  issue: string;
+  resolution_rule: string;
+};
+
+export type StakeholderConsensusSummary = {
+  name: string;
+  role: string;
+  priority: string;
+  status: OpsStatus;
+  accepted_terms: string[];
+  open_questions: string[];
+};
+
+export type RequirementsConsensusRequest = {
+  category: Category;
+  purchase_context: string;
+  shared_budget_krw: number | null;
+  target_timing: string;
+  stakeholders: RequirementStakeholderInput[];
+  source: string;
+};
+
+export type PublicRequirementsConsensusKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  consensus_status: OpsStatus;
+  consensus_score: number;
+  headline: string;
+  summary: string;
+  budget_krw: number | null;
+  purpose: string;
+  agreed_must_haves: string[];
+  agreed_nice_to_haves: string[];
+  agreed_exclusions: string[];
+  conflict_count: number;
+  conflicts: RequirementsConflict[];
+  stakeholders: StakeholderConsensusSummary[];
+  decision_rules: string[];
+  recommended_request: IntakeNormalizedRequest;
+  copy_variants: ApprovalCopyVariant[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type SellerEvidenceRequest = {
   category: Category;
   product_title: string;

@@ -79,7 +79,9 @@ function assertPng(path, response, buffer) {
 async function checkLaunchHtml() {
   const { text } = await fetchText("/launch");
   assertIncludes("launch html", text, '<html lang="ko"');
-  assertIncludes("launch html", text, "SpecPilot AI 런칭룸");
+  assertIncludes("launch html", text, "컴퓨터 구매 질문에 답부터 주는 AI");
+  assertIncludes("launch html", text, "/launch/tools");
+  assertIncludes("launch html", text, "/launch/guide");
   assertIncludes("launch html", text, "application/ld+json");
   assertIncludes("launch json-ld", text, "SoftwareApplication");
 
@@ -115,7 +117,14 @@ async function checkRobots() {
 
 async function checkSitemap() {
   const { text } = await fetchText("/sitemap.xml");
-  for (const path of ["/launch", "/join", "/market/desktop-pc", "/market/laptop"]) {
+  for (const path of [
+    "/launch",
+    "/launch/tools",
+    "/launch/guide",
+    "/join",
+    "/market/desktop-pc",
+    "/market/laptop",
+  ]) {
     assertIncludes("sitemap.xml", text, path);
   }
 }

@@ -194,7 +194,7 @@ async function checkViewport(pageWsUrl, viewport) {
 
   await page.send("Page.navigate", { url: launchUrl });
   await waitFor(page.send, "document.readyState === 'complete'");
-  await waitFor(page.send, "!!document.querySelector('.launchPublicHero')");
+  await waitFor(page.send, "!!document.querySelector('.answerHero')");
   await new Promise((resolve) => setTimeout(resolve, 500));
   await exerciseFullPage(page.send);
 
@@ -202,31 +202,18 @@ async function checkViewport(pageWsUrl, viewport) {
     returnByValue: true,
     expression: `(() => {
       const viewportWidth = document.documentElement.clientWidth;
-      const hero = document.querySelector(".launchPublicHero");
-      const title = document.querySelector(".launchPublicHeroContent h1");
-      const primary = document.querySelector(".launchPublicActions .primaryButton");
-      const secondary = document.querySelector(".launchPublicActions .secondaryLaunchButton");
-      const pills = [...document.querySelectorAll(".launchPublicPills .pill")];
-      const sharePack = document.querySelector(".launchSharePack");
-      const shareButtons = [...document.querySelectorAll(".launchSharePackActions button")];
-      const shareLinks = [...document.querySelectorAll(".launchSharePackActions a")];
-      const stickyBar = document.querySelector(".launchStickyConversionBar");
-      const stickyLinks = [...document.querySelectorAll(".launchStickyConversionBar a")];
-      const requiredSections = [
-        "start-concierge",
-        "purchase-journey",
-        "community-reply",
-        "persona-quiz",
-        "setup-compatibility",
-        "review-risk",
-        "purchase-execution",
-        "final-decision",
-        "reviewer-quick-card",
-        "spec-risk-scanner",
-        "candidate-compare",
-        "launch-share-pack",
-        "launch-action-router",
-      ];
+      const shell = document.querySelector(".answerFirstPage");
+      const hero = document.querySelector(".answerHero");
+      const title = document.querySelector(".answerHero h1");
+      const primary = document.querySelector(".answerHeroActions .answerPrimaryLink");
+      const secondary = document.querySelector(".answerHeroActions .answerSecondaryLink");
+      const proofCards = [...document.querySelectorAll(".answerHeroProof > div")];
+      const desk = document.querySelector(".answerDesk");
+      const form = document.querySelector(".answerDeskForm");
+      const result = document.querySelector(".answerDeskResult");
+      const portfolio = document.querySelector(".answerPortfolio");
+      const topbarLinks = [...document.querySelectorAll(".answerTopbar a")];
+      const requiredLinks = ["/launch#ask", "/launch/tools", "/launch/guide"];
       const inspect = (el) => {
         if (!el) return null;
         const rect = el.getBoundingClientRect();
@@ -263,7 +250,7 @@ async function checkViewport(pageWsUrl, viewport) {
           style.display !== "none" &&
           Number(style.opacity || "1") > 0.01;
       };
-      const heroNodes = [hero, title, primary, secondary, ...pills].filter(Boolean);
+      const heroNodes = [hero, title, primary, secondary, ...proofCards].filter(Boolean);
       const overflows = heroNodes
         .map((el) => ({ tag: el.tagName.toLowerCase(), className: el.className, ...inspect(el) }))
         .filter((item) =>
@@ -271,44 +258,27 @@ async function checkViewport(pageWsUrl, viewport) {
           item.right > viewportWidth + 1 ||
           item.scrollWidth > item.clientWidth + 1
         );
-      const shareActionNodes = [sharePack, ...shareButtons, ...shareLinks].filter(Boolean);
-      const shareOverflows = shareActionNodes
-        .map((el) => ({ tag: el.tagName.toLowerCase(), className: el.className, ...inspect(el) }))
-        .filter((item) =>
-          item.left < -1 ||
-          item.right > viewportWidth + 1 ||
-          item.scrollWidth > item.clientWidth + 1
-        );
-      const stickyOverflows = [stickyBar, ...stickyLinks]
-        .filter(Boolean)
-        .map((el) => ({ tag: el.tagName.toLowerCase(), className: el.className, ...inspect(el) }))
-        .filter((item) =>
-          item.left < -1 ||
-          item.right > viewportWidth + 1 ||
-          item.scrollWidth > item.clientWidth + 1
-        );
-      const publicSections = [...document.querySelectorAll(".launchPublicSection")].filter(isVisible);
-      const missingSections = requiredSections.filter((id) => !document.getElementById(id));
-      const sectionOverflows = publicSections
+      const answerSections = [...document.querySelectorAll(".answerHero, .answerDesk, .answerPortfolio")].filter(isVisible);
+      const sectionOverflows = answerSections
         .map((el) => ({ path: cssPath(el), ...inspect(el) }))
         .filter((item) => item.left < -1 || item.right > viewportWidth + 1)
         .slice(0, 12);
       const textNodes = [...document.querySelectorAll([
-        ".launchPublicSection h1",
-        ".launchPublicSection h2",
-        ".launchPublicSection h3",
-        ".launchPublicSection p",
-        ".launchPublicSection li",
-        ".launchPublicSection a",
-        ".launchPublicSection button",
-        ".launchPublicSection label",
-        ".launchPublicSection .pill",
-        ".launchStickyConversionBar a",
+        ".answerFirstPage h1",
+        ".answerFirstPage h2",
+        ".answerFirstPage h3",
+        ".answerFirstPage p",
+        ".answerFirstPage li",
+        ".answerFirstPage a",
+        ".answerFirstPage button",
+        ".answerFirstPage label",
+        ".answerFirstPage strong",
+        ".answerFirstPage span",
       ].join(","))].filter(isVisible);
       const formControls = [...document.querySelectorAll([
-        ".launchPublicSection input",
-        ".launchPublicSection select",
-        ".launchPublicSection textarea",
+        ".answerFirstPage input",
+        ".answerFirstPage select",
+        ".answerFirstPage textarea",
       ].join(","))].filter(isVisible);
       const textOverflows = textNodes
         .map((el) => ({ path: cssPath(el), tag: el.tagName.toLowerCase(), ...inspect(el) }))
@@ -330,37 +300,36 @@ async function checkViewport(pageWsUrl, viewport) {
       if (!title || !inspect(title).visible) failures.push("missing-hero-title");
       if (!primary || !inspect(primary).visible) failures.push("missing-primary-cta");
       if (!secondary || !inspect(secondary).visible) failures.push("missing-secondary-cta");
-      if (pills.length < 3) failures.push("missing-proof-pills");
+      if (proofCards.length < 3) failures.push("missing-proof-cards");
       if (overflows.length > 0) failures.push("hero-node-overflow");
-      if (!sharePack || !inspect(sharePack).visible) failures.push("missing-share-pack");
-      if (shareButtons.length < 4) failures.push("missing-share-pack-buttons");
-      if (shareLinks.length < 2) failures.push("missing-share-pack-links");
-      if (shareOverflows.length > 0) failures.push("share-pack-overflow");
-      if (!stickyBar || !inspect(stickyBar).visible) failures.push("missing-sticky-conversion");
-      if (stickyLinks.length < 3) failures.push("missing-sticky-conversion-links");
-      if (stickyOverflows.length > 0) failures.push("sticky-conversion-overflow");
-      if (publicSections.length < 35) failures.push("missing-public-sections");
-      if (missingSections.length > 0) failures.push("missing-required-sections");
-      if (sectionOverflows.length > 0) failures.push("public-section-overflow");
-      if (textOverflows.length > 0) failures.push("public-text-overflow");
-      if (formControlOverflows.length > 0) failures.push("public-form-control-overflow");
+      if (!desk || !inspect(desk).visible) failures.push("missing-answer-desk");
+      if (!form || !inspect(form).visible) failures.push("missing-answer-form");
+      if (!result || !inspect(result).visible) failures.push("missing-answer-result");
+      if (!portfolio || !inspect(portfolio).visible) failures.push("missing-portfolio-section");
+      if (answerSections.length < 3) failures.push("missing-answer-sections");
+      if (requiredLinks.some((href) => !topbarLinks.some((link) => link.getAttribute("href") === href))) {
+        failures.push("missing-topbar-links");
+      }
+      if (sectionOverflows.length > 0) failures.push("answer-section-overflow");
+      if (textOverflows.length > 0) failures.push("answer-text-overflow");
+      if (formControlOverflows.length > 0) failures.push("answer-form-control-overflow");
       if (fullPageOverflowNodes.length > 0) failures.push("full-page-node-overflow");
       return {
         viewportWidth,
         documentScrollWidth: document.documentElement.scrollWidth,
         documentScrollHeight: document.documentElement.scrollHeight,
+        shell: inspect(shell),
         title: inspect(title),
         primary: inspect(primary),
         secondary: inspect(secondary),
-        pillCount: pills.length,
+        proofCardCount: proofCards.length,
         overflows,
-        shareButtonCount: shareButtons.length,
-        shareLinkCount: shareLinks.length,
-        shareOverflows,
-        stickyLinkCount: stickyLinks.length,
-        stickyOverflows,
-        publicSectionCount: publicSections.length,
-        missingSections,
+        topbarLinkHrefs: topbarLinks.map((link) => link.getAttribute("href")),
+        answerSectionCount: answerSections.length,
+        desk: inspect(desk),
+        form: inspect(form),
+        result: inspect(result),
+        portfolio: inspect(portfolio),
         sectionOverflows,
         textOverflows,
         formControlOverflows,

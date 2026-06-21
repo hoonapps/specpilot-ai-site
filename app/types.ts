@@ -2052,6 +2052,55 @@ export type PublicDealSanityKit = {
   next_actions: string[];
 };
 
+export type BudgetStressRequest = {
+  category: Category;
+  product_title: string;
+  current_budget_krw: number;
+  target_price_krw: number;
+  reference_good_price_krw: number | null;
+  required_specs: string[];
+  flexible_specs: string[];
+  blocked_conditions: string[];
+  use_case: string;
+  urgency: string;
+  can_wait_days: number;
+  risk_tolerance: string;
+  source: string;
+};
+
+export type BudgetStressScenario = {
+  scenario_id: string;
+  label: string;
+  status: OpsStatus;
+  budget_krw: number;
+  delta_krw: number;
+  expected_gap_krw: number;
+  expected_tradeoff: string;
+  likely_outcome: string;
+  recommended_action: string;
+  search_terms: string[];
+  checks: string[];
+};
+
+export type PublicBudgetStressKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  baseline_status: OpsStatus;
+  gap_krw: number;
+  headline: string;
+  summary: string;
+  recommended_scenario_id: string;
+  scenarios: BudgetStressScenario[];
+  decision_rules: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type PurchaseExecutionKitRequest = {
   category: Category;
   product_title: string;

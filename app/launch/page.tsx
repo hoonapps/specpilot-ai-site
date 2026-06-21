@@ -32,6 +32,7 @@ import { LaunchActivationOfferPanel } from "./LaunchActivationOfferPanel";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { BuildBlueprintPanel } from "./BuildBlueprintPanel";
+import { BudgetStressPanel } from "./BudgetStressPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
 import { CheckoutLockPanel } from "./CheckoutLockPanel";
 import { CustomCandidateDecisionPanel } from "./CustomCandidateDecisionPanel";
@@ -1428,6 +1429,8 @@ export default async function LaunchPage() {
       <PriceBreakdownPanel />
 
       <DealSanityPanel />
+
+      <BudgetStressPanel />
 
       <PurchaseExecutionPanel />
 

@@ -31,6 +31,7 @@ import { LaunchActionRouterPanel } from "./LaunchActionRouterPanel";
 import { LaunchActivationOfferPanel } from "./LaunchActivationOfferPanel";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
+import { BuildBlueprintPanel } from "./BuildBlueprintPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
 import { CheckoutLockPanel } from "./CheckoutLockPanel";
 import { CustomCandidateDecisionPanel } from "./CustomCandidateDecisionPanel";
@@ -1412,6 +1413,8 @@ export default async function LaunchPage() {
       />
 
       <RequirementsConsensusPanel />
+
+      <BuildBlueprintPanel />
 
       <SetupCompatibilityPanel />
 

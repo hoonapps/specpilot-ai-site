@@ -1490,6 +1490,64 @@ export type PublicRequirementsConsensusKit = {
   next_actions: string[];
 };
 
+export type BuildBlueprintRequest = {
+  category: Category;
+  budget_krw: number;
+  purpose: string;
+  priority_mode: string;
+  must_haves: string[];
+  exclusions: string[];
+  owned_parts: string[];
+  monitor_resolution: string;
+  portability: string;
+  purchase_timing: string;
+  source: string;
+};
+
+export type BuildBlueprintComponent = {
+  component_id: string;
+  label: string;
+  target_spec: string;
+  budget_min_krw: number;
+  budget_max_krw: number;
+  priority: OpsStatus;
+  why_it_matters: string;
+  search_terms: string[];
+  avoid_terms: string[];
+};
+
+export type BuildBlueprintSearchQuery = {
+  channel: string;
+  query: string;
+  intent: string;
+  must_include: string[];
+  must_exclude: string[];
+};
+
+export type PublicBuildBlueprintKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  blueprint_status: OpsStatus;
+  blueprint_score: number;
+  headline: string;
+  summary: string;
+  budget_krw: number;
+  target_profile: string;
+  component_budget_total_krw: number;
+  components: BuildBlueprintComponent[];
+  search_queries: BuildBlueprintSearchQuery[];
+  compatibility_rules: string[];
+  avoid_conditions: string[];
+  cart_text_template: string;
+  setup_prefill: SetupCompatibilityRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type SellerEvidenceRequest = {
   category: Category;
   product_title: string;

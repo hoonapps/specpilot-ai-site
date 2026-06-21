@@ -5143,6 +5143,177 @@ ul {
   padding: 11px 13px;
 }
 
+.launchBuildBlueprint {
+  gap: 18px;
+  border: 1px solid rgba(120, 78, 25, 0.2);
+  background: #fffaf2;
+}
+
+.launchBuildBlueprintGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  gap: 16px;
+}
+
+.launchBuildBlueprintForm,
+.launchBuildBlueprintResult,
+.launchBuildBlueprintParts article,
+.launchBuildBlueprintSearch article,
+.launchBuildBlueprintColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  border: 1px solid rgba(120, 78, 25, 0.16);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+  padding: clamp(14px, 2.4vw, 18px);
+}
+
+.launchBuildBlueprintControls,
+.launchBuildBlueprintParts,
+.launchBuildBlueprintSearch,
+.launchBuildBlueprintColumns,
+.launchBuildBlueprintActions {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+.launchBuildBlueprintControls {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchBuildBlueprintControls.compact,
+.launchBuildBlueprintColumns,
+.launchBuildBlueprintActions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchBuildBlueprintParts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchBuildBlueprintForm label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.launchBuildBlueprintForm input,
+.launchBuildBlueprintForm select,
+.launchBuildBlueprintForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+  padding: 10px 11px;
+}
+
+.launchBuildBlueprintForm textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+.launchBuildBlueprintForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchBuildBlueprintResult h3 {
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.1;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchBuildBlueprintResult p,
+.launchBuildBlueprintResult li,
+.launchBuildBlueprintResult small {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchBuildBlueprintScore {
+  align-items: end;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 18px;
+  background: #2f2412;
+}
+
+.launchBuildBlueprintScore strong {
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 0.95;
+}
+
+.launchBuildBlueprintScore small {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  font-weight: 950;
+  padding-bottom: 5px;
+}
+
+.launchBuildBlueprintParts article,
+.launchBuildBlueprintSearch article {
+  box-shadow: none;
+  background: #fffdf8;
+}
+
+.launchBuildBlueprintParts span,
+.launchBuildBlueprintSearch span {
+  align-items: center;
+  color: #8a5a18;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 950;
+  gap: 7px;
+  line-height: 1.35;
+}
+
+.launchBuildBlueprintParts strong,
+.launchBuildBlueprintSearch strong,
+.launchBuildBlueprintColumns strong {
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.launchBuildBlueprintColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchBuildBlueprintActions button {
+  align-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #fef3c7;
+  color: #92400e;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 950;
+  gap: 8px;
+  justify-content: center;
+  min-height: 42px;
+  padding: 11px 13px;
+}
+
 .launchDecisionDefenseGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -10787,6 +10958,12 @@ ul {
   .launchRequirementsConsensusColumns,
   .launchRequirementsStakeholders,
   .launchRequirementsConsensusActions,
+  .launchBuildBlueprintGrid,
+  .launchBuildBlueprintControls,
+  .launchBuildBlueprintParts,
+  .launchBuildBlueprintSearch,
+  .launchBuildBlueprintColumns,
+  .launchBuildBlueprintActions,
   .launchDecisionDefenseGrid,
   .launchDecisionDefenseControls,
   .launchDecisionDefenseColumns,
@@ -10971,6 +11148,12 @@ ul {
   .launchRequirementsConsensusColumns,
   .launchRequirementsStakeholders,
   .launchRequirementsConsensusActions,
+  .launchBuildBlueprintGrid,
+  .launchBuildBlueprintControls,
+  .launchBuildBlueprintParts,
+  .launchBuildBlueprintSearch,
+  .launchBuildBlueprintColumns,
+  .launchBuildBlueprintActions,
   .launchDecisionDefenseGrid,
   .launchDecisionDefenseControls,
   .launchDecisionDefenseColumns,
@@ -11334,6 +11517,12 @@ ul {
   .launchRequirementsConsensusColumns,
   .launchRequirementsStakeholders,
   .launchRequirementsConsensusActions,
+  .launchBuildBlueprintGrid,
+  .launchBuildBlueprintControls,
+  .launchBuildBlueprintParts,
+  .launchBuildBlueprintSearch,
+  .launchBuildBlueprintColumns,
+  .launchBuildBlueprintActions,
   .launchDecisionDefenseGrid,
   .launchDecisionDefenseControls,
   .launchDecisionDefenseColumns,

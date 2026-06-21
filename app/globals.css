@@ -8590,7 +8590,7 @@ ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 6px;
 }
 
 .answerTopbar a {
@@ -8598,7 +8598,7 @@ ul {
   min-height: 36px;
   align-items: center;
   border-radius: 8px;
-  padding: 0 10px;
+  padding: 0;
   color: var(--muted);
   font-size: 0.9rem;
   font-weight: 850;
@@ -8634,8 +8634,8 @@ ul {
 
 .answerHero {
   grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.65fr);
-  align-items: end;
-  padding: clamp(34px, 7vw, 88px) 0 28px;
+  align-items: center;
+  padding: clamp(28px, 6vw, 72px) 0 22px;
 }
 
 .answerHeroCopy {
@@ -8660,7 +8660,7 @@ ul {
   max-width: 820px;
   margin: 0;
   color: var(--ink);
-  font-size: clamp(2.4rem, 7vw, 5.6rem);
+  font-size: clamp(2.4rem, 6.4vw, 5.1rem);
   line-height: 0.98;
   letter-spacing: 0;
   overflow-wrap: anywhere;
@@ -8757,18 +8757,54 @@ ul {
 }
 
 .answerDesk {
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  padding: 20px 0 34px;
+  justify-items: center;
+  padding: 12px 0 34px;
 }
 
 .answerDeskForm,
 .answerDeskResult {
   display: grid;
   align-content: start;
+  width: min(760px, 100%);
   min-width: 0;
   gap: 14px;
   padding: clamp(16px, 2.4vw, 24px);
+}
+
+.answerDeskResult {
+  width: min(900px, 100%);
+}
+
+.answerStepHeader {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 4px;
+}
+
+.answerStepHeader span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 950;
+}
+
+.answerStepHeader strong {
+  color: var(--ink);
+  font-size: clamp(1.45rem, 3vw, 2.1rem);
+  line-height: 1.1;
+}
+
+.answerStepHeader p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
 }
 
 .answerDeskHeader {
@@ -8820,6 +8856,38 @@ ul {
 
 .answerPrimaryButton {
   width: 100%;
+}
+
+.answerBackButton {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 38px;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 0;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.answerAdvanced {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f9fbf8;
+  padding: 12px;
+}
+
+.answerAdvanced summary {
+  color: var(--ink);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.answerAdvanced .answerDeskGrid {
+  margin-top: 12px;
 }
 
 .answerVerdict {
@@ -14272,14 +14340,14 @@ ul {
   }
 
   .answerTopbar {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
     padding: 14px 0;
   }
 
   .answerTopbar > div {
-    width: 100%;
-    justify-content: flex-start;
+    width: auto;
+    justify-content: flex-end;
   }
 
   .answerTopbar a {

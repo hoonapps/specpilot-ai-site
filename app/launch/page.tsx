@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Layers3, ShieldCheck } from "lucide-react";
+import { ArrowRight, BookOpen, ShieldCheck } from "lucide-react";
 import { absoluteUrl, siteConfig } from "../site-config";
 import { LaunchQuestionAnswer } from "./LaunchQuestionAnswer";
 
@@ -85,8 +85,6 @@ export default function LaunchPage() {
           <strong>SpecPilot AI</strong>
         </Link>
         <div>
-          <Link href="/launch#ask">질문하기</Link>
-          <Link href="/launch/tools">기능별 데모</Link>
           <Link href="/launch/guide">사용법</Link>
         </div>
       </nav>
@@ -105,9 +103,6 @@ export default function LaunchPage() {
               질문 입력하기
               <ArrowRight size={16} />
             </a>
-            <Link className="answerSecondaryLink" href="/launch/tools">
-              기능별 데모 보기
-            </Link>
           </div>
         </div>
         <div className="answerHeroProof">
@@ -120,11 +115,6 @@ export default function LaunchPage() {
             <BookOpen size={18} />
             <strong>답변 근거</strong>
             <span>리스크와 추가 증거를 답변 안에 같이 표시</span>
-          </div>
-          <div>
-            <Layers3 size={18} />
-            <strong>포트폴리오 가치</strong>
-            <span>API, Next.js, CI, 디자인 시스템, 런칭 검수까지 연결</span>
           </div>
         </div>
       </section>

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import {
   AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
   CheckCircle2,
   Clipboard,
   LoaderCircle,
@@ -85,6 +87,7 @@ export function LaunchQuestionAnswer() {
   const [kit, setKit] = useState<PublicCommunityReplyKit | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [step, setStep] = useState<"question" | "answer">("question");
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -125,6 +128,7 @@ export function LaunchQuestionAnswer() {
         throw new Error("answer rejected");
       }
       setKit(payload.kit);
+      setStep("answer");
       setStatus("idle");
     } catch {
       setStatus("error");
@@ -144,8 +148,14 @@ export function LaunchQuestionAnswer() {
   }
 
   return (
-    <section className="answerDesk" id="ask">
+    <section className={`answerDesk ${step === "question" ? "questionStep" : "answerStep"}`} id="ask">
+      {step === "question" ? (
       <div className="answerDeskForm">
+        <div className="answerStepHeader">
+          <span>01</span>
+          <strong>질문 입력</strong>
+          <p>견적이나 상품 설명을 붙여 넣으면 다음 화면에서 바로 답변을 보여줍니다.</p>
+        </div>
         <div className="answerDeskHeader">
           <span>
             <MessageSquareText size={16} />
@@ -178,14 +188,6 @@ export function LaunchQuestionAnswer() {
             제품명
             <input value={form.productTitle} onChange={(event) => update("productTitle", event.target.value)} />
           </label>
-          <label>
-            예산
-            <input inputMode="numeric" value={form.budget} onChange={(event) => update("budget", event.target.value)} />
-          </label>
-          <label>
-            최종가
-            <input inputMode="numeric" value={form.price} onChange={(event) => update("price", event.target.value)} />
-          </label>
         </div>
 
         <label>
@@ -193,38 +195,58 @@ export function LaunchQuestionAnswer() {
           <textarea rows={4} value={form.summary} onChange={(event) => update("summary", event.target.value)} />
         </label>
 
-        <div className="answerDeskGrid">
-          <label>
-            판매자
-            <input value={form.sellerName} onChange={(event) => update("sellerName", event.target.value)} />
-          </label>
-          <label>
-            용도
-            <input value={form.useCase} onChange={(event) => update("useCase", event.target.value)} />
-          </label>
-        </div>
-
-        <div className="answerDeskGrid">
-          <label>
-            리스크 메모
-            <textarea rows={4} value={form.risks} onChange={(event) => update("risks", event.target.value)} />
-          </label>
-          <label>
-            누락 증거
-            <textarea rows={4} value={form.missing} onChange={(event) => update("missing", event.target.value)} />
-          </label>
-        </div>
+        <details className="answerAdvanced">
+          <summary>예산, 최종가, 리스크 더 입력하기</summary>
+          <div className="answerDeskGrid">
+            <label>
+              예산
+              <input inputMode="numeric" value={form.budget} onChange={(event) => update("budget", event.target.value)} />
+            </label>
+            <label>
+              최종가
+              <input inputMode="numeric" value={form.price} onChange={(event) => update("price", event.target.value)} />
+            </label>
+            <label>
+              판매자
+              <input value={form.sellerName} onChange={(event) => update("sellerName", event.target.value)} />
+            </label>
+            <label>
+              용도
+              <input value={form.useCase} onChange={(event) => update("useCase", event.target.value)} />
+            </label>
+            <label>
+              리스크 메모
+              <textarea rows={4} value={form.risks} onChange={(event) => update("risks", event.target.value)} />
+            </label>
+            <label>
+              누락 증거
+              <textarea rows={4} value={form.missing} onChange={(event) => update("missing", event.target.value)} />
+            </label>
+          </div>
+        </details>
 
         <button className="answerPrimaryButton" type="button" onClick={ask} disabled={status === "loading"}>
           {status === "loading" ? <LoaderCircle size={18} className="spinIcon" /> : <MessageSquareText size={18} />}
-          답변 받기
+          답변 화면으로 넘어가기
+          {status === "loading" ? null : <ArrowRight size={16} />}
         </button>
         {status === "error" ? <p className="answerError">답변을 만들지 못했습니다. 입력값이나 서버 상태를 확인하세요.</p> : null}
       </div>
+      ) : null}
 
+      {step === "answer" ? (
       <div className="answerDeskResult" aria-live="polite">
         {kit ? (
           <>
+            <button className="answerBackButton" type="button" onClick={() => setStep("question")}>
+              <ArrowLeft size={16} />
+              질문 수정
+            </button>
+            <div className="answerStepHeader">
+              <span>02</span>
+              <strong>답변 확인</strong>
+              <p>결제해도 되는지, 어떤 증거를 더 봐야 하는지 먼저 판단합니다.</p>
+            </div>
             <div className={`answerVerdict ${tone(kit.reply_status)}`}>
               <span>
                 {iconFor(kit.reply_status)}
@@ -261,6 +283,9 @@ export function LaunchQuestionAnswer() {
                 <Clipboard size={16} />
                 답변 복사
               </button>
+              <a className="answerSecondaryLink" href="/launch/tools">
+                기능별 데모
+              </a>
               <LaunchAnalysisLink
                 className="answerPrimaryLink"
                 handoff={{
@@ -293,6 +318,7 @@ export function LaunchQuestionAnswer() {
           </div>
         )}
       </div>
+      ) : null}
     </section>
   );
 }

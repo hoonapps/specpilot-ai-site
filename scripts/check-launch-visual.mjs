@@ -213,7 +213,7 @@ async function checkViewport(pageWsUrl, viewport) {
       const result = document.querySelector(".answerDeskResult");
       const portfolio = document.querySelector(".answerPortfolio");
       const topbarLinks = [...document.querySelectorAll(".answerTopbar a")];
-      const requiredLinks = ["/launch#ask", "/launch/tools", "/launch/guide"];
+      const requiredLinks = ["/", "/launch/guide"];
       const inspect = (el) => {
         if (!el) return null;
         const rect = el.getBoundingClientRect();
@@ -299,13 +299,14 @@ async function checkViewport(pageWsUrl, viewport) {
       }
       if (!title || !inspect(title).visible) failures.push("missing-hero-title");
       if (!primary || !inspect(primary).visible) failures.push("missing-primary-cta");
-      if (!secondary || !inspect(secondary).visible) failures.push("missing-secondary-cta");
-      if (proofCards.length < 3) failures.push("missing-proof-cards");
+      if (secondary && inspect(secondary).visible) failures.push("unexpected-secondary-cta");
+      if (proofCards.length < 2) failures.push("missing-proof-cards");
       if (overflows.length > 0) failures.push("hero-node-overflow");
       if (!desk || !inspect(desk).visible) failures.push("missing-answer-desk");
       if (!form || !inspect(form).visible) failures.push("missing-answer-form");
-      if (!result || !inspect(result).visible) failures.push("missing-answer-result");
+      if (result && inspect(result).visible) failures.push("answer-result-visible-before-submit");
       if (!portfolio || !inspect(portfolio).visible) failures.push("missing-portfolio-section");
+      if (topbarLinks.length > 2) failures.push("too-many-topbar-links");
       if (answerSections.length < 3) failures.push("missing-answer-sections");
       if (requiredLinks.some((href) => !topbarLinks.some((link) => link.getAttribute("href") === href))) {
         failures.push("missing-topbar-links");

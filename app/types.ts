@@ -2207,6 +2207,71 @@ export type PublicCheckoutLockKit = {
   next_actions: string[];
 };
 
+export type DecisionDefenseAlternative = {
+  title: string;
+  price_krw: number | null;
+  reason_not_selected: string;
+};
+
+export type DecisionDefenseRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  decision: string;
+  budget_krw: number;
+  final_price_krw: number | null;
+  confidence_score: number;
+  purpose: string;
+  audience: string;
+  key_reasons: string[];
+  watchouts: string[];
+  evidence_ready: string[];
+  alternatives: DecisionDefenseAlternative[];
+  objection_focus: string[];
+  source: string;
+};
+
+export type DecisionDefenseObjection = {
+  objection_id: string;
+  question: string;
+  status: "ok" | "warning" | "blocker";
+  answer: string;
+  proof_points: string[];
+  counter_condition: string;
+};
+
+export type DecisionDefenseComparison = {
+  criterion: string;
+  selected_choice: string;
+  alternative_view: string;
+  reviewer_takeaway: string;
+};
+
+export type PublicDecisionDefenseKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  decision: string;
+  audience: string;
+  defense_status: "ok" | "warning" | "blocker";
+  defense_score: number;
+  headline: string;
+  summary: string;
+  reviewer_brief: string;
+  objections: DecisionDefenseObjection[];
+  comparisons: DecisionDefenseComparison[];
+  proof_checklist: string[];
+  reviewer_questions: string[];
+  copy_variants: ApprovalCopyVariant[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type PublicDealTimingWindow = {
   timing_version: string;
   generated_at: string;

@@ -79,6 +79,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/candidate-compare`: 제품 API의 `/public/candidate-compare`로 카테고리/예산/목적별 공개 후보 5개, 비교 축별 승자, 예산/성능/안전 우선 대안 시나리오, 공유 문구 조회
 - `/api/specpilot/custom-candidate-decision-kit`: 제품 API의 `/public/custom-candidate-decision-kit`로 사용자가 붙여 넣은 실제 후보 2~6개를 가격, 목적 적합도, 증거, 보증/반품, 재고, 위험 조건으로 랭킹
 - `/api/specpilot/checkout-lock-kit`: 제품 API의 `/public/checkout-lock-kit`로 1순위 후보의 잠금가, 사양, 판매자, 보증/반품 기준을 최종 결제 화면과 대조해 locked/verify/blocked, 중단 조건, 구매 실행 prefill로 변환
+- `/api/specpilot/decision-defense-kit`: 제품 API의 `/public/decision-defense-kit`로 1순위 구매 결정을 가족/팀/커뮤니티에 공유하기 전 가격, 대체 후보, 용도, 리스크, 구매 타이밍 반박 질문과 방어 답변, 채널별 복사 문구로 변환
 - `/api/specpilot/deal-timing-window`: 제품 API의 `/public/deal-timing-window`로 후보별 현재가, 목표가, 적정가 밴드, 재고/쿠폰 변동 리스크, 결제 트리거, 목표가 공유 문구 조회
 - `/api/specpilot/price-watch-kit`: 제품 API의 `/public/price-watch-kit`로 구매 타이밍 결과를 목표가 알림 기준가, 감시 주기, 알림 문구, 결제 판단 규칙, 대체 행동으로 변환
 - `/api/specpilot/start-concierge`: 제품 API의 `/public/start-concierge`로 현재 입력 진단, 맞춤 플레이북, 시작 마일스톤, 빠른 CTA 조회
@@ -130,6 +131,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`의 옵션/사양 빠른 검수 결과는 `/public/spec-rescue-kit` 대체 후보 rescue도 호출해 보류 후보 대신 비교할 예산 내 대체안, 판매자 확인 메시지, 검색 문구를 함께 보여준다.
 - `/launch`는 `/public/custom-candidate-decision-kit`을 후보 비교 스냅샷 다음에 렌더링해 실제 쇼핑몰 후보 2~6개를 직접 붙여 넣고 1순위, 보류, 제외 후보를 즉시 가르게 한다.
 - `/launch`는 `/public/checkout-lock-kit`을 커스텀 후보 비교 다음에 렌더링해 고른 1순위가 최종 결제 화면에서 상품명, 판매자, 가격, 사양, AS/반품 조건이 바뀌지 않았는지 잠근다.
+- `/launch`는 `/public/decision-defense-kit`을 체크아웃 잠금 다음에 렌더링해 고른 1순위를 가족/팀/커뮤니티에 공유하기 전 반대 질문과 답변, 증거 체크리스트, 채널별 복사 문구를 만든다.
 - `/launch`의 공개 구매 타이밍 섹션은 `/public/price-watch-kit`을 함께 호출해 목표가 알림 기준, 감시 주기, 알림 공유 문구, 결제 판단 규칙을 같은 화면에 보여준다.
 - `/launch`는 `/public/purchase-aftercare-kit`을 구매 타이밍 다음에 렌더링해 결제 이후 반품/교환 마감, 보증 만료, 초기 불량 대응, 구매 결과 기록까지 공개 흐름에서 이어준다.
 - `/launch`는 `/public/first-boot-setup-kit`을 구매 후 케어 다음에 렌더링해 제품 수령 첫날 전원, OS, 포트, 드라이버, 벤치마크, 보증 등록 기준값을 점검하게 한다.

@@ -35,6 +35,7 @@ import { CandidateComparePanel } from "./CandidateComparePanel";
 import { CheckoutLockPanel } from "./CheckoutLockPanel";
 import { CustomCandidateDecisionPanel } from "./CustomCandidateDecisionPanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
+import { DecisionDefensePanel } from "./DecisionDefensePanel";
 import { FirstBootSetupPanel } from "./FirstBootSetupPanel";
 import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
@@ -1444,6 +1445,8 @@ export default async function LaunchPage() {
       <CustomCandidateDecisionPanel />
 
       <CheckoutLockPanel />
+
+      <DecisionDefensePanel />
 
       <DealTimingWindowPanel
         timing={dealTiming}

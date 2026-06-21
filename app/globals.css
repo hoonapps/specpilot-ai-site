@@ -5998,6 +5998,212 @@ ul {
   font-weight: 950;
 }
 
+.launchOutcomeShare {
+  background: #f8fbf8;
+}
+
+.launchOutcomeShareGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  gap: 18px;
+}
+
+.launchOutcomeShareForm,
+.launchOutcomeShareResult,
+.launchOutcomeShareMetrics div,
+.launchOutcomeShareColumns > div,
+.launchOutcomeShareVariants button {
+  border: 1px solid rgba(44, 99, 71, 0.15);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(28, 73, 49, 0.07);
+}
+
+.launchOutcomeShareForm,
+.launchOutcomeShareResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchOutcomeShareControls,
+.launchOutcomeShareColumns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchOutcomeShareControls.dense {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchOutcomeShareColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchOutcomeShareForm label {
+  display: grid;
+  gap: 7px;
+  color: #425f4b;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchOutcomeShareForm input,
+.launchOutcomeShareForm select,
+.launchOutcomeShareForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(44, 99, 71, 0.18);
+  border-radius: 8px;
+  background: #f7fff8;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchOutcomeShareForm textarea {
+  resize: vertical;
+}
+
+.launchOutcomeShareForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchOutcomeShareScore {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 4px 12px;
+}
+
+.launchOutcomeShareScore strong {
+  color: #22543a;
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  font-weight: 950;
+  line-height: 0.9;
+}
+
+.launchOutcomeShareScore small {
+  grid-column: 2;
+  color: #57715f;
+  font-size: 0.75rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchOutcomeShareResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchOutcomeShareResult p,
+.launchOutcomeShareResult li,
+.launchOutcomeShareResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchOutcomeShareMetrics,
+.launchOutcomeShareVariants,
+.launchOutcomeShareSignals {
+  display: grid;
+  gap: 10px;
+}
+
+.launchOutcomeShareMetrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchOutcomeShareMetrics div,
+.launchOutcomeShareColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchOutcomeShareMetrics span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #54705c;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchOutcomeShareMetrics strong,
+.launchOutcomeShareColumns strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchOutcomeShareMetrics div.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchOutcomeShareMetrics div.warning {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchOutcomeShareMetrics div.blocker {
+  border-color: rgba(220, 38, 38, 0.26);
+  background: #fef2f2;
+}
+
+.launchOutcomeShareColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchOutcomeShareVariants {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchOutcomeShareVariants button {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  justify-items: start;
+  border-color: rgba(44, 99, 71, 0.16);
+  color: var(--ink);
+  padding: 12px;
+  text-align: left;
+}
+
+.launchOutcomeShareVariants button span {
+  font-weight: 950;
+}
+
+.launchOutcomeShareSignals {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchOutcomeShareSignals span {
+  border: 1px solid rgba(44, 99, 71, 0.14);
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #22543a;
+  padding: 8px 10px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
 .launchFirstBoot {
   background: #f7fbff;
 }
@@ -11501,6 +11707,7 @@ ul {
   .launchDealWatch,
   .launchDealWatchGrid,
   .launchAftercareGrid,
+  .launchOutcomeShareGrid,
   .launchFirstBootGrid,
   .launchUpgradeGrid,
   .launchOwnershipGrid,
@@ -11701,6 +11908,12 @@ ul {
   .launchAftercareDeadlineGrid,
   .launchAftercareChecklist,
   .launchAftercareMessages,
+  .launchOutcomeShareControls,
+  .launchOutcomeShareControls.dense,
+  .launchOutcomeShareColumns,
+  .launchOutcomeShareMetrics,
+  .launchOutcomeShareVariants,
+  .launchOutcomeShareSignals,
   .launchFirstBootControls,
   .launchFirstBootControls.dense,
   .launchFirstBootTaskGrid,
@@ -12087,6 +12300,13 @@ ul {
   .launchAftercareDeadlineGrid,
   .launchAftercareChecklist,
   .launchAftercareMessages,
+  .launchOutcomeShareGrid,
+  .launchOutcomeShareControls,
+  .launchOutcomeShareControls.dense,
+  .launchOutcomeShareColumns,
+  .launchOutcomeShareMetrics,
+  .launchOutcomeShareVariants,
+  .launchOutcomeShareSignals,
   .launchFirstBootGrid,
   .launchFirstBootControls,
   .launchFirstBootControls.dense,

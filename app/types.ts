@@ -1718,6 +1718,61 @@ export type PublicPurchaseAftercareKit = {
   next_actions: string[];
 };
 
+export type OutcomeShareCardRequest = {
+  category: Category;
+  product_title: string;
+  outcome_status: PurchaseOutcomeStatus;
+  planned_price_krw: number | null;
+  final_paid_price_krw: number | null;
+  budget_krw: number | null;
+  satisfaction_score: number;
+  time_to_decide_hours: number | null;
+  issues: string[];
+  saved_reasons: string[];
+  regrets: string[];
+  next_recommendation: string;
+  share_audience: string;
+  source: string;
+};
+
+export type OutcomeProofMetric = {
+  metric_id: string;
+  label: string;
+  value: string;
+  detail: string;
+  status: OpsStatus;
+};
+
+export type OutcomeShareVariant = {
+  channel: string;
+  label: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicOutcomeShareCardKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  outcome_status: PurchaseOutcomeStatus;
+  proof_status: OpsStatus;
+  proof_score: number;
+  price_delta_krw: number | null;
+  headline: string;
+  summary: string;
+  proof_metrics: OutcomeProofMetric[];
+  proof_points: string[];
+  caution_notes: string[];
+  share_variants: OutcomeShareVariant[];
+  learning_signals: string[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type FirstBootSetupRequest = {
   category: Category;
   product_title: string;

@@ -77,6 +77,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/product-page-evidence-kit`: 제품 API의 `/public/product-page-evidence-kit`으로 상품 URL과 붙여 넣은 페이지 문구/HTML에서 가격, 배송비, 할인, 실구매가, 재고, 모델명 일치도, URL 안전성, 판매자 질문, 검수 prefill을 생성
 - `/api/specpilot/checkout-nudge-kit`: 제품 API의 `/public/checkout-nudge-kit`로 장바구니 검수 결과를 판매자 답변 요청, 가격 재확인, 구매 결과 회수 후속 알림과 분석/대기열 prefill로 변환
 - `/api/specpilot/purchase-aftercare-kit`: 제품 API의 `/public/purchase-aftercare-kit`로 구매일, 배송완료일, 최종 결제 금액, 초기 이슈를 반품/교환 마감, 보증 만료, 구매 결과 기록, 채널별 후속 문구로 변환
+- `/api/specpilot/outcome-share-card-kit`: 제품 API의 `/public/outcome-share-card-kit`로 실제 구매/지연/이탈/반품 결과, 최종가 차이, 만족도, 이슈를 공개 proof 카드와 공유 문구로 변환
 - `/api/specpilot/first-boot-setup-kit`: 제품 API의 `/public/first-boot-setup-kit`로 첫 부팅 OS/포트/디스플레이/드라이버/벤치마크/보증 등록 상태를 세팅 점수와 점검표로 변환
 - `/api/specpilot/spec-rescue-kit`: 제품 API의 `/public/spec-rescue-kit`로 장바구니 보류/확인 필요 결과를 예산 내 대체 후보, 판매자 확인 메시지, 검색 문구, 분석/공유 prefill로 변환
 - `/api/specpilot/candidate-compare`: 제품 API의 `/public/candidate-compare`로 카테고리/예산/목적별 공개 후보 5개, 비교 축별 승자, 예산/성능/안전 우선 대안 시나리오, 공유 문구 조회
@@ -144,7 +145,8 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`는 `/public/decision-defense-kit`을 체크아웃 잠금 다음에 렌더링해 고른 1순위를 가족/팀/커뮤니티에 공유하기 전 반대 질문과 답변, 증거 체크리스트, 채널별 복사 문구를 만든다.
 - `/launch`의 공개 구매 타이밍 섹션은 `/public/price-watch-kit`을 함께 호출해 목표가 알림 기준, 감시 주기, 알림 공유 문구, 결제 판단 규칙을 같은 화면에 보여준다.
 - `/launch`는 `/public/purchase-aftercare-kit`을 구매 타이밍 다음에 렌더링해 결제 이후 반품/교환 마감, 보증 만료, 초기 불량 대응, 구매 결과 기록까지 공개 흐름에서 이어준다.
-- `/launch`는 `/public/first-boot-setup-kit`을 구매 후 케어 다음에 렌더링해 제품 수령 첫날 전원, OS, 포트, 드라이버, 벤치마크, 보증 등록 기준값을 점검하게 한다.
+- `/launch`는 `/public/outcome-share-card-kit`을 구매 후 케어 다음에 렌더링해 실제 구매 결과를 개인정보 없는 proof 카드, 커뮤니티 공유 문구, 다음 추천 학습 신호로 바꾼다.
+- `/launch`는 `/public/first-boot-setup-kit`을 구매 결과 공유 카드 다음에 렌더링해 제품 수령 첫날 전원, OS, 포트, 드라이버, 벤치마크, 보증 등록 기준값을 점검하게 한다.
 - `/launch/opengraph-image`, `/launch/twitter-image`: 커뮤니티와 메신저 미리보기에서 제품명, 핵심 가치, 조건 진단/가격 타이밍/결제 전 검수 신호가 바로 보이도록 1200x630 PNG 공유 이미지를 동적으로 생성
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링

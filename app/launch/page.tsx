@@ -63,6 +63,7 @@ import { LaunchTeamConsultPreviewPanel } from "./LaunchTeamConsultPreviewPanel";
 import { LaunchWarRoomPanel } from "./LaunchWarRoomPanel";
 import { LaunchWeekRecapPanel } from "./LaunchWeekRecapPanel";
 import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
+import { OutcomeShareCardPanel } from "./OutcomeShareCardPanel";
 import { OwnershipCostPanel } from "./OwnershipCostPanel";
 import { PriceBreakdownPanel } from "./PriceBreakdownPanel";
 import { ProductPageEvidencePanel } from "./ProductPageEvidencePanel";
@@ -1470,6 +1471,8 @@ export default async function LaunchPage() {
       />
 
       <PurchaseAftercarePanel />
+
+      <OutcomeShareCardPanel />
 
       <FirstBootSetupPanel />
 

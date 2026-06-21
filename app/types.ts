@@ -2141,6 +2141,72 @@ export type PublicCustomCandidateDecisionKit = {
   next_actions: string[];
 };
 
+export type CheckoutLockReference = {
+  candidate_id: string;
+  title: string;
+  seller_name: string;
+  locked_price_krw: number;
+  cpu: string;
+  gpu: string;
+  ram_gb: number | null;
+  storage_gb: number | null;
+  os_name: string;
+  warranty_months: number | null;
+  return_window_days: number | null;
+  evidence_locked: string[];
+};
+
+export type CheckoutLockRequest = {
+  category: Category;
+  budget_krw: number;
+  locked_candidate: CheckoutLockReference;
+  checkout_title: string;
+  checkout_seller_name: string;
+  checkout_option_text: string;
+  checkout_total_krw: number | null;
+  checkout_quantity: number;
+  shipping_fee_krw: number;
+  coupon_discount_krw: number;
+  payment_method: string;
+  evidence_text: string;
+  source: string;
+};
+
+export type CheckoutLockCheck = {
+  check_id: string;
+  label: string;
+  status: "ok" | "warning" | "blocker";
+  locked: string;
+  observed: string;
+  recommendation: string;
+};
+
+export type PublicCheckoutLockKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  candidate_id: string;
+  lock_status: string;
+  lock_score: number;
+  price_delta_krw: number | null;
+  mismatch_count: number;
+  evidence_gap_count: number;
+  headline: string;
+  summary: string;
+  checks: CheckoutLockCheck[];
+  locked_fields: string[];
+  seller_questions: string[];
+  capture_checklist: string[];
+  stop_conditions: string[];
+  execution_prefill: PurchaseExecutionKitRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type PublicDealTimingWindow = {
   timing_version: string;
   generated_at: string;

@@ -32,6 +32,7 @@ import { LaunchActivationOfferPanel } from "./LaunchActivationOfferPanel";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
+import { CheckoutLockPanel } from "./CheckoutLockPanel";
 import { CustomCandidateDecisionPanel } from "./CustomCandidateDecisionPanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { FirstBootSetupPanel } from "./FirstBootSetupPanel";
@@ -1441,6 +1442,8 @@ export default async function LaunchPage() {
       />
 
       <CustomCandidateDecisionPanel />
+
+      <CheckoutLockPanel />
 
       <DealTimingWindowPanel
         timing={dealTiming}

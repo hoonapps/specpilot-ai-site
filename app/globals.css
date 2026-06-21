@@ -8142,6 +8142,193 @@ ul {
   padding-left: 18px;
 }
 
+.launchQuestionTriage {
+  background: #f8fff9;
+}
+
+.launchQuestionTriageGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchQuestionTriageForm,
+.launchQuestionTriageResult,
+.launchQuestionTriageScore,
+.launchQuestionTriageSignals article,
+.launchQuestionTriageColumns > div,
+.launchQuestionTriageNext {
+  border: 1px solid rgba(34, 197, 94, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(34, 197, 94, 0.06);
+}
+
+.launchQuestionTriageForm,
+.launchQuestionTriageResult {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchQuestionTriageControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchQuestionTriageForm label {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: #15803d;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchQuestionTriageForm input,
+.launchQuestionTriageForm select,
+.launchQuestionTriageForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(34, 197, 94, 0.18);
+  border-radius: 8px;
+  background: #f8fff9;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchQuestionTriageForm textarea {
+  min-height: 98px;
+  resize: vertical;
+}
+
+.launchQuestionTriageForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchQuestionTriageScore {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 4px 12px;
+  padding: 14px;
+}
+
+.launchQuestionTriageScore strong {
+  color: #15803d;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.9;
+}
+
+.launchQuestionTriageScore small {
+  grid-column: 2;
+  color: #15803d;
+  font-size: 0.82rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchQuestionTriageResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchQuestionTriageResult p,
+.launchQuestionTriageResult li,
+.launchQuestionTriageResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchQuestionTriageNext {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 10px;
+  padding: 12px;
+}
+
+.launchQuestionTriageNext svg {
+  color: #15803d;
+}
+
+.launchQuestionTriageNext p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchQuestionTriageSignals,
+.launchQuestionTriageColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchQuestionTriageSignals {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchQuestionTriageColumns {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchQuestionTriageSignals article,
+.launchQuestionTriageColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchQuestionTriageSignals article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchQuestionTriageSignals article.warn {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchQuestionTriageSignals article.danger {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: #fff5f5;
+}
+
+.launchQuestionTriageSignals span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #15803d;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchQuestionTriageSignals strong,
+.launchQuestionTriageColumns strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchQuestionTriageColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchBudgetStress {
   background: #fffdf7;
 }
@@ -12832,6 +13019,9 @@ ul {
   .launchSpecTermControls,
   .launchSpecTermExplanations,
   .launchSpecTermColumns,
+  .launchQuestionTriageControls,
+  .launchQuestionTriageSignals,
+  .launchQuestionTriageColumns,
   .launchBudgetStressControls,
   .launchBudgetStressControls.dense,
   .launchBudgetStressScenarios,
@@ -13257,6 +13447,10 @@ ul {
   .launchSpecTermControls,
   .launchSpecTermExplanations,
   .launchSpecTermColumns,
+  .launchQuestionTriageGrid,
+  .launchQuestionTriageControls,
+  .launchQuestionTriageSignals,
+  .launchQuestionTriageColumns,
   .launchBudgetStressGrid,
   .launchBudgetStressControls,
   .launchBudgetStressControls.dense,

@@ -73,6 +73,7 @@ import { ProductPageEvidencePanel } from "./ProductPageEvidencePanel";
 import { PurchaseApprovalBriefPanel } from "./PurchaseApprovalBriefPanel";
 import { PurchaseAftercarePanel } from "./PurchaseAftercarePanel";
 import { PurchaseExecutionPanel } from "./PurchaseExecutionPanel";
+import { PurchaseQuestionTriagePanel } from "./PurchaseQuestionTriagePanel";
 import { RequirementsConsensusPanel } from "./RequirementsConsensusPanel";
 import { ReviewerQuickCardPanel } from "./ReviewerQuickCardPanel";
 import { SellerEvidencePanel } from "./SellerEvidencePanel";
@@ -1334,6 +1335,8 @@ export default async function LaunchPage() {
       </section>
 
       <StartConciergePanel />
+
+      <PurchaseQuestionTriagePanel />
 
       <LaunchExperimentStrip />
 

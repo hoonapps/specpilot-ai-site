@@ -1254,6 +1254,52 @@ export type PublicSpecTermDecoderKit = {
   next_actions: string[];
 };
 
+export type PurchaseQuestionTriageRequest = {
+  category: Category;
+  buyer_question: string;
+  product_title: string;
+  listing_text: string;
+  budget_krw: number;
+  cart_total_krw: number | null;
+  purchase_stage: string;
+  audience: string;
+  source: string;
+};
+
+export type QuestionTriageSignal = {
+  signal_id: string;
+  label: string;
+  status: OpsStatus;
+  evidence: string;
+  next_step: string;
+};
+
+export type PublicPurchaseQuestionTriageKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  purchase_stage: string;
+  question_type: string;
+  triage_status: OpsStatus;
+  urgency_score: number;
+  headline: string;
+  summary: string;
+  routed_kits: string[];
+  triage_signals: QuestionTriageSignal[];
+  missing_inputs: string[];
+  recommended_next_step: string;
+  buyer_reply: string;
+  seller_questions: string[];
+  community_post: string;
+  scanner_prefill: SpecRiskScannerRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type ProductPageEvidenceRequest = {
   category: Category;
   url: string;

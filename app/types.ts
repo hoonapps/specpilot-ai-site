@@ -2232,6 +2232,87 @@ export type PublicDealSanityKit = {
   next_actions: string[];
 };
 
+export type PriceTrustCandidateInput = {
+  source_name: string;
+  seller_name: string;
+  product_title: string;
+  listed_price_krw: number;
+  shipping_fee_krw: number;
+  coupon_discount_krw: number;
+  card_discount_krw: number;
+  point_rebate_krw: number;
+  captured_minutes_ago: number | null;
+  stock_count: number | null;
+  affiliate_link: boolean;
+  non_affiliate_available: boolean;
+  screenshot_captured: boolean;
+  checkout_price_verified: boolean;
+  url_verified: boolean;
+  condition_notes: string[];
+};
+
+export type PriceTrustRequest = {
+  category: Category;
+  product_title: string;
+  report_price_krw: number | null;
+  budget_krw: number | null;
+  selected_seller_name: string;
+  candidates: PriceTrustCandidateInput[];
+  source: string;
+};
+
+export type PriceTrustCandidate = {
+  candidate_id: string;
+  source_name: string;
+  seller_name: string;
+  effective_price_krw: number;
+  freshness_label: string;
+  status: OpsStatus;
+  evidence: string;
+  recommendation: string;
+  affiliate_link: boolean;
+  non_affiliate_available: boolean;
+};
+
+export type PriceTrustCheck = {
+  check_id: string;
+  label: string;
+  status: OpsStatus;
+  finding: string;
+  action: string;
+};
+
+export type PriceTrustMessage = {
+  channel: string;
+  label: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicPriceTrustKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  trust_status: OpsStatus;
+  trust_score: number;
+  selected_effective_price_krw: number | null;
+  report_price_delta_krw: number | null;
+  headline: string;
+  summary: string;
+  candidates: PriceTrustCandidate[];
+  checks: PriceTrustCheck[];
+  evidence_checklist: string[];
+  disclosure_notes: string[];
+  buyer_warning: string;
+  messages: PriceTrustMessage[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type BudgetStressRequest = {
   category: Category;
   product_title: string;

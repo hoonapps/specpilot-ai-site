@@ -68,6 +68,7 @@ import { MistakeCostCalculatorPanel } from "./MistakeCostCalculatorPanel";
 import { OutcomeShareCardPanel } from "./OutcomeShareCardPanel";
 import { OwnershipCostPanel } from "./OwnershipCostPanel";
 import { PriceBreakdownPanel } from "./PriceBreakdownPanel";
+import { PriceTrustPanel } from "./PriceTrustPanel";
 import { ProductPageEvidencePanel } from "./ProductPageEvidencePanel";
 import { PurchaseApprovalBriefPanel } from "./PurchaseApprovalBriefPanel";
 import { PurchaseAftercarePanel } from "./PurchaseAftercarePanel";
@@ -1433,6 +1434,8 @@ export default async function LaunchPage() {
       <PriceBreakdownPanel />
 
       <DealSanityPanel />
+
+      <PriceTrustPanel />
 
       <BudgetStressPanel />
 

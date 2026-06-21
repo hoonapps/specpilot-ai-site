@@ -7717,6 +7717,247 @@ ul {
   padding-left: 18px;
 }
 
+.launchPriceTrust {
+  background: #f7fffb;
+}
+
+.launchPriceTrustGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
+  gap: 18px;
+}
+
+.launchPriceTrustForm,
+.launchPriceTrustResult,
+.launchPriceTrustScore,
+.launchPriceTrustSource,
+.launchPriceTrustCandidates article,
+.launchPriceTrustChecks article,
+.launchPriceTrustWarning,
+.launchPriceTrustColumns > div {
+  border: 1px solid rgba(13, 148, 136, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(13, 148, 136, 0.06);
+}
+
+.launchPriceTrustForm,
+.launchPriceTrustResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px;
+}
+
+.launchPriceTrustControls,
+.launchPriceTrustColumns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchPriceTrustControls.dense {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPriceTrustForm label {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: #0f766e;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchPriceTrustForm input,
+.launchPriceTrustForm select,
+.launchPriceTrustForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(13, 148, 136, 0.18);
+  border-radius: 8px;
+  background: #f7fffb;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchPriceTrustForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchPriceTrustSource {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px;
+}
+
+.launchPriceTrustSource.muted {
+  background: #fbfffd;
+}
+
+.launchPriceTrustSource strong {
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.launchPriceTrustSwitches {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.launchPriceTrustSwitches.compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchPriceTrustSwitches label {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(13, 148, 136, 0.15);
+  border-radius: 8px;
+  background: #f7fffb;
+  padding: 8px 9px;
+}
+
+.launchPriceTrustSwitches input {
+  width: 17px;
+  height: 17px;
+  accent-color: #0f766e;
+}
+
+.launchPriceTrustScore {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 4px 12px;
+  padding: 14px;
+}
+
+.launchPriceTrustScore strong {
+  color: #0f766e;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.9;
+}
+
+.launchPriceTrustScore small {
+  grid-column: 2;
+  color: #0f766e;
+  font-size: 0.82rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchPriceTrustResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchPriceTrustResult p,
+.launchPriceTrustResult li,
+.launchPriceTrustResult small,
+.launchPriceTrustResult em {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchPriceTrustCandidates,
+.launchPriceTrustChecks,
+.launchPriceTrustColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchPriceTrustCandidates,
+.launchPriceTrustChecks {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchPriceTrustCandidates article,
+.launchPriceTrustChecks article,
+.launchPriceTrustColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchPriceTrustCandidates span,
+.launchPriceTrustChecks span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #0f766e;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchPriceTrustCandidates article.ok,
+.launchPriceTrustChecks article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchPriceTrustCandidates article.warn,
+.launchPriceTrustChecks article.warn {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchPriceTrustCandidates article.danger,
+.launchPriceTrustChecks article.danger {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: #fff5f5;
+}
+
+.launchPriceTrustCandidates strong,
+.launchPriceTrustChecks strong,
+.launchPriceTrustColumns strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchPriceTrustCandidates em {
+  font-style: normal;
+}
+
+.launchPriceTrustWarning {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 10px;
+  padding: 12px;
+}
+
+.launchPriceTrustWarning svg {
+  color: #0f766e;
+}
+
+.launchPriceTrustWarning p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.launchPriceTrustColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchBudgetStress {
   background: #fffdf7;
 }
@@ -12397,6 +12638,13 @@ ul {
   .launchDealSanityMetrics,
   .launchDealSanityFlags,
   .launchDealSanityColumns,
+  .launchPriceTrustControls,
+  .launchPriceTrustControls.dense,
+  .launchPriceTrustSwitches,
+  .launchPriceTrustSwitches.compact,
+  .launchPriceTrustCandidates,
+  .launchPriceTrustChecks,
+  .launchPriceTrustColumns,
   .launchBudgetStressControls,
   .launchBudgetStressControls.dense,
   .launchBudgetStressScenarios,
@@ -12810,6 +13058,14 @@ ul {
   .launchDealSanityMetrics,
   .launchDealSanityFlags,
   .launchDealSanityColumns,
+  .launchPriceTrustGrid,
+  .launchPriceTrustControls,
+  .launchPriceTrustControls.dense,
+  .launchPriceTrustSwitches,
+  .launchPriceTrustSwitches.compact,
+  .launchPriceTrustCandidates,
+  .launchPriceTrustChecks,
+  .launchPriceTrustColumns,
   .launchBudgetStressGrid,
   .launchBudgetStressControls,
   .launchBudgetStressControls.dense,

@@ -81,6 +81,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/first-boot-setup-kit`: 제품 API의 `/public/first-boot-setup-kit`로 첫 부팅 OS/포트/디스플레이/드라이버/벤치마크/보증 등록 상태를 세팅 점수와 점검표로 변환
 - `/api/specpilot/benchmark-validation-kit`: 제품 API의 `/public/benchmark-validation-kit`로 첫날 CPU/GPU/SSD 점수, 온도, 스로틀링, 꺼짐 증상을 정상 기준값 또는 반품/AS 증거로 변환
 - `/api/specpilot/defect-claim-kit`: 제품 API의 `/public/defect-claim-kit`로 수령 후 이상 증상, 실패 점검, 반품/보증 마감, 확보 증거를 접수 타임라인과 판매자/제조사 문구로 변환
+- `/api/specpilot/price-trust-kit`: 제품 API의 `/public/price-trust-kit`로 가격 캡처 시각, 복수 출처, 제휴/비제휴 대안, 결제 화면 증거를 가격 신뢰 proof로 변환
 - `/api/specpilot/spec-rescue-kit`: 제품 API의 `/public/spec-rescue-kit`로 장바구니 보류/확인 필요 결과를 예산 내 대체 후보, 판매자 확인 메시지, 검색 문구, 분석/공유 prefill로 변환
 - `/api/specpilot/candidate-compare`: 제품 API의 `/public/candidate-compare`로 카테고리/예산/목적별 공개 후보 5개, 비교 축별 승자, 예산/성능/안전 우선 대안 시나리오, 공유 문구 조회
 - `/api/specpilot/custom-candidate-decision-kit`: 제품 API의 `/public/custom-candidate-decision-kit`로 사용자가 붙여 넣은 실제 후보 2~6개를 가격, 목적 적합도, 증거, 보증/반품, 재고, 위험 조건으로 랭킹
@@ -151,6 +152,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`는 `/public/first-boot-setup-kit`을 구매 결과 공유 카드 다음에 렌더링해 제품 수령 첫날 전원, OS, 포트, 드라이버, 벤치마크, 보증 등록 기준값을 점검하게 한다.
 - `/launch`는 `/public/benchmark-validation-kit`을 첫 부팅 세팅 다음에 렌더링해 CPU/GPU/SSD 성능, 온도, 스로틀링, 꺼짐 증상을 반품/AS 증거와 판매자 문의 문구로 정리한다.
 - `/launch`는 `/public/defect-claim-kit`을 성능 벤치마크 검수 다음에 렌더링해 수령 후 이상 증상을 반품·AS 접수 증거 패킷과 판매자/제조사 문구로 전환한다.
+- `/launch`는 `/public/price-trust-kit`을 특가 검수 다음에 렌더링해 최신 가격, 출처 다양성, 제휴 중립성, 결제 화면 증거를 공개 proof로 보여준다.
 - `/launch/opengraph-image`, `/launch/twitter-image`: 커뮤니티와 메신저 미리보기에서 제품명, 핵심 가치, 조건 진단/가격 타이밍/결제 전 검수 신호가 바로 보이도록 1200x630 PNG 공유 이미지를 동적으로 생성
 - `/join?ref={referral_code}` 또는 `/join?source=public-report&report={share_token}`: 제품 API가 발급한 추천 URL이나 공개 리포트 CTA를 받아 대기열/요금제 관심 폼으로 연결하고, 가입 후 절대 초대 링크와 채널별 초대 문구 복사/공유 버튼으로 확산을 유도하는 추천 초대 페이지
 - `/r/{share_token}`: 제품 API의 `/public/reports/{share_token}`를 서버에서 읽어 SpecPilot AI 웹사이트 브랜드의 공개 구매 리포트로 렌더링

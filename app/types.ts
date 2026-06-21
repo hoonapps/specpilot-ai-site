@@ -1887,6 +1887,69 @@ export type PublicBenchmarkValidationKit = {
   next_actions: string[];
 };
 
+export type DefectClaimRequest = {
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  manufacturer_name: string;
+  purchase_date: string;
+  delivered_date: string;
+  return_deadline: string;
+  warranty_deadline: string;
+  final_paid_price_krw: number | null;
+  order_reference_masked: string;
+  preferred_resolution: string;
+  issue_summary: string;
+  observed_issues: string[];
+  failed_checks: string[];
+  benchmark_status: OpsStatus;
+  evidence_items: string[];
+  seller_responses: string[];
+  policy_text: string;
+  source: string;
+};
+
+export type DefectClaimTimelineItem = {
+  item_id: string;
+  label: string;
+  status: OpsStatus;
+  due_date: string;
+  action: string;
+};
+
+export type DefectClaimMessage = {
+  channel: string;
+  label: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicDefectClaimKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  seller_name: string;
+  manufacturer_name: string;
+  claim_status: OpsStatus;
+  claim_score: number;
+  urgency_label: string;
+  headline: string;
+  summary: string;
+  timeline: DefectClaimTimelineItem[];
+  evidence_checklist: string[];
+  evidence_gaps: string[];
+  claim_steps: string[];
+  seller_message: string;
+  manufacturer_message: string;
+  messages: DefectClaimMessage[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type UpgradeReadinessRequest = {
   category: Category;
   product_title: string;

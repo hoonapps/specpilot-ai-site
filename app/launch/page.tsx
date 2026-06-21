@@ -40,6 +40,7 @@ import { CustomCandidateDecisionPanel } from "./CustomCandidateDecisionPanel";
 import { DealSanityPanel } from "./DealSanityPanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
 import { DecisionDefensePanel } from "./DecisionDefensePanel";
+import { DefectClaimPanel } from "./DefectClaimPanel";
 import { FirstBootSetupPanel } from "./FirstBootSetupPanel";
 import { LaunchAnalysisLink } from "./LaunchAnalysisLink";
 import { LaunchConversionPanel } from "./LaunchConversionPanel";
@@ -1478,6 +1479,8 @@ export default async function LaunchPage() {
       <FirstBootSetupPanel />
 
       <BenchmarkValidationPanel />
+
+      <DefectClaimPanel />
 
       <section className="launchPublicSection launchSocialProofWall">
         <div className="sectionHeader">

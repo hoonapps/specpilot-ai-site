@@ -6629,6 +6629,207 @@ ul {
   font-weight: 950;
 }
 
+.launchDefectClaim {
+  background: #fffafa;
+}
+
+.launchDefectGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+  gap: 18px;
+}
+
+.launchDefectForm,
+.launchDefectResult,
+.launchDefectScore,
+.launchDefectTimeline article,
+.launchDefectColumns > div,
+.launchDefectMessageGrid article {
+  border: 1px solid rgba(185, 28, 28, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(127, 29, 29, 0.06);
+}
+
+.launchDefectForm,
+.launchDefectResult {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px;
+}
+
+.launchDefectControls,
+.launchDefectColumns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchDefectControls.dense {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.launchDefectForm label {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: #8f2727;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchDefectForm input,
+.launchDefectForm select,
+.launchDefectForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(185, 28, 28, 0.18);
+  border-radius: 8px;
+  background: #fff7f7;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchDefectForm textarea {
+  resize: vertical;
+}
+
+.launchDefectForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchDefectScore {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 4px 12px;
+  padding: 14px;
+}
+
+.launchDefectScore strong {
+  color: #b91c1c;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.9;
+}
+
+.launchDefectScore small {
+  grid-column: 2;
+  color: #8f2727;
+  font-size: 0.82rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchDefectResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchDefectResult p,
+.launchDefectResult li,
+.launchDefectResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchDefectTimeline,
+.launchDefectColumns,
+.launchDefectMessageGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.launchDefectTimeline {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchDefectTimeline article,
+.launchDefectColumns > div,
+.launchDefectMessageGrid article {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchDefectTimeline span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #8f2727;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchDefectTimeline strong,
+.launchDefectColumns strong,
+.launchDefectMessageGrid strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchDefectTimeline article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchDefectTimeline article.warning {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchDefectTimeline article.blocker {
+  border-color: rgba(220, 38, 38, 0.26);
+  background: #fef2f2;
+}
+
+.launchDefectColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launchDefectMessageGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchDefectMessageGrid article p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.launchDefectMessageGrid article svg {
+  color: #b91c1c;
+}
+
+.launchDefectMessageGrid button {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(185, 28, 28, 0.16);
+  border-radius: 8px;
+  background: #fff7f7;
+  color: var(--ink);
+  padding: 8px 10px;
+  font-weight: 900;
+}
+
 .launchUpgradeReadiness {
   background: #fbfff8;
 }
@@ -11947,6 +12148,7 @@ ul {
   .launchOutcomeShareGrid,
   .launchFirstBootGrid,
   .launchBenchmarkGrid,
+  .launchDefectGrid,
   .launchUpgradeGrid,
   .launchOwnershipGrid,
   .launchWarrantyGrid,
@@ -12164,6 +12366,11 @@ ul {
   .launchBenchmarkColumns,
   .launchBenchmarkSeller,
   .launchBenchmarkMessages,
+  .launchDefectControls,
+  .launchDefectControls.dense,
+  .launchDefectTimeline,
+  .launchDefectColumns,
+  .launchDefectMessageGrid,
   .launchUpgradeControls,
   .launchUpgradeControls.dense,
   .launchUpgradeItemGrid,
@@ -12566,6 +12773,12 @@ ul {
   .launchBenchmarkColumns,
   .launchBenchmarkSeller,
   .launchBenchmarkMessages,
+  .launchDefectGrid,
+  .launchDefectControls,
+  .launchDefectControls.dense,
+  .launchDefectTimeline,
+  .launchDefectColumns,
+  .launchDefectMessageGrid,
   .launchUpgradeGrid,
   .launchUpgradeControls,
   .launchUpgradeControls.dense,

@@ -31,6 +31,7 @@ import { LaunchActionRouterPanel } from "./LaunchActionRouterPanel";
 import { LaunchActivationOfferPanel } from "./LaunchActivationOfferPanel";
 import { BuyerChallengeKitPanel } from "./BuyerChallengeKitPanel";
 import { BuyerPersonaQuizPanel } from "./BuyerPersonaQuizPanel";
+import { BenchmarkValidationPanel } from "./BenchmarkValidationPanel";
 import { BuildBlueprintPanel } from "./BuildBlueprintPanel";
 import { BudgetStressPanel } from "./BudgetStressPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
@@ -1475,6 +1476,8 @@ export default async function LaunchPage() {
       <OutcomeShareCardPanel />
 
       <FirstBootSetupPanel />
+
+      <BenchmarkValidationPanel />
 
       <section className="launchPublicSection launchSocialProofWall">
         <div className="sectionHeader">

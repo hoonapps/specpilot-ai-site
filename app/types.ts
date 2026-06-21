@@ -1825,6 +1825,68 @@ export type PublicFirstBootSetupKit = {
   next_actions: string[];
 };
 
+export type BenchmarkValidationRequest = {
+  category: Category;
+  product_title: string;
+  primary_purpose: string;
+  cpu_name: string;
+  gpu_name: string;
+  ram_gb: number;
+  expected_cpu_score: number | null;
+  observed_cpu_score: number | null;
+  expected_gpu_score: number | null;
+  observed_gpu_score: number | null;
+  expected_ssd_read_mbps: number | null;
+  observed_ssd_read_mbps: number | null;
+  max_cpu_temp_c: number | null;
+  max_gpu_temp_c: number | null;
+  fan_noise_note: string;
+  throttling_observed: boolean;
+  crashes: string[];
+  driver_versions_checked: boolean;
+  evidence_links: string[];
+  source: string;
+};
+
+export type BenchmarkValidationCheck = {
+  check_id: string;
+  label: string;
+  status: OpsStatus;
+  observed: string;
+  expected: string;
+  action: string;
+  evidence: string;
+};
+
+export type BenchmarkValidationMessage = {
+  channel: string;
+  label: string;
+  copy_text: string;
+  cta_label: string;
+};
+
+export type PublicBenchmarkValidationKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  performance_status: OpsStatus;
+  performance_score: number;
+  bottleneck_summary: string;
+  headline: string;
+  summary: string;
+  checks: BenchmarkValidationCheck[];
+  evidence_checklist: string[];
+  issue_triage: string[];
+  seller_message: string;
+  messages: BenchmarkValidationMessage[];
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type UpgradeReadinessRequest = {
   category: Category;
   product_title: string;

@@ -8329,6 +8329,175 @@ ul {
   padding-left: 18px;
 }
 
+.launchReviewRisk {
+  background: #fff8fb;
+}
+
+.launchReviewRiskGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.launchReviewRiskForm,
+.launchReviewRiskResult,
+.launchReviewRiskScore,
+.launchReviewRiskSignals article,
+.launchReviewRiskColumns > div {
+  border: 1px solid rgba(190, 24, 93, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(190, 24, 93, 0.06);
+}
+
+.launchReviewRiskForm,
+.launchReviewRiskResult {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: 14px;
+  padding: 18px;
+}
+
+.launchReviewRiskControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launchReviewRiskForm label {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: #be185d;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.launchReviewRiskForm input,
+.launchReviewRiskForm select,
+.launchReviewRiskForm textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(190, 24, 93, 0.16);
+  border-radius: 8px;
+  background: #fff8fb;
+  color: var(--ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.launchReviewRiskForm textarea {
+  min-height: 142px;
+  resize: vertical;
+}
+
+.launchReviewRiskForm .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.launchReviewRiskScore {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 4px 12px;
+  padding: 14px;
+}
+
+.launchReviewRiskScore strong {
+  color: #be185d;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.9;
+}
+
+.launchReviewRiskScore small {
+  grid-column: 2;
+  color: #be185d;
+  font-size: 0.82rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.launchReviewRiskResult h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.launchReviewRiskResult p,
+.launchReviewRiskResult li,
+.launchReviewRiskResult small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.launchReviewRiskSignals,
+.launchReviewRiskColumns {
+  display: grid;
+  gap: 10px;
+}
+
+.launchReviewRiskSignals {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.launchReviewRiskColumns {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.launchReviewRiskSignals article,
+.launchReviewRiskColumns > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  padding: 12px;
+}
+
+.launchReviewRiskSignals article.ok {
+  border-color: rgba(22, 163, 74, 0.22);
+  background: #f0fdf4;
+}
+
+.launchReviewRiskSignals article.warn {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: #fffbeb;
+}
+
+.launchReviewRiskSignals article.danger {
+  border-color: rgba(220, 38, 38, 0.22);
+  background: #fff5f5;
+}
+
+.launchReviewRiskSignals span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #be185d;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.launchReviewRiskSignals strong,
+.launchReviewRiskColumns strong {
+  color: var(--ink);
+  font-weight: 950;
+  overflow-wrap: anywhere;
+}
+
+.launchReviewRiskColumns ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .launchBudgetStress {
   background: #fffdf7;
 }
@@ -13022,6 +13191,9 @@ ul {
   .launchQuestionTriageControls,
   .launchQuestionTriageSignals,
   .launchQuestionTriageColumns,
+  .launchReviewRiskControls,
+  .launchReviewRiskSignals,
+  .launchReviewRiskColumns,
   .launchBudgetStressControls,
   .launchBudgetStressControls.dense,
   .launchBudgetStressScenarios,
@@ -13451,6 +13623,10 @@ ul {
   .launchQuestionTriageControls,
   .launchQuestionTriageSignals,
   .launchQuestionTriageColumns,
+  .launchReviewRiskGrid,
+  .launchReviewRiskControls,
+  .launchReviewRiskSignals,
+  .launchReviewRiskColumns,
   .launchBudgetStressGrid,
   .launchBudgetStressControls,
   .launchBudgetStressControls.dense,

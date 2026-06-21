@@ -76,6 +76,7 @@ import { PurchaseExecutionPanel } from "./PurchaseExecutionPanel";
 import { PurchaseQuestionTriagePanel } from "./PurchaseQuestionTriagePanel";
 import { RequirementsConsensusPanel } from "./RequirementsConsensusPanel";
 import { ReviewerQuickCardPanel } from "./ReviewerQuickCardPanel";
+import { ReviewRiskPanel } from "./ReviewRiskPanel";
 import { SellerEvidencePanel } from "./SellerEvidencePanel";
 import { SellerNegotiationPanel } from "./SellerNegotiationPanel";
 import { ShoppingCartIntakePanel } from "./ShoppingCartIntakePanel";
@@ -1337,6 +1338,8 @@ export default async function LaunchPage() {
       <StartConciergePanel />
 
       <PurchaseQuestionTriagePanel />
+
+      <ReviewRiskPanel />
 
       <LaunchExperimentStrip />
 

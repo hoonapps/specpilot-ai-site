@@ -1300,6 +1300,50 @@ export type PublicPurchaseQuestionTriageKit = {
   next_actions: string[];
 };
 
+export type ReviewRiskRequest = {
+  category: Category;
+  product_title: string;
+  review_snippets: string[];
+  rating: number | null;
+  review_count: number | null;
+  budget_krw: number;
+  usage_context: string;
+  source: string;
+};
+
+export type ReviewRiskSignal = {
+  signal_id: string;
+  label: string;
+  status: OpsStatus;
+  evidence: string;
+  frequency: number;
+  buyer_impact: string;
+  next_step: string;
+};
+
+export type PublicReviewRiskKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  product_title: string;
+  review_status: OpsStatus;
+  review_risk_score: number;
+  headline: string;
+  summary: string;
+  repeated_complaints: string[];
+  positive_signals: string[];
+  review_signals: ReviewRiskSignal[];
+  source_quality_notes: string[];
+  seller_questions: string[];
+  evidence_checklist: string[];
+  scanner_prefill: SpecRiskScannerRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
 export type ProductPageEvidenceRequest = {
   category: Category;
   url: string;

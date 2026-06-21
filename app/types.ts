@@ -2679,19 +2679,20 @@ export type PurchaseJourneyStep = {
   order: number;
   label: string;
   status: OpsStatus;
-  objective: string;
-  user_action: string;
   kit_path: string;
-  done_when: string;
+  why_now: string;
+  required_input: string;
+  success_rule: string;
+  next_action: string;
 };
 
 export type PurchaseJourneyRouteCard = {
-  card_id: string;
+  route_id: string;
   label: string;
   status: OpsStatus;
-  reason: string;
-  kit_path: string;
-  prefill_summary: string;
+  cta_label: string;
+  cta_path: string;
+  prefill_hint: string;
 };
 
 export type PublicPurchaseJourneyKit = {
@@ -2713,6 +2714,64 @@ export type PublicPurchaseJourneyKit = {
   triage_prefill: PurchaseQuestionTriageRequest;
   review_risk_prefill: ReviewRiskRequest;
   final_decision_prefill: FinalDecisionKitRequest;
+  analysis_prefill: string;
+  share_copy: string;
+  primary_cta_label: string;
+  primary_cta_path: string;
+  next_actions: string[];
+};
+
+export type CommunityReplyKitRequest = {
+  category: Category;
+  community_channel: string;
+  buyer_question: string;
+  product_title: string;
+  seller_name: string;
+  candidate_summary: string;
+  budget_krw: number;
+  final_price_krw: number | null;
+  usage_context: string;
+  risk_notes: string[];
+  ready_evidence: string[];
+  missing_evidence: string[];
+  reply_tone: string;
+  source: string;
+};
+
+export type CommunityReplyCard = {
+  card_id: string;
+  label: string;
+  status: OpsStatus;
+  copy_text: string;
+  use_when: string;
+};
+
+export type CommunityEvidenceRequest = {
+  evidence_id: string;
+  label: string;
+  status: OpsStatus;
+  reason: string;
+  request_text: string;
+};
+
+export type PublicCommunityReplyKit = {
+  kit_version: string;
+  generated_at: string;
+  category: Category;
+  community_channel: string;
+  product_title: string;
+  seller_name: string;
+  reply_status: OpsStatus;
+  reply_score: number;
+  headline: string;
+  summary: string;
+  primary_reply: string;
+  reply_cards: CommunityReplyCard[];
+  risk_flags: string[];
+  evidence_requests: CommunityEvidenceRequest[];
+  posting_rules: string[];
+  triage_prefill: PurchaseQuestionTriageRequest;
+  journey_prefill: PurchaseJourneyKitRequest;
   analysis_prefill: string;
   share_copy: string;
   primary_cta_label: string;

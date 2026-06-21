@@ -343,18 +343,18 @@ export function PurchaseJourneyPanel() {
                       {iconFor(step.status)}
                       {step.order}. {step.label}
                     </span>
-                    <strong>{step.user_action}</strong>
-                    <small>{step.done_when}</small>
+                    <strong>{step.next_action}</strong>
+                    <small>{step.success_rule}</small>
                   </article>
                 ))}
               </div>
 
               <div className="launchPurchaseJourneyRoutes">
                 {kit.route_cards.map((card) => (
-                  <article className={tone(card.status)} key={card.card_id}>
+                  <article className={tone(card.status)} key={card.route_id}>
                     <span>{card.label}</span>
-                    <strong>{card.reason}</strong>
-                    <small>{card.prefill_summary}</small>
+                    <strong>{card.cta_label}</strong>
+                    <small>{card.prefill_hint}</small>
                   </article>
                 ))}
               </div>

@@ -215,6 +215,7 @@ async function checkViewport(pageWsUrl, viewport) {
       const requiredSections = [
         "start-concierge",
         "purchase-journey",
+        "community-reply",
         "persona-quiz",
         "setup-compatibility",
         "review-risk",

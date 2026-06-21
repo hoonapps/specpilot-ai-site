@@ -69,6 +69,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/api/specpilot/purchase-execution-kit`: 제품 API의 `/public/purchase-execution-kit`으로 최종가, 예산, blocker/warning, 누락 증거, 판매자 질문을 결제 전 실행 단계, 증거 게이트, 중단 조건, 공유 문구로 변환
 - `/api/specpilot/final-decision-kit`: 제품 API의 `/public/final-decision-kit`으로 가격, 체크아웃, 호환성, 리뷰, 보증, 증거 신호를 go/verify/hold 최종 판정과 실행/검토 prefill로 변환
 - `/api/specpilot/purchase-journey-kit`: 제품 API의 `/public/purchase-journey-kit`으로 구매 질문, 상품 문구, 리뷰, 최종가, 준비/누락 증거를 공개 구매 여정 단계와 질문/리뷰/최종 판정 prefill로 변환
+- `/api/specpilot/community-reply-kit`: 제품 API의 `/public/community-reply-kit`으로 커뮤니티/카톡/팀 구매 질문을 안전한 답글 카드, 증거 요청, 게시 규칙, 질문 라우팅/구매 여정 prefill로 변환
 - `/api/specpilot/reviewer-quick-card-kit`: 제품 API의 `/public/reviewer-quick-card-kit`으로 공유받은 검토자의 승인, 증거 요청, 반대/보류 응답 카드와 답장 템플릿을 생성
 - `/api/specpilot/shopping-cart-intake-kit`: 제품 API의 `/public/shopping-cart-intake-kit`로 쇼핑몰 장바구니 텍스트/항목을 총액, 필수 슬롯 누락, 검수/승인 prefill로 변환
 - `/api/specpilot/listing-decoder-kit`: 제품 API의 `/public/listing-decoder-kit`로 쇼핑몰 상품명/옵션명에서 CPU/GPU/RAM/SSD/OS와 리퍼·전시·해외 조건을 구조화하고 검수 prefill 조회
@@ -142,6 +143,7 @@ SPECPILOT_API_KEY=specpilot-site-demo
 - `/launch`는 `/public/purchase-execution-kit`을 실구매가 분해 다음에 렌더링해 결제 전 실행 단계, 증거 게이트, 중단 조건, 가족/팀/커뮤니티 공유 문구를 만든다.
 - `/launch`는 `/public/final-decision-kit`을 구매 실행 패키지와 30초 검토 카드 사이에 렌더링해 가격, 체크아웃, 호환성, 리뷰, 보증, 증거 신호를 마지막 go/verify/hold 판단으로 압축한다.
 - `/launch`는 `/public/purchase-journey-kit`을 첫 구매 진단 다음에 렌더링해 구매 질문, 상품 페이지, 리뷰, 최종가, 증거 상태를 질문 분류, 리뷰 리스크, 최종 판정 순서로 연결한다.
+- `/launch`는 `/public/community-reply-kit`을 구매 여정 다음에 렌더링해 커뮤니티/카톡/팀 채팅의 “이 견적 어때요?” 질문을 조건부 답글, 증거 요청, 분석 handoff로 바꾼다.
 - `/launch`는 `/public/reviewer-quick-card-kit`을 구매 실행 패키지 다음에 렌더링해 공유받은 가족/팀/커뮤니티가 승인, 증거 요청, 반대/보류 중 하나로 바로 응답하게 한다.
 - `/launch`는 `/public/product-page-evidence-kit`을 구매 실행 패키지 다음에 렌더링해 상품 URL과 페이지 문구에서 가격/재고/모델명/위험 조건을 추출하고 옵션 검수, 실구매가 분해, 판매자 증거 요청 prefill로 연결한다.
 - `/launch`는 `/public/shopping-cart-intake-kit`을 구매 실행 패키지 다음에 렌더링해 쇼핑몰 장바구니 텍스트를 총액, 필수 슬롯 누락, 옵션/사양 검수 prefill, 구매 승인 prefill로 변환한다.
@@ -228,6 +230,7 @@ GitHub Actions는 `npm run check`, production 서버 기반 `check:launch-visual
 - `POST /public/listing-decoder-kit`
 - `POST /public/spec-term-decoder-kit`
 - `POST /public/purchase-journey-kit`
+- `POST /public/community-reply-kit`
 - `POST /public/purchase-question-triage-kit`
 - `POST /public/review-risk-kit`
 - `POST /public/checkout-nudge-kit`

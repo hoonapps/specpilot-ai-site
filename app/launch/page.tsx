@@ -36,6 +36,7 @@ import { BuildBlueprintPanel } from "./BuildBlueprintPanel";
 import { BudgetStressPanel } from "./BudgetStressPanel";
 import { CandidateComparePanel } from "./CandidateComparePanel";
 import { CheckoutLockPanel } from "./CheckoutLockPanel";
+import { CommunityReplyPanel } from "./CommunityReplyPanel";
 import { CustomCandidateDecisionPanel } from "./CustomCandidateDecisionPanel";
 import { DealSanityPanel } from "./DealSanityPanel";
 import { DealTimingWindowPanel } from "./DealTimingWindowPanel";
@@ -1340,6 +1341,8 @@ export default async function LaunchPage() {
       <StartConciergePanel />
 
       <PurchaseJourneyPanel />
+
+      <CommunityReplyPanel />
 
       <PurchaseQuestionTriagePanel />
 
